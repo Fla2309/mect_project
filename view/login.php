@@ -8,12 +8,13 @@
 </head>
 
 <body id="background">
-    <form method="post" action="../php/user.php">
+    <form method="post">
         <div class="container">
             <div id="main">
                 <div class="image">
                     <img src="../img/logoMECT.png" id="logo">
                 </div>
+                <?php if (isset($errorLogin)) echo "<div class=\"alert alert-danger\" style=\"font-size: .8rem;\" role=\"alert\">".$errorLogin."</div>" ?>
                 <label class="login_text">
                     Usuario
                 </label>

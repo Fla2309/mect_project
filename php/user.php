@@ -1,22 +1,65 @@
 <?php
-session_start();
-include("connection.php");
-$con = connect();
-$username = $_POST["username"];
-$password = $_POST["password"];
-$sql = sprintf("SELECT * FROM Usuarios where login_user='".$username.
-"' and login_pass='".$password."'");
-$query = mysqli_query($con, $sql);
-$user = mysqli_fetch_assoc($query);
 
-if (mysqli_num_rows($query) > 0) {
-    $_SESSION['loginUser'] = $user['login_user'];
-    $_SESSION['name'] = $user['nombre'];
-    $_SESSION['lastname'] = $user['apellidos'];
-    header('Location:../html/index.html');
-}
-else {
-    header('Location:../html/login.html');
+include_once 'connection.php';
+include_once 'session.php';
+
+class User extends DB
+{
+    private $name;
+    private $lastname;
+    private $prefName;
+    private $group;
+    private $mail;
+    private $regDate;
+    private $idUser;
+    
+
+    public function userExists($user, $pass)
+    {
+        $md5pass = md5($pass);
+
+        $query = $this->connect()->prepare('SELECT * FROM usuarios WHERE login_user = :user AND login_pass = :pass');
+        $query->execute(['user' => $user, 'pass' => $md5pass]);
+
+        if ($query->rowCount()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public function setUser($user)
+    {
+        $query = $this->connect()->prepare('SELECT * FROM usuarios WHERE login_user = :user');
+        $query->execute(['user' => $user]);
+
+        foreach ($query as $currentUser) {
+            $this->name = $currentUser['nombre'];
+            $this->lastname = $currentUser['apellidos'];
+            $this->prefName = $currentUser['nombre_preferido'] != '' 
+            ? $currentUser['nombre_preferido'] : $currentUser['nombre'] ;
+            $this->group = $currentUser['id_grupo'];
+            $this->mail = $currentUser['correo'];
+            $this->regDate = $currentUser['fecha_ingreso'];
+            $this->idUser = $currentUser['id'];
+        }
+    }
+
+    public function getFullName()
+    {
+        return $this->name . " " . $this->lastname;
+    }
+
+    public function getPreferredName()
+    {
+        return $this->prefName;
+    }
+
+    public function getUserGroup()
+    {
+        return $this->group;
+    }
 }
 
 
