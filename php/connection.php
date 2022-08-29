@@ -1,18 +1,4 @@
 <?php
-#function connect()
-#{
-#    $server="localhost";
-#    $user="root";
-#    $pass="";
-#    $db="mect_dev";
-#    $conn = mysqli_connect($server, $user, $pass);
-#    if (!$conn){
-#        die("No hay conexión a la base de datos".mysqli_connect_error());
-#    }
-#    mysqli_select_db($conn, $db);
-#    #mysql_query("SET NAME 'utf8'");
-#    return $conn;
-#}
 
 class DB{
     private $host;
@@ -26,10 +12,10 @@ class DB{
         $this->db       = 'mect_dev';
         $this->user     = 'root';
         $this->password = "";
-        $this->charset  = 'utf8mb4';
+        $this->charset  = 'utf8';
     }
 
-    function connect(){
+    /*function connect(){
     
         try{
             
@@ -45,6 +31,14 @@ class DB{
         }catch(PDOException $e){
             print_r('Error connection: ' . $e->getMessage());
         }   
+    }*/
+
+    function connect(){
+        $mysqli = new mysqli($this->host, $this->user, $this->password, $this->db);
+        if($mysqli->connect_errno){
+            die("Error de conexión: ".$mysqli->connect_error);
+        }
+        return $mysqli;
     }
 }
 

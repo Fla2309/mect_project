@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <nav id="" class="nav_bar">
+    <nav class="nav_bar">
         <div class="form-inline">
             <a href="#"><img src="../img/logoMECT.png" id="nav_logo"></a>
             <form id="search_box">
@@ -20,13 +20,6 @@
                     aria-label="Search">
                 <button class="btn btn-outline-success" type="submit" style="color: #ffffff;">Buscar</button>
             </form>
-            <!--<form class="nav_bar_icon_form">-->
-            <!--<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex nav_bar_icon_form">
-                <li><a href="#"><img src="../img/calendar.png" alt="" class="nav_bar_icon nav-item"></a></li>
-                <li><img src="../img/notif.png" alt="" class="nav_bar_icon nav-item"></li>
-                <li><img src="../img/user.png" alt="" class="nav_bar_icon nav-item"></li>
-            </ul>-->
-
 
             <ul class="collapse navbar-collapse navbar-nav flex-row ml-md-auto d-none d-md-flex nav_bar_icon_form "
                 style="position: absolute; right: 3%;">
@@ -51,7 +44,7 @@
         </div>
     </nav>
 
-    <div class="row">
+    <div class="row w-100">
         <div class="col-1">
             <ul class="nav nav-tabs flex-column">
                 <li class="nav-item active">
@@ -85,11 +78,11 @@
             <?php
             include_once('./php/modules.php');
             $_SESSION['grupo']=$user->getUserGroup();
-            echo $_SESSION['user'];
-            echo (new Module())->retrieveModules($_SESSION['grupo']);
+            $moduleClass = new Module();
+            echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
             ?>
-            <button id="but_mod_1" onclick="showModuleHtml(this);" type="button" class="btn btn-success" style="width: 120px; text-align: left;">
-                                Entrar<img src="../img/right-arrow.png" style="float: right;" width="20"></button>
+            <!--<button id="but_mod_1" onclick="showModuleHtml(this);" type="button" class="btn btn-success" style="width: 120px; text-align: left;">
+                                Entrar<img src="../img/right-arrow.png" style="float: right;" width="20"></button>-->
             </div>
             
             <div class="tab-pane fade" id="coaching">Coaching Coaching Coaching Coaching Coaching Coaching Coaching

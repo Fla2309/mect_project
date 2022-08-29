@@ -18,10 +18,12 @@ class User extends DB
     {
         $md5pass = md5($pass);
 
-        $query = $this->connect()->prepare('SELECT * FROM usuarios WHERE login_user = :user AND login_pass = :pass');
-        $query->execute(['user' => $user, 'pass' => $md5pass]);
+        $query = $this->connect()->query("SELECT * FROM usuarios WHERE login_user = '".$user."' AND login_pass = '".$md5pass."'");
 
-        if ($query->rowCount()) {
+        #$query->execute(['user' => $user, 'pass' => $md5pass]);
+        #$query->execute();
+
+        if ($query->num_rows > 0) {
             return true;
         }
         else {
@@ -31,8 +33,8 @@ class User extends DB
 
     public function setUser($user)
     {
-        $query = $this->connect()->prepare('SELECT * FROM usuarios WHERE login_user = :user');
-        $query->execute(['user' => $user]);
+        $query = $this->connect()->query("SELECT * FROM usuarios WHERE login_user = '".$user."'");
+        #$query->execute(['user' => $user]);
 
         foreach ($query as $currentUser) {
             $this->name = $currentUser['nombre'];
