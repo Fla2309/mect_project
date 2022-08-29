@@ -79,6 +79,17 @@
   max-height: 35px;
 }
 
+.left_bar_icon, .dashboard_icon{
+  width: auto;
+  height: auto;
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.left_bar{
+  margin: 0 ;
+}
+
 .nav_bar_icon_form ul{
   position: absolute;
   right: 0%;

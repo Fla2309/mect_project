@@ -20,10 +20,6 @@ class UserModule
         INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
         WHERE id_modulo = '.$this->moduleId.' AND id_usuario IN 
         (SELECT id FROM usuarios WHERE login_user = \''.$this->username.'\')')or die ($conn->error);;
-        #$query->execute(['module' => $this->moduleId, 'user' => $this->username]);
-        #$query = $this->connect()->prepare('SELECT * FROM tareas_usuarios 
-        #    WHERE id_usuario IN (SELECT id FROM usuarios WHERE login_user = :user)');
-        #$query->execute(['user' => $this->username]);
         return $query;
     }
 
@@ -40,7 +36,7 @@ class UserModule
         $html = "";
 
         while ($row = mysqli_fetch_array($rows)) {
-            $html = $html.'<a href="#" class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
+            $html = $html.'<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
             $html = $html.'<h5 class="mb-1">' . $row['nombre_tarea'] . '</h5>';
             $html = $html.'<small>Fecha de subida: ' . $row['fecha_subida'] . '</small>';
             $html = $html.'</div>';
