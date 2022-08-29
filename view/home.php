@@ -7,7 +7,6 @@ $_SESSION['grupo']=$user->getUserGroup();
 
 <head>
     <link rel="stylesheet" href="../css/main.css">
-    <!--<link rel="stylesheet" href="../bootstrap-4.5.2-dist/css/bootstrap.css">-->
     <link rel="stylesheet" href="../bootstrap-4.5.2-dist/css/bootstrap.min.css">
     <meta charset="utf-8">
 
@@ -21,7 +20,7 @@ $_SESSION['grupo']=$user->getUserGroup();
 <body>
     <nav class="nav_bar">
         <div class="form-inline">
-            <a href="#"><img src="../img/logoMECT.png" id="nav_logo"></a>
+            <a href=""><img src="../img/logoMECT.png" id="nav_logo"></a>
             <form id="search_box">
                 <input class="form-control mr-sm-2" type="search" placeholder="Buscar en el sitio..."
                     aria-label="Search">
@@ -87,7 +86,7 @@ $_SESSION['grupo']=$user->getUserGroup();
                     <?php echo $_SESSION['pref_name'] ?>
                 </h2>
                 <div class="row w-100">
-                    <div class="col-4 mx-3 my-2" style="background-color: white">
+                    <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="form-inline align-items-center" style="margin: 0">
                             <h4>Módulos Activos</h4>
                             <small><a class="nav-link" data-toggle="tab" href="#modulos">Ir →</a></small>
@@ -101,7 +100,7 @@ $_SESSION['grupo']=$user->getUserGroup();
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 mx-3 my-2" style="background-color: white">
+                    <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="form-inline align-items-center" style="margin: 0">
                             <h4>Coaching Recientes</h4>
                             <small><a class="nav-link" data-toggle="tab" href="#coaching">Ir →</a></small>
@@ -114,7 +113,7 @@ $_SESSION['grupo']=$user->getUserGroup();
                             </div>
                         </div>
                     </div>
-                    <div class="col-4 mx-3 my-2" style="background-color: white">
+                    <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="form-inline align-items-center" style="margin: 0">
                             <h4>Presentaciones</h4>
                             <small><a class="nav-link" data-toggle="tab" href="#presentaciones">Ir →</a></small>

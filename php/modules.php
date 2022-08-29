@@ -8,7 +8,6 @@ class Module extends DB
     public function retrieveModules($group)
     {
         $query = $this->connect()->query('SELECT * FROM modulos WHERE id_modulo IN (SELECT id_modulo FROM modulos_grupos WHERE id_grupo = '.$group.' AND disponible > 0)');
-        #$query->execute(['group' => $group]);
         $cardHtml = "";
         $count = 1;
 
