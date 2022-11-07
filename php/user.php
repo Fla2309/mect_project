@@ -12,6 +12,7 @@ class User extends DB
     private $mail;
     private $regDate;
     private $idUser;
+    private $userLevel;
     
 
     public function userExists($user, $pass)
@@ -40,6 +41,7 @@ class User extends DB
             $this->mail = $currentUser['correo'];
             $this->regDate = $currentUser['fecha_ingreso'];
             $this->idUser = $currentUser['id'];
+            $this->userLevel = $currentUser['nivel_usuario'];
         }
     }
 
@@ -56,6 +58,10 @@ class User extends DB
     public function getUserGroup()
     {
         return $this->group;
+    }
+
+    public function getUserLevel(){
+        return $this->userLevel;
     }
 }
 

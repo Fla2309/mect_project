@@ -20,7 +20,7 @@ class Module extends DB
                                     <h1>" . $row['nombre_modulo'] . "</h1>
                                     <h4>" . $row['descripcion'] . "</h4>
                                     <p>0% completado</p>
-                                    <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-success\" style=\"width: 120px; text-align: left;\">
+                                    <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">
                                     Entrar<img src=\"../img/right-arrow.png\" style=\"float: right;\" width=\"20\"></button>
                                 </div>
                             </div>";
@@ -32,7 +32,7 @@ class Module extends DB
                                 <h1>" . $row['nombre_modulo'] . "</h1>
                                 <h4>" . $row['descripcion'] . "</h4>
                                 <p>0% completado</p>
-                                <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-success\" style=\"width: 120px; text-align: left;\">
+                                <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">
                                 Entrar<img src=\"../img/right-arrow.png\" style=\"float: right;\" width=\"20\"></button>
                             </div>
                         </div>
@@ -46,7 +46,7 @@ class Module extends DB
                                 <h1>" . $row['nombre_modulo'] . "</h1>
                                 <h4>" . $row['descripcion'] . "</h4>
                                 <p>0% completado</p>
-                                <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-success\" style=\"width: 120px; text-align: left;\">
+                                <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">
                                 Entrar<img src=\"../img/right-arrow.png\" style=\"float: right;\" width=\"20\"></button>
                             </div>
                         </div>";

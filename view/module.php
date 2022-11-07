@@ -59,13 +59,13 @@ class UserModule
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#trabajos" data-toggle="tab">Trabajos</a>
+                        <a class="nav-link active" href="#trabajos" data-bs-toggle="tab">Trabajos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tareas" data-toggle="tab">Tareas</a>
+                        <a class="nav-link" href="#tareas" data-bs-toggle="tab">Tareas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#informacion" data-toggle="tab">Información</a>
+                        <a class="nav-link" href="#informacion" data-bs-toggle="tab">Información</a>
                     </li>
                 </ul>
             </div>
