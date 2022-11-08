@@ -8,7 +8,7 @@ $userSession = new Session();
 $user = new User();
 
 if(isset($_SESSION['session_id'])){
-    include_once 'view/home.php';
+    include_once 'php/home.php';
 }else if(isset($_POST['username']) && isset($_POST['password'])){
     $userForm = $_POST['username'];
     $passForm = $_POST['password'];
@@ -20,7 +20,7 @@ if(isset($_SESSION['session_id'])){
         $userSession->setCurrentUserPreferredName($user);
         $userSession->generateSessionId();
 
-        include_once 'view/home.php';
+        include_once 'php/home.php';
     }else{
         $errorLogin = "Nombre de usuario y/o contraseña es incorrecto";
         include_once 'view/login.php';

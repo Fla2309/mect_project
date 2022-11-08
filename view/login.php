@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../bootstrap-4.5.2-dist/css/bootstrap.css">
 </head>
@@ -14,7 +16,8 @@
                 <div class="image">
                     <img src="../img/fridamental_logo_borderless.png" id="logo">
                 </div>
-                <?php if (isset($errorLogin)) echo "<div class=\"alert alert-danger\" style=\"font-size: .8rem;\" role=\"alert\">".$errorLogin."</div>" ?>
+                <?php if (isset($errorLogin))
+                    echo "<div class=\"alert alert-danger\" style=\"font-size: .8rem;\" role=\"alert\">" . $errorLogin . "</div>" ?>
                 <label class="login_text">
                     Usuario
                 </label>

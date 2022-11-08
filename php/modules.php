@@ -17,7 +17,7 @@ class Module extends DB
                     "<div class=\"row\" style=\"align-content: center;\">
                             <div id=\"mod_".$row['id_modulo']."\" class=\"col-sm px-5 py-5 mx-3 mt-4\" style=\"background-color: white;\">
                                 <div class=\"p-1\">
-                                    <h1>" . $row['nombre_modulo'] . "</h1>
+                                    <h2>" . $row['nombre_modulo'] . "</h1>
                                     <h4>" . $row['descripcion'] . "</h4>
                                     <p>0% completado</p>
                                     <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">
@@ -29,7 +29,7 @@ class Module extends DB
                 $cardHtml = $cardHtml .
                     "<div id=\"mod_".$row['id_modulo']."\" class=\"col-sm px-5 py-5 mx-3 mt-4\" style=\"background-color: white;\">
                             <div class=\"p-1\">
-                                <h1>" . $row['nombre_modulo'] . "</h1>
+                                <h2>" . $row['nombre_modulo'] . "</h1>
                                 <h4>" . $row['descripcion'] . "</h4>
                                 <p>0% completado</p>
                                 <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">
@@ -43,7 +43,7 @@ class Module extends DB
                 $cardHtml = $cardHtml .
                     "<div id=\"mod_".$row['id_modulo']."\" class=\"col-sm px-5 py-5 mx-3 mt-4\" style=\"background-color: white;\">
                             <div class=\"p-1\">
-                                <h1>" . $row['nombre_modulo'] . "</h1>
+                                <h2>" . $row['nombre_modulo'] . "</h1>
                                 <h4>" . $row['descripcion'] . "</h4>
                                 <p>0% completado</p>
                                 <button id=\"but_mod_".$row['id_modulo']."\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">

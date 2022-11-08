@@ -42,6 +42,7 @@ class UserModule
             $html = $html.'</div>';
             $html = $row['comentarios'] != null ? $html.'<p class="mb-1">' . $row['comentarios'] . '</p>' : $html.'<p class="mb-1">No hay comentarios</p>';
             $html = $html.'<small class="text-muted"> Estado: ' . ($row['revisado'] > 0 ? 'Revisado' : 'Pendiente') . '</small>';
+            $html = $html.'<hr class="divider">';
             $html = $html.'</a>';
         }
 
