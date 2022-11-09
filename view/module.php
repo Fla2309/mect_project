@@ -83,8 +83,8 @@ class UserModule
             $html = $html.'<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
             $html = $html.'<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
             $html = $uplEnabled ? $html.'<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
-            $html = $html.'<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a></form></div>';
-            $html = $html.'<hr class="divider">';
+            $html = ($status !== $statusLayout) ? $html.'<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a>': $html;
+            $html = $html.'</form></div><hr class="divider">';
             $html = $html.'</a>';
         }
 
@@ -130,8 +130,8 @@ class UserModule
             $html = $html.'<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
             $html = $html.'<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
             $html = $uplEnabled ? $html.'<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
-            $html = $html.'<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a></form></div>';
-            $html = $html.'<hr class="divider">';
+            $html = ($status !== $statusLayout) ? $html.'<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a>' : $html;
+            $html = $html.'</form></div><hr class="divider">';
             $html = $html.'</a>';
         }
 
@@ -149,7 +149,7 @@ class UserModule
     <?php
     $userModule=new UserModule();
     ?>
-    <input type="button" onclick="history.back()" name="volver atrás" value="volver atrás">
+    <button type="button" class="btn btn-primary" onclick="reloadModules()"><img src="../img/left-arrow.png" width="20">  Volver</button>
     <div class="px-2 py-2 mx-2 my-2">
         <div class="card text-center">
             <div class="card-header">

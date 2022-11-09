@@ -20,11 +20,13 @@ class Module extends DB
             $totalCount=$this->getTotalTrabajosTareas($row['id_modulo'])[0];
             $trabajosCount=$this->getCountTrabajos($_SESSION['user'],$row['id_modulo'])[0];
             $tareasCount=$this->getCountTareas($_SESSION['user'],$row['id_modulo'])[0];
-            $percentage = $totalCount > 0 ? (100 * ($trabajosCount + $tareasCount)) / $totalCount : 100;
+            $percentage = $totalCount > 0 ? 
+            (100 * ($trabajosCount + $tareasCount)) / $totalCount : 
+            100;
             if ($count == 1) 
                 $cardHtml = $cardHtml . "<div class=\"row\" style=\"align-content: center;\">";
             $cardHtml = $cardHtml .
-                    "<div id=\"mod_".$row['id_modulo']."\" class=\"col-sm px-5 py-5 mx-3 mt-4\" style=\"background-color: white;\">
+                    "<div id=\"mod_".$row['id_modulo']."\" class=\"col-sm px-5 py-5 mx-3 my-3\" style=\"background-color: white;\">
                         <div class=\"p-1\">
                             <h2>" . $row['nombre_modulo'] . "</h1>
                             <h4>" . $row['descripcion'] . "</h4>

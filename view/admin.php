@@ -1,6 +1,8 @@
 <html lang="en">
 
 <head>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/main.css">
@@ -45,23 +47,23 @@
         </nav>
         <table hidden="true">
             <tr>
-                <td><input type="text" placeholder="<?php echo $_SESSION['user']?>" class="user_properties"></td>
+                <td><input type="text" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
             </tr>
         </table>
         <div class="tab-content" style="background-color: #e2e2e2; min-width: 97% !important;">
             <div class="tab-pane fade show active" id="grupos">
                 <?php
-include_once('./php/groups.php');
-$moduleClass = new Groups();
-echo ($moduleClass)->retrieveGroups();
-?>
+                include_once('./php/groups.php');
+                $moduleClass = new Groups();
+                echo ($moduleClass)->retrieveGroups();
+                ?>
             </div>
             <div class="tab-pane fade" id="modulos">
                 <!--<?php
-include_once('./php/modules.php');
-$moduleClass = new Module();
-echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
-?>-->
+                include_once('./php/modules.php');
+                $moduleClass = new Module();
+                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
+                ?>-->
             </div>
 
             <div class="tab-pane fade" id="coaching">Coaching Coaching Coaching Coaching Coaching Coaching Coaching
