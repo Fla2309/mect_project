@@ -19,6 +19,18 @@ class UserModule
         tareas_modulos.comentarios, tareas_usuarios.revisado FROM tareas_modulos 
         INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
         WHERE id_modulo = '.$this->moduleId.' AND id_usuario IN 
+        (SELECT id FROM usuarios WHERE login_user = \''.$this->username.'\')')or die ($conn->error);
+        return $query;
+    }
+
+    public function getTrabajosPerUser()
+    {
+        $conn=(new DB())->connect();
+        $query = $conn
+        ->query('SELECT trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
+        trabajos_usuarios.revisado FROM trabajos_modulos 
+        INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
+        WHERE id_modulo = '.$this->moduleId.' AND id_usuario IN 
         (SELECT id FROM usuarios WHERE login_user = \''.$this->username.'\')')or die ($conn->error);;
         return $query;
     }
@@ -34,6 +46,9 @@ class UserModule
     public function prepareHtmlTareas($rows)
     {
         $html = "";
+        $status="";
+        $statusLayout="";
+        $uplEnabled=false;
 
         while ($row = mysqli_fetch_array($rows)) {
             $html = $html.'<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
@@ -41,7 +56,81 @@ class UserModule
             $html = $html.'<small>Fecha de subida: ' . $row['fecha_subida'] . '</small>';
             $html = $html.'</div>';
             $html = $row['comentarios'] != null ? $html.'<p class="mb-1">' . $row['comentarios'] . '</p>' : $html.'<p class="mb-1">No hay comentarios</p>';
-            $html = $html.'<small class="text-muted"> Estado: ' . ($row['revisado'] > 0 ? 'Revisado' : 'Pendiente') . '</small>';
+            switch($row['revisado']){
+                case 0:
+                    $status="Pendiente";
+                    $statusLayout=$status;
+                    $uplEnabled=true;
+                    break;
+                case 1:
+                    $status="En revisión";
+                    $statusLayout='<span style="color: goldenrod; font-weight: bold;">'.$status.'</span>';
+                    $uplEnabled=false;
+                    break;
+                case 2:
+                    $status="Rechazado";
+                    $statusLayout='<span style="color: darkred; font-weight: bold;">'.$status.'</span>';
+                    $uplEnabled=true;
+                    break;
+                case 3:
+                    $status="Revisado";
+                    $statusLayout='<span style="color: dodgerblue; font-weight: bold;">'.$status.'</span>';
+                    $uplEnabled=false;
+                    break;
+            }
+            $html = $html.'<div style="display: inline-block"><div class="d-flex justify-content-center">';
+            $html = $html.'<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
+            $html = $html.'<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
+            $html = $html.'<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
+            $html = $uplEnabled ? $html.'<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
+            $html = $html.'<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a></form></div>';
+            $html = $html.'<hr class="divider">';
+            $html = $html.'</a>';
+        }
+
+        return $html;
+    }
+
+    public function prepareHtmlTrabajos($rows)
+    {
+        $html = "";
+        $status="";
+        $statusLayout="";
+        $uplEnabled=false;
+
+        while ($row = mysqli_fetch_array($rows)) {
+            $html = $html.'<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
+            $html = $html.'<h5 class="mb-1">' . $row['nombre_trabajo'] . '</h5>';
+            $html = $html.'<small>Fecha de subida: ' . $row['fecha_subido'] . '</small>';
+            $html = $html.'</div>';
+            switch($row['revisado']){
+                case 0:
+                    $status="Pendiente";
+                    $statusLayout=$status;
+                    $uplEnabled=true;
+                    break;
+                case 1:
+                    $status="En revisión";
+                    $statusLayout='<span style="color: goldenrod; font-weight: bold;">'.$status.'</span>';
+                    $uplEnabled=false;
+                    break;
+                case 2:
+                    $status="Rechazado";
+                    $statusLayout='<span style="color: darkred; font-weight: bold;">'.$status.'</span>';
+                    $uplEnabled=true;
+                    break;
+                case 3:
+                    $status="Revisado";
+                    $statusLayout='<span style="color: dodgerblue; font-weight: bold;">'.$status.'</span>';
+                    $uplEnabled=false;
+                    break;
+            }
+            $html = $html.'<div style="display: inline-block"><div class="d-flex justify-content-center">';
+            $html = $html.'<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
+            $html = $html.'<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
+            $html = $html.'<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
+            $html = $uplEnabled ? $html.'<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
+            $html = $html.'<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a></form></div>';
             $html = $html.'<hr class="divider">';
             $html = $html.'</a>';
         }
@@ -52,9 +141,15 @@ class UserModule
 ?>
 
 <html>
+
 <head>
 </head>
+
 <body>
+    <?php
+    $userModule=new UserModule();
+    ?>
+    <input type="button" onclick="history.back()" name="volver atrás" value="volver atrás">
     <div class="px-2 py-2 mx-2 my-2">
         <div class="card text-center">
             <div class="card-header">
@@ -72,18 +167,12 @@ class UserModule
             </div>
             <div class="tab-content">
                 <div class="tab-pane card-body active" id="trabajos">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">tareas_modulos.Nombre Tarea</h5>
-                            <small>tareas_usuarios.Fecha subida</small>
-                        </div>
-                        <p class="mb-1">tareas_usuarios.Comentarios</p>
-                        <small class="text-muted">(tareas_usuarios.revisado)Status:</small>
-                    </a>
+                    <?php
+                    echo $userModule->prepareHtmlTrabajos($userModule->getTrabajosPerUser())
+                    ?>
                 </div>
                 <div class="tab-pane card-body" id="tareas">
                     <?php
-                    $userModule=new UserModule();
                     echo $userModule->prepareHtmlTareas($userModule->getTareasPerUser());
                     ?>
                 </div>
