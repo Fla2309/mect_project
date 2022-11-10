@@ -1,13 +1,13 @@
 <?php
-
-
-
+include_once('../php/settingsModel.php');
+$settings = new Settings($_GET['user']);
+$row = $settings->retrieveSettings();
 ?>
 
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
@@ -18,50 +18,109 @@
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
-    <script src="../js/admin.js"></script>
+    <script src="../js/settings.js"></script>
+    <?php if ($row['nivel_usuario'] > 1)
+        echo '<script src="../js/admin.js"></script>'; ?>
+
     <title>Configuración de cuenta</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg" id="nav_bar">
-        <div class="container-fluid">
-            <a href="/index.php" class="navbar-brand"><img src="../img/fridamental_banner1.png" id="nav_logo"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <form class="d-flex"
-                    style="display: inline-block; margin-left: auto; margin-right: auto; text-align: left;"
-                    role="search">
-                    <input class="form-control me-2" type="search" placeholder="Buscar en el sitio..."
-                        aria-label="Search">
-                    <button class="btn btn-outline-primary" type="submit" style="color: #ffffff;">Buscar</button>
-                </form>
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="position: absolute; right: 1%;">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><img src="../img/calendar.png" title="Calendario" alt=""
-                                class="nav_bar_icon nav-item"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><img src="../img/notif.png" title="Notificaciones" alt=""
-                                class="nav_bar_icon nav-item"></a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" id="userDropdown" title="Menú de usuario" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="../img/user.png" alt="" class="nav_bar_icon nav-item">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <a href="#" class="dropdown-item">Módulo personal</a>
-                            <a href="../view/settings.php" class="dropdown-item">Configuración</a>
-                            <a href="../php/logout.php" class="dropdown-item">Cerrar sesión</a>
-                        </div>
-                    </li>
-                </ul>
+    <?php include_once('navbar.php') ?>
+    <h1 class="pt-3 ms-4">Configuración de la cuenta</h1>
+    <div class="col-sm mx-5 my-5">
+        <form action="post">
+            <div class="d-flex mx-2 my-3">
+                <div class="input-group me-3">
+                    <span class="input-group-text bg-primary text-white">Nombres y apellidos</span>
+                    <input type="text" aria-label="First name" value="<?php echo $row['nombre']; ?>"
+                        class="form-control" disabled>
+                    <input type="text" aria-label="Last name" value="<?php echo $row['apellidos']; ?>"
+                        class="form-control" disabled>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text bg-primary text-white" id="nickname">Nombre/Alias preferido</span>
+                    <input type="text" class="form-control" value="<?php echo $row['nombre_preferido']; ?>">
+                </div>
             </div>
-        </div>
-    </nav>
+            <div class="d-flex mx-2 my-3">
+                <div class="input-group me-3">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Grupo de PL/AM</span>
+                    <input type="text" class="form-control" value="<?php echo $row['id_pl']; ?>" disabled>
+                </div>
+                <div class="input-group me-3">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Grupo de MECT</span>
+                    <input type="text" class="form-control" value="<?php echo $row['id_grupo']; ?>" disabled>
+                </div>
+                <div class="input-group me-3">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Nombre grupo</span>
+                    <input type="text" class="form-control" value="<?php echo $row['nombre_grupo']; ?>" disabled>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Fecha de ingreso a MECT</span>
+                    <input type="text" class="form-control" value="<?php echo $row['fecha_ingreso']; ?>" disabled>
+                </div>
+            </div>
+            <div class="d-flex mx-2 my-3">
+                <div class="input-group me-3">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Correo</span>
+                    <input type="text" class="form-control" value="<?php echo $row['correo']; ?>">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Teléfono</span>
+                    <input type="text" class="form-control" value="<?php echo $row['telefono']; ?>">
+                </div>
+            </div>
+            <div class="d-flex mx-2 my-3">
+                <div class="input-group me-3">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Usuario</span>
+                    <input type="text" class="form-control" value="<?php echo $row['login_user']; ?>">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text  bg-primary text-white" id="pl_input">Contraseña</span>
+                    <input type="password" class="form-control" value="password">
+                    <button class="btn btn-outline-primary" type="button" id="changePass" data-bs-toggle="modal"
+                        data-bs-target="#passModal">Cambiar contraseña</button>
+                </div>
+            </div>
+            <div class="modal fade" id="passModal" tabindex="-1" aria-labelledby="passModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cambiar contraseña</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group mb-2">
+                                <span class="input-group-text  bg-primary text-white" id="pl_input">Contraseña
+                                    actual</span>
+                                <input type="password" class="form-control" placeholder="Contraseña">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text  bg-primary text-white" id="pl_input">Nueva
+                                    contraseña</span>
+                                <input type="password" class="form-control" placeholder="Contraseña">
+                            </div>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text  bg-primary text-white" id="pl_input">Confirmar
+                                    contraseña</span>
+                                <input type="password" class="form-control" placeholder="Contraseña">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar
+                                cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-secondary me-2">Descartar cambios</button>
+                <button type="button" class="btn btn-outline-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
 </body>
 
 </html>
