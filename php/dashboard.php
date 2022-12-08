@@ -32,6 +32,10 @@ class Dashboard
     {
 
     }
+
+    function generateGroupsFrame(){
+        
+    }
 }
 
 ?>

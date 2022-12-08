@@ -25,101 +25,132 @@ $row = $settings->retrieveSettings();
     <title>Configuración de cuenta</title>
 </head>
 
-<body>
+<body onload="getSettings()">
     <?php include_once('navbar.php') ?>
     <h1 class="pt-3 ms-4">Configuración de la cuenta</h1>
     <div class="col-sm mx-5 my-5">
-        <form action="post">
+        <form action="post" id="settingsForm">
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
+                    <span class="input-group-text bg-primary text-white" hidden>ID</span>
+                    <input type="text" id="userId" aria-label="Id" value="<?php echo $row['id']; ?>"
+                        class="form-control" hidden disabled>
                     <span class="input-group-text bg-primary text-white">Nombres y apellidos</span>
-                    <input type="text" aria-label="First name" value="<?php echo $row['nombre']; ?>"
+                    <input type="text" id="userName" aria-label="First name" value="<?php echo $row['nombre']; ?>"
                         class="form-control" disabled>
-                    <input type="text" aria-label="Last name" value="<?php echo $row['apellidos']; ?>"
+                    <input type="text" id="userLastname" aria-label="Last name" value="<?php echo $row['apellidos']; ?>"
                         class="form-control" disabled>
                 </div>
                 <div class="input-group">
                     <span class="input-group-text bg-primary text-white" id="nickname">Nombre/Alias preferido</span>
-                    <input type="text" class="form-control" value="<?php echo $row['nombre_preferido']; ?>">
+                    <input type="text" id="userAlias" class="form-control"
+                        value="<?php echo $row['nombre_preferido']; ?>">
                 </div>
             </div>
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Grupo de PL/AM</span>
-                    <input type="text" class="form-control" value="<?php echo $row['id_pl']; ?>" disabled>
+                    <span class="input-group-text bg-primary text-white">Grupo de PL/AM</span>
+                    <input type="text" id="userPl" class="form-control" value="<?php echo $row['id_pl']; ?>" disabled>
                 </div>
                 <div class="input-group me-3">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Grupo de MECT</span>
-                    <input type="text" class="form-control" value="<?php echo $row['id_grupo']; ?>" disabled>
+                    <span class="input-group-text bg-primary text-white">Grupo de MECT</span>
+                    <input type="text" id="userGroup" class="form-control" value="<?php echo $row['id_grupo']; ?>"
+                        disabled>
                 </div>
                 <div class="input-group me-3">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Nombre grupo</span>
-                    <input type="text" class="form-control" value="<?php echo $row['nombre_grupo']; ?>" disabled>
+                    <span class="input-group-text bg-primary text-white">Nombre grupo</span>
+                    <input type="text" id="userGroupName" class="form-control"
+                        value="<?php echo $row['nombre_grupo']; ?>" disabled>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Fecha de ingreso a MECT</span>
-                    <input type="text" class="form-control" value="<?php echo $row['fecha_ingreso']; ?>" disabled>
+                    <span class="input-group-text bg-primary text-white">Fecha de ingreso a MECT</span>
+                    <input type="text" id="userDate" class="form-control" value="<?php echo $row['fecha_ingreso']; ?>"
+                        disabled>
                 </div>
             </div>
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Correo</span>
-                    <input type="text" class="form-control" value="<?php echo $row['correo']; ?>">
+                    <span class="input-group-text bg-primary text-white">Correo</span>
+                    <input type="text" id="userMail" class="form-control" value="<?php echo $row['correo']; ?>">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Teléfono</span>
-                    <input type="text" class="form-control" value="<?php echo $row['telefono']; ?>">
+                    <span class="input-group-text bg-primary text-white">Teléfono</span>
+                    <input type="text" id="userPhone" class="form-control" value="<?php echo $row['telefono']; ?>">
                 </div>
             </div>
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Usuario</span>
-                    <input type="text" class="form-control" value="<?php echo $row['login_user']; ?>">
+                    <span class="input-group-text bg-primary text-white">Usuario</span>
+                    <input type="text" id="userLogin" class="form-control" value="<?php echo $row['login_user']; ?>">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-text  bg-primary text-white" id="pl_input">Contraseña</span>
-                    <input type="password" class="form-control" value="password">
+                    <span class="input-group-text bg-primary text-white">Contraseña</span>
+                    <input type="password" class="form-control" value="password" disabled>
                     <button class="btn btn-outline-primary" type="button" id="changePass" data-bs-toggle="modal"
                         data-bs-target="#passModal">Cambiar contraseña</button>
                 </div>
             </div>
-            <div class="modal fade" id="passModal" tabindex="-1" aria-labelledby="passModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Cambiar contraseña</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group mb-2">
-                                <span class="input-group-text  bg-primary text-white" id="pl_input">Contraseña
-                                    actual</span>
-                                <input type="password" class="form-control" placeholder="Contraseña">
-                            </div>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text  bg-primary text-white" id="pl_input">Nueva
-                                    contraseña</span>
-                                <input type="password" class="form-control" placeholder="Contraseña">
-                            </div>
-                            <div class="input-group mb-2">
-                                <span class="input-group-text  bg-primary text-white" id="pl_input">Confirmar
-                                    contraseña</span>
-                                <input type="password" class="form-control" placeholder="Contraseña">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar
-                                cambios</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-secondary me-2">Descartar cambios</button>
-                <button type="button" class="btn btn-outline-primary">Guardar</button>
+                <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal"
+                    data-bs-target="#discardChangesModal">Descartar
+                    cambios</button>
+                <button type="button" class="btn btn-outline-primary" onclick="saveSettings()">Guardar</button>
             </div>
         </form>
+    </div>
+
+    <!--Modals-->
+
+    <div class="modal fade" id="passModal" tabindex="-1" aria-labelledby="passModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambiar contraseña</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Contraseña
+                            actual</span>
+                        <input type="password" id="currentPass" class="form-control" placeholder="Contraseña">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nueva
+                            contraseña</span>
+                        <input type="password" id="newPass" class="form-control" placeholder="Contraseña">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Confirmar
+                            contraseña</span>
+                        <input type="password" id="confirmNewPass" class="form-control" placeholder="Contraseña">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar
+                        cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="discardChangesModal" tabindex="-2" aria-labelledby="discardChangesModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Descartar Cambios</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Seguro que quieres salir sin guardar cambios?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="discardSettings()">Aceptar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

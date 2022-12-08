@@ -19,13 +19,17 @@
 </head>
 
 <body>
-    <?php include_once('view/navbar.html') ?>
-    <div class="row w-100">
-        <nav class="left_bar w-10">
-            <ul class="nav nav-pills flex-column me-3">
+    <?php include_once('view/navbar.php') ?>
+    <div class="row">
+        <div style="width: auto;">
+            <ul class="nav nav-pills mb-1 flex-column">
                 <li class="nav-item active">
-                    <a class="nav-link active" title="Grupos" href="#grupos" data-bs-toggle="tab"><img
-                            src="../img/group.png" class="left_bar_icon"></a>
+                    <a class="nav-link active" title="Inicio" href="#inicio" data-bs-toggle="tab"><img
+                            src="../img/home.png" class="left_bar_icon"></a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " title="Grupos" href="#grupos" data-bs-toggle="tab"><img src="../img/group.png"
+                            class="left_bar_icon"></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" title="Usuarios" href="#modulos" data-bs-toggle="tab"><img
@@ -44,14 +48,64 @@
                             class="left_bar_icon"></a>
                 </li>
             </ul>
-        </nav>
+        </div>
         <table hidden="true">
             <tr>
                 <td><input type="text" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
             </tr>
         </table>
-        <div class="tab-content" style="background-color: #e2e2e2; min-width: 97% !important;">
-            <div class="tab-pane fade show active" id="grupos">
+        <div class="tab-content" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
+            <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
+                <h2 style="padding: 2rem;">Bienvenido(a),
+                    <?php echo $_SESSION['pref_name'] ?>
+                </h2>
+                <div class="row w-100">
+                    <div class="col-sm mx-3 my-2" style="background-color: white">
+                        <div class="d-flex align-items-center" style="margin: 0">
+                            <h4 class="col-md-11">Grupos</h4>
+                            <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
+                                    href="#modulos">Ir→</a></small>
+                        </div>
+                        <div class="px-3 py-2">
+                            <div class="list-group" id="list-tab" role="tablist">
+                                <?php
+                                include_once('./php/dashboard.php');
+                                //echo (new Dashboard)->generateCoachingFrame($_SESSION['grupo']);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm mx-3 my-2" style="background-color: white">
+                        <div class="d-flex align-items-center" style="margin: 0">
+                            <h4 class="col-md-11">Módulos</h4>
+                            <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
+                                    href="#coaching">Ir→</a></small>
+                        </div>
+                        <div class="px-3 py-2">
+                            <div class="list-group" id="list-tab" role="tablist">
+                                <?php
+                                //echo (new Dashboard)->generateModulesFrame($_SESSION['user']);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm mx-3 my-2" style="background-color: white">
+                        <div class="d-flex align-items-center" style="margin: 0">
+                            <h4 class="col-md-11">Presentaciones</h4>
+                            <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
+                                    href="#presentaciones">Ir→</a></small>
+                        </div>
+                        <div class="px-3 py-2">
+                            <div class="list-group" id="list-tab" role="tablist">
+                                <?php
+                                //echo (new Dashboard)->generatePresentationsFrame($_SESSION['user']);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="grupos">
                 <?php
                 include_once('./php/groups.php');
                 $moduleClass = new Groups();

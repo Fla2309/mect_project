@@ -19,6 +19,10 @@
                 </form>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="position: absolute; right: 1%;">
                     <li class="nav-item">
+                        <a class="nav-link" href="#"><img src="../img/help.png" title="Ayuda" alt=""
+                                class="nav_bar_icon nav-item"></a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#"><img src="../img/calendar.png" title="Calendario" alt=""
                                 class="nav_bar_icon nav-item"></a>
                     </li>
@@ -33,7 +37,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <a href="#" class="dropdown-item">Módulo personal</a>
-                            <?php echo '<a href="../view/settings.php?user='.$_SESSION['user'].'" class="dropdown-item">Configuración</a>'?>
+                            <?php echo isset($_SESSION['user']) ? '<a href="../view/settings.php?user='.$_SESSION['user'].'" class="dropdown-item">Configuración</a>' : '';?>
                             <hr class="divider">
                             <a href="../php/logout.php" class="dropdown-item">Cerrar sesión</a>
                         </div>
