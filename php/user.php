@@ -5,6 +5,7 @@ include_once 'session.php';
 
 class User extends DB
 {
+    private $id;
     private $name;
     private $lastname;
     private $prefName;
@@ -33,6 +34,7 @@ class User extends DB
         $query = $this->connect()->query("SELECT * FROM usuarios WHERE login_user = '".$user."'");
 
         foreach ($query as $currentUser) {
+            $this->id = $currentUser['id'];
             $this->name = $currentUser['nombre'];
             $this->lastname = $currentUser['apellidos'];
             $this->prefName = $currentUser['nombre_preferido'] != '' 
@@ -43,6 +45,10 @@ class User extends DB
             $this->idUser = $currentUser['id'];
             $this->userLevel = $currentUser['nivel_usuario'];
         }
+    }
+
+    public function getUserId(){
+        return $this->id;
     }
 
     public function getFullName()

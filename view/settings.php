@@ -1,6 +1,6 @@
 <?php
 include_once('../php/settingsModel.php');
-$settings = new Settings($_GET['user']);
+$settings = new Settings($_GET['userId']);
 $row = $settings->retrieveSettings();
 ?>
 
@@ -25,16 +25,18 @@ $row = $settings->retrieveSettings();
     <title>Configuración de cuenta</title>
 </head>
 
-<body onload="getSettings()">
+<body>
     <?php include_once('navbar.php') ?>
     <h1 class="pt-3 ms-4">Configuración de la cuenta</h1>
     <div class="col-sm mx-5 my-5">
         <form action="post" id="settingsForm">
             <div class="d-flex mx-2 my-3">
-                <div class="input-group me-3">
-                    <span class="input-group-text bg-primary text-white" hidden>ID</span>
+                <div class="input-group me-3" hidden>
+                    <span class="input-group-text bg-primary text-white">ID</span>
                     <input type="text" id="userId" aria-label="Id" value="<?php echo $row['id']; ?>"
-                        class="form-control" hidden disabled>
+                        class="form-control" disabled>
+                </div>
+                <div class="input-group me-3">
                     <span class="input-group-text bg-primary text-white">Nombres y apellidos</span>
                     <input type="text" id="userName" aria-label="First name" value="<?php echo $row['nombre']; ?>"
                         class="form-control" disabled>
@@ -63,7 +65,7 @@ $row = $settings->retrieveSettings();
                         value="<?php echo $row['nombre_grupo']; ?>" disabled>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-text bg-primary text-white">Fecha de ingreso a MECT</span>
+                    <span class="input-group-text bg-primary text-white">Fecha ingreso MECT</span>
                     <input type="text" id="userDate" class="form-control" value="<?php echo $row['fecha_ingreso']; ?>"
                         disabled>
                 </div>
@@ -92,10 +94,14 @@ $row = $settings->retrieveSettings();
             </div>
 
             <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal"
-                    data-bs-target="#discardChangesModal">Descartar
+                <button type="button" class="btn btn-outline-secondary me-2" onclick="discardSettings()">Descartar
                     cambios</button>
                 <button type="button" class="btn btn-outline-primary" onclick="saveSettings()">Guardar</button>
+            </div>
+            <div class="d-flex justify-content-center mt-3 visually-hidden" id="loadingSpinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
             </div>
         </form>
     </div>
@@ -147,7 +153,40 @@ $row = $settings->retrieveSettings();
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="discardSettings()">Aceptar</button>
+                    <a href="/index.php"><button type="button" class="btn btn-primary">Aceptar</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="usernameErrorModal" tabindex="-1" aria-labelledby="usernameErrorModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="usernameErrorModalLabel">Error al guardar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="usernameErrorModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changesMadeModal" tabindex="-1" aria-labelledby="changesMadeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changesMadeModalLabel">Atención</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="changesMadeModalBody">
+                    Información actualizada con éxito
+                </div>
+                <div class="modal-footer">
+                    <p id="modal-footer_text">Serás redirigido al inicio en 3 segundos</p>
                 </div>
             </div>
         </div>

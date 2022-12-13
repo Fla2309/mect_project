@@ -18,6 +18,11 @@ class Session
         $_SESSION['user'] = $user;
     }
 
+    public function setCurrentUserId($user)
+    {
+        $_SESSION['userId'] = $user->getUserId();
+    }
+
     public function setCurrentUserFullname($user)
     {
         $_SESSION['fullname'] = $user->getFullName();

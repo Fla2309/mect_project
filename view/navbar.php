@@ -37,7 +37,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <a href="#" class="dropdown-item">Módulo personal</a>
-                            <?php echo isset($_SESSION['user']) ? '<a href="../view/settings.php?user='.$_SESSION['user'].'" class="dropdown-item">Configuración</a>' : '';?>
+                            <?php echo isset($_SESSION['user']) ? '<a href="../view/settings.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Configuración</a>' : '';?>
                             <hr class="divider">
                             <a href="../php/logout.php" class="dropdown-item">Cerrar sesión</a>
                         </div>

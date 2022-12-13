@@ -16,6 +16,7 @@ if(isset($_SESSION['session_id'])){
     if($user->userExists($userForm, $passForm)){
         $userSession->setCurrentUser($userForm);
         $user->setUser($userForm);
+        $userSession->setCurrentUserId($user);
         $userSession->setCurrentUserFullname($user);
         $userSession->setCurrentUserPreferredName($user);
         $userSession->generateSessionId();
