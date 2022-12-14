@@ -27,7 +27,7 @@ function saveSettings() {
         });
     }
     else
-        window.location = '/index.php';
+        goHome();
 }
 
 function getSettings() {

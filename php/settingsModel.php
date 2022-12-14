@@ -37,7 +37,7 @@ class Settings
     {
         $string = '';
         $getCount = 1;
-        $query = $this->conn->query("SELECT * FROM usuarios WHERE id = " . $this->userId);
+        $query = $this->retrieveUser();
         $user = $query->fetch_object();
         if (isset($_GET[$this->settings[9][0]])) {
             if ($this->validateLogin($_GET[$this->settings[9][0]])) {
@@ -61,11 +61,16 @@ class Settings
         }
         $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = \'' . $this->userId . '\'');
         echo 200;
+        return $this->retrieveUser()->fetch_object();
     }
 
     public function validateLogin($username)
     {
         return $this->conn->query('SELECT id FROM `usuarios` WHERE login_user = \'' . $username . '\'')->fetch_row() !== null;
+    }
+
+    public function retrieveUser(){
+        return $this->conn->query("SELECT * FROM usuarios WHERE id = " . $this->userId);
     }
 }
 
