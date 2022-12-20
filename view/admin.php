@@ -56,7 +56,7 @@
         </table>
         <div class="tab-content" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
-                <h2 style="padding: 2rem;">Bienvenido(a),
+                <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>
                 </h2>
                 <div class="row w-100">
@@ -68,10 +68,20 @@
                         </div>
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
-                                <?php
-                                include_once('./php/dashboard.php');
-                                //echo (new Dashboard)->generateCoachingFrame($_SESSION['grupo']);
-                                ?>
+                                <hr class="divider">
+                                <h5>Buscar grupo</h5>
+                                <div class="row mt-3" id="groupSelects">
+                                    <?php
+                                    include_once('./php/dashboard.php');
+                                    $dashboard = new Dashboard();
+                                    echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
+                                    ?>
+                                    <div class="list-group mb-3" id="groupsFrame">
+                                        <?php
+                                        echo $dashboard->generateValidGroupsFrame('');
+                                        ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -83,8 +93,9 @@
                         </div>
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
+                            <hr class="divider">
                                 <?php
-                                //echo (new Dashboard)->generateModulesFrame($_SESSION['user']);
+                                echo (new Dashboard)->generateModulesFrame($_SESSION['user'], true);
                                 ?>
                             </div>
                         </div>
@@ -98,7 +109,7 @@
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
-                                //echo (new Dashboard)->generatePresentationsFrame($_SESSION['user']);
+                                echo (new Dashboard)->generatePresentationsFrame($_SESSION['user']);
                                 ?>
                             </div>
                         </div>
