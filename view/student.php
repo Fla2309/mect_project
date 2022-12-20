@@ -50,7 +50,7 @@
         </div>
         <div class="tab-content" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
-                <h2 style="padding: 2rem;">Bienvenido(a),
+                <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name']?>
                 </h2>
                 <div class="row w-100">
@@ -59,6 +59,7 @@
                             <h4 class="col-md-11">Módulos Activos</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab" href="#modulos">Ir→</a></small>
                         </div>
+                        <hr class="divider">
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
@@ -73,6 +74,7 @@ echo (new Dashboard)->generateModulesFrame($_SESSION['grupo']);
                             <h4 class="col-md-11">Coaching Recientes</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab" href="#coaching">Ir→</a></small>
                         </div>
+                        <hr class="divider">
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
@@ -86,6 +88,7 @@ echo (new Dashboard)->generateCoachingFrame($_SESSION['user']);
                             <h4 class="col-md-11">Presentaciones</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab" href="#presentaciones">Ir→</a></small>
                         </div>
+                        <hr class="divider">
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
