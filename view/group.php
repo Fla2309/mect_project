@@ -22,7 +22,7 @@ class UserGroup
 
         if ($users !== 0) {
             while ($user = mysqli_fetch_array($users)) {
-                $html = $html . '<li class="list-group-item" id="' . $user['id'] . '"><a>';
+                $html = $html . '<li class="list-group-item" id="user_' . $user['id'] . '"><a>';
                 $html = $html . $user['nombre'] . ' ' . $user['apellidos'] . '</a>';
                 $html = $html . '<a><img src="img/del_user.png" title="Eliminar usuario" class="dashboard_icon ms-4 me-1"></a>';
                 $html = $html . '<a><img src="img/settings.png" title="Configuración" class="dashboard_icon m-1"></a>';
@@ -46,7 +46,7 @@ class UserGroup
 
         if ($modules !== 0) {
             while ($module = mysqli_fetch_array($modules)) {
-                $html = $html . '<li class="list-group-item" id="' . $module['id_modulo'] . '"><a>';
+                $html = $html . '<li class="list-group-item" id="module_' . $module['id_modulo'] . '"><a>';
                 $html = $html . $module['nombre_modulo'] . '</a>';
                 $html = $html . '<a><img src="img/eye.png" title="Ver detalles" class="dashboard_icon ms-4 me-1"></a>';
                 $html = $html . '<a><img src="img/payment.png" title="Pagos grupales" class="dashboard_icon  m-1"></a>';
@@ -55,6 +55,31 @@ class UserGroup
                 $html = $module['disponible'] > 0 ? 
                     $html . '<input class="form-check-input" type="checkbox" value="" id="' . $module['id_modulo'] . '_enabled" checked><label class="form-check-label" for="flexCheckChecked">Disponible</label></div>' :
                     $html . '<input class="form-check-input" type="checkbox" value="" id="' . $module['id_modulo'] . '_enabled"><label class="form-check-label" for="flexCheckDefault">Disponible</label></div>';
+                $html = $html . '</li>';
+            }
+        } else {
+            $html = $html . '<h3>No hay usuarios para mostrar</h3>';
+        }
+
+        $html = $html . '</ul>';
+
+        return $html;
+    }
+
+    public function prepareHtmlPagos($payments)
+    {
+        $html = '';
+        $html = $html . '<ul class="list-group" id="paymentsList">';
+
+        if ($payments !== 0) {
+            while ($payment = mysqli_fetch_array($payments)) {
+                $html = $html . '<li class="list-group-item" id="payment_' . $payment['id_pago'] . '"><a>';
+                $html = $html . $payment['nombre'] . ' ' . $payment['apellidos'] . '</a>';
+                $html = $html . '<a><img src="img/eye.png" title="Ver detalles" class="dashboard_icon ms-4 me-1"></a>';
+                $html = $html . '<p><strong>Importe: </strong>' . $payment['importe'];
+                $html = $html . '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha: </strong>' . $payment['fecha_pago'];
+                $html = $html . '<br><strong>Teléfono: </strong>' . $payment['telefono'];
+                $html = $html . '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Correo: </strong>' . $payment['correo'] . '</p>';
                 $html = $html . '</li>';
             }
         } else {
@@ -79,6 +104,14 @@ class UserGroup
         modulos.descripcion, modulos_grupos.id_grupo, modulos_grupos.fecha_impartido, modulos_grupos.disponible 
         FROM modulos_grupos, modulos 
         WHERE modulos_grupos.id_modulo = modulos.id_modulo AND modulos_grupos.id_grupo = ' . $this->groupId) or die($this->conn->error);
+        return $query;
+    }
+
+    public function getPagos()
+    {
+        $query = $this->conn->query('SELECT pagos.id_pago, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre, usuarios.apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo 
+        FROM pagos, usuarios WHERE 
+        pagos.id_usuario=usuarios.id AND usuarios.id_grupo=' . $this->groupId) or die($this->conn->error);
         return $query;
     }
 
@@ -122,7 +155,7 @@ class UserGroup
                 <div class="tab-pane card-body active" id="usuarios">
                     <div class="col-4 mb-3 d-flex">
                         <div class="col-7" id="controlPanel">
-                            <input class="form-control" type="text" id="txtUser" onkeyup="searchUser()"
+                            <input class="form-control" type="text" id="txtUser" onkeyup="searchInList('txtUser','usersList')"
                                 placeholder="Buscar..." title="Escribe el nombre">
                         </div>
                         <div class="col-5 ms-4">
@@ -141,7 +174,7 @@ class UserGroup
                 <div class="tab-pane card-body" id="modulos">
                     <div class="col-4 mb-3">
                         <div class="col-7" id="controlPanel">
-                            <input class="form-control" type="text" id="txtModule" onkeyup="searchModule()"
+                            <input class="form-control" type="text" id="txtModule" onkeyup="searchInList('txtModule','modulesList')"
                                 placeholder="Buscar..." title="Escribe el nombre">
                         </div>
                     </div>
@@ -149,10 +182,19 @@ class UserGroup
                     echo $userGroup->prepareHtmlModulos($userGroup->getModulos());
                     ?>
                 </div>
-                <div class="tab-pane card-body" id="informacion">
-                    <h5 class="card-title">Info</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="tab-pane card-body" id="pagos">
+                    <div class="col-4 mb-3 d-flex">
+                        <div class="col-7" id="controlPanel">
+                            <input class="form-control" type="text" id="txtPayment" onkeyup="searchInList('txtPayment','paymentsList')"
+                                placeholder="Buscar..." title="Escribe el nombre">
+                        </div>
+                        <div class="col-5 ms-4">
+                            <button type="button" class="btn btn-primary">Registrar Pago</button>
+                        </div>
+                    </div>
+                    <?php
+                    echo $userGroup->prepareHtmlPagos($userGroup->getPagos());
+                    ?>
                 </div>
             </div>
         </div>
