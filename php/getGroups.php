@@ -2,6 +2,7 @@
 
 include_once('dashboard.php');
 
+header('Content-Type: text/html; charset=utf-8');
 $dashboard = new Dashboard;
 if (!isset($_GET['region']) && !isset($_GET['year']) && !isset($_GET['group'])){
     echo $dashboard->generateValidGroupsFrame('');

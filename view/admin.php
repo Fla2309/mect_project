@@ -1,8 +1,8 @@
 <html lang="en">
 
 <head>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/main.css">
@@ -14,12 +14,17 @@
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
-    <script src="../js/admin.js"></script>
     <title>Portal administrador</title>
 </head>
 
 <body>
     <?php include_once('view/navbar.php') ?>
+    <script src="../js/admin.js" type="text/javascript"></script>
+    <table hidden="true">
+        <tr>
+            <td><input type="text" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+        </tr>
+    </table>
     <div class="row">
         <div style="width: auto;">
             <ul class="nav nav-pills mb-1 flex-column">
@@ -64,7 +69,7 @@
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11">Grupos</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
-                                    href="#modulos">Ir→</a></small>
+                                    href="#grupos">Ir→</a></small>
                         </div>
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
@@ -93,7 +98,7 @@
                         </div>
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
-                            <hr class="divider">
+                                <hr class="divider">
                                 <?php
                                 echo (new Dashboard)->generateModulesFrame($_SESSION['user'], true);
                                 ?>
@@ -116,6 +121,7 @@
                     </div>
                 </div>
             </div>
+            <script src="../js/group.js" type="text/javascript"></script>
             <div class="tab-pane fade show" id="grupos">
                 <?php
                 include_once('./php/groups.php');

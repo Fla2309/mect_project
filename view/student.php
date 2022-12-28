@@ -1,8 +1,8 @@
 <html>
 
 <head>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
     <meta charset="utf-8">

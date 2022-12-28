@@ -16,6 +16,5 @@ function showModuleHtml(button) {
 }
 
 function reloadModules(){
-    ;
     $('#modulos').html(html);
 }
