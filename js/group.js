@@ -21,9 +21,26 @@ function prepareGroupUrl(data) {
     return result.join('&');
 }
 
-function prepareUrl(data, module_id) {
+function prepareUrl(data, group_id) {
     let result = [];
     result.push('user' + '=' + data[0].attributes['placeholder'].value);
-    result.push('module' + '=' + module_id);
+    result.push('group' + '=' + group_id);
     return result.join('&');
+}
+
+function searchUser() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById("txtUser");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("usersList");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
 }
