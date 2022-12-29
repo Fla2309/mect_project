@@ -37,7 +37,7 @@
                             class="left_bar_icon"></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" title="Usuarios" href="#modulos" data-bs-toggle="tab"><img
+                    <a class="nav-link" title="Usuarios" href="#usuarios" data-bs-toggle="tab"><img
                             src="../img/user_b.png" class="left_bar_icon"></a>
                 </li>
                 <li class="nav-item">
@@ -81,11 +81,11 @@
                                     $dashboard = new Dashboard();
                                     echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
                                     ?>
-                                    <div class="list-group mb-3" id="groupsFrame">
-                                        <?php
-                                        echo $dashboard->generateValidGroupsFrame('');
-                                        ?>
-                                    </div>
+                                </div>
+                                <div class="list-group mb-3" id="groupsFrame">
+                                    <?php
+                                    echo $dashboard->generateValidGroupsFrame('');
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                             <div class="list-group" id="list-tab" role="tablist">
                                 <hr class="divider">
                                 <?php
-                                echo (new Dashboard)->generateModulesFrame($_SESSION['user'], true);
+                                echo $dashboard->generateModulesFrame($_SESSION['user'], true);
                                 ?>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
-                                echo (new Dashboard)->generatePresentationsFrame($_SESSION['user']);
+                                echo $dashboard->generatePresentationsFrame($_SESSION['user']);
                                 ?>
                             </div>
                         </div>
@@ -129,12 +129,35 @@
                 echo ($moduleClass)->retrieveGroups();
                 ?>
             </div>
-            <div class="tab-pane fade" id="modulos">
-                <!--<?php
-                include_once('./php/modules.php');
-                $moduleClass = new Module();
-                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
-                ?>-->
+            <div class="tab-pane fade" id="usuarios">
+                <div class="px-2 py-2 mx-2 my-2">
+                    <div class="px-3 py-3" style="background-color: white;">
+                        <h1 class="mb-3">Usuarios Registrados</h1>
+                        <hr class="divider">
+                        <div class="col-4 mb-3 d-flex">
+                            <div class="col-7" id="controlPanel">
+                                <input class="form-control" type="text" id="txtUser"
+                                    onkeyup="searchInList('txtUser','usersList')" placeholder="Buscar por nombre..."
+                                    title="Escribe el nombre">
+                            </div>
+                            <div class="col-5 ms-4">
+                                <button type="button" class="btn btn-primary">Agregar Usuario</button>
+                            </div>
+                        </div>
+                        <div class="row mt-3 col-4" id="groupSelects">
+                            <?php
+                            include_once('./php/dashboard.php');
+                            $dashboard = new Dashboard();
+                            echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
+                            ?>
+                        </div>
+                        <?php
+                        include_once('./php/users.php');
+                        $userGroup = new Users($_SESSION['user']);
+                        echo $userGroup->prepareHtmlUsuarios($userGroup->getUsuarios());
+                        ?>
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="coaching">Coaching Coaching Coaching Coaching Coaching Coaching Coaching

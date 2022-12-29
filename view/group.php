@@ -1,5 +1,4 @@
 <?php
-use FTP\Connection;
 
 include_once('../php/connection.php');
 
@@ -8,18 +7,17 @@ class UserGroup
     private $user;
     private $groupId;
     private $conn;
-    public function __construct($user, $groupId)
+    public function __construct($user, $groupId = -1)
     {
         $this->user = $user;
         $this->groupId = $groupId;
         $this->conn = (new DB())->connect();
     }
 
-    public function prepareHtmlUsuarios($users)
+    public function prepareHtmlUsuarios($users = 0)
     {
         $html = '';
-        $html = $html . '<ul class="list-group" id="usersList">';
-
+        $html = $html . '<ul class="list-group" id="groupUsersList">';
         if ($users !== 0) {
             while ($user = mysqli_fetch_array($users)) {
                 $html = $html . '<li class="list-group-item" id="user_' . $user['id'] . '"><a>';
@@ -39,10 +37,10 @@ class UserGroup
         return $html;
     }
 
-    public function prepareHtmlModulos($modules)
+    public function prepareHtmlModulos($modules = 0)
     {
         $html = '';
-        $html = $html . '<ul class="list-group" id="modulesList">';
+        $html = $html . '<ul class="list-group" id="groupModulesList">';
 
         if ($modules !== 0) {
             while ($module = mysqli_fetch_array($modules)) {
@@ -58,7 +56,7 @@ class UserGroup
                 $html = $html . '</li>';
             }
         } else {
-            $html = $html . '<h3>No hay usuarios para mostrar</h3>';
+            $html = $html . '<h3>No hay módulos para mostrar</h3>';
         }
 
         $html = $html . '</ul>';
@@ -66,10 +64,10 @@ class UserGroup
         return $html;
     }
 
-    public function prepareHtmlPagos($payments)
+    public function prepareHtmlPagos($payments = 0)
     {
         $html = '';
-        $html = $html . '<ul class="list-group" id="paymentsList">';
+        $html = $html . '<ul class="list-group" id="groupPaymentsList">';
 
         if ($payments !== 0) {
             while ($payment = mysqli_fetch_array($payments)) {
@@ -83,7 +81,7 @@ class UserGroup
                 $html = $html . '</li>';
             }
         } else {
-            $html = $html . '<h3>No hay usuarios para mostrar</h3>';
+            $html = $html . '<h3>No hay pagos para mostrar</h3>';
         }
 
         $html = $html . '</ul>';
@@ -104,7 +102,7 @@ class UserGroup
         modulos.descripcion, modulos_grupos.id_grupo, modulos_grupos.fecha_impartido, modulos_grupos.disponible 
         FROM modulos_grupos, modulos 
         WHERE modulos_grupos.id_modulo = modulos.id_modulo AND modulos_grupos.id_grupo = ' . $this->groupId) or die($this->conn->error);
-        return $query;
+        return $query->num_rows > 0 ? $query : 0;
     }
 
     public function getPagos()
@@ -112,7 +110,7 @@ class UserGroup
         $query = $this->conn->query('SELECT pagos.id_pago, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre, usuarios.apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo 
         FROM pagos, usuarios WHERE 
         pagos.id_usuario=usuarios.id AND usuarios.id_grupo=' . $this->groupId) or die($this->conn->error);
-        return $query;
+        return $query->num_rows > 0 ? $query : 0;
     }
 
     public function getGroupName()
@@ -155,7 +153,7 @@ class UserGroup
                 <div class="tab-pane card-body active" id="usuarios">
                     <div class="col-4 mb-3 d-flex">
                         <div class="col-7" id="controlPanel">
-                            <input class="form-control" type="text" id="txtUser" onkeyup="searchInList('txtUser','usersList')"
+                            <input class="form-control" type="text" id="txtGroupUser" onkeyup="searchInList('txtGroupUser','groupUsersList')"
                                 placeholder="Buscar..." title="Escribe el nombre">
                         </div>
                         <div class="col-5 ms-4">
@@ -174,7 +172,7 @@ class UserGroup
                 <div class="tab-pane card-body" id="modulos">
                     <div class="col-4 mb-3">
                         <div class="col-7" id="controlPanel">
-                            <input class="form-control" type="text" id="txtModule" onkeyup="searchInList('txtModule','modulesList')"
+                            <input class="form-control" type="text" id="txtGroupModule" onkeyup="searchInList('txtGroupModule','groupModulesList')"
                                 placeholder="Buscar..." title="Escribe el nombre">
                         </div>
                     </div>
@@ -185,7 +183,7 @@ class UserGroup
                 <div class="tab-pane card-body" id="pagos">
                     <div class="col-4 mb-3 d-flex">
                         <div class="col-7" id="controlPanel">
-                            <input class="form-control" type="text" id="txtPayment" onkeyup="searchInList('txtPayment','paymentsList')"
+                            <input class="form-control" type="text" id="txtGroupPayment" onkeyup="searchInList('txtGroupPayment','groupPaymentsList')"
                                 placeholder="Buscar..." title="Escribe el nombre">
                         </div>
                         <div class="col-5 ms-4">
