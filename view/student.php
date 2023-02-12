@@ -3,8 +3,8 @@
 <head>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="../css/main.css">
     <meta charset="utf-8">
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

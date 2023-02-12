@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../bootstrap-4.5.2-dist/css/bootstrap.css">
+	<link rel="stylesheet" href="../css/main.css">
 </head>
 
 <body id="background">
@@ -14,7 +14,7 @@
         <div class="container">
             <div id="main">
                 <div class="image">
-                    <img src="../img/fridamental_logo_borderless1.png" id="logo">
+                    <img id="logo" src="../img/logov2.png">
                 </div>
                 <?php if (isset($errorLogin))
                     echo "<div class=\"alert alert-danger\" style=\"font-size: .8rem;\" role=\"alert\">" . $errorLogin . "</div>" ?>
@@ -34,7 +34,7 @@
                     <input name="password" class="login_input" type="password" placeholder="Contraseña123">
                 </div>
                 <div>
-                    <input type="submit" value="INGRESAR" id="submit">
+                    <input class="bg-primary" type="submit" value="INGRESAR" id="submit">
                 </div>
                 <a href="#" style="font-family: ibm plex sans;">Olvidé mi contraseña</a>
             </div>
