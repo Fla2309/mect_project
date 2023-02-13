@@ -148,6 +148,7 @@ echo ($moduleClass)->retrieveCoachings($_SESSION['user']);
             </div>
         </div>
     </div>
+    <?php include_once('view/footer.html')?>
 </body>
 
 </html>

@@ -191,6 +191,7 @@ $row = $settings->retrieveSettings();
             </div>
         </div>
     </div>
+    <?php include_once('view/footer.html')?>
 </body>
 
 </html>

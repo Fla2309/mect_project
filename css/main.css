@@ -19,7 +19,7 @@ h2 {
   color: #01176f;
 }
 
-div input::placeholder{
+div input::placeholder {
   font-family: 'montserrat', sans-serif !important;
   color: gray;
 }
@@ -92,7 +92,11 @@ div input::placeholder{
 .nav-pills li a.active,
 .nav-pills li a.active:hover,
 .nav-pills li a.active:focus {
-  background-color: #93d50a !important;
+  background-color: /*93d50a*/#28a745 !important;
+}
+
+.nav-pills li a.active img{
+  filter: invert(100%);
 }
 
 .nav_bar_icon {
@@ -146,13 +150,48 @@ div input::placeholder{
   border-radius: 2rem;
 }
 
+.footer{
+background-color: #01176f;
+color: #bababa;
+}
+
+.footer-quick-links-4 li a{
+  padding: 3px 0;
+  margin: 0;
+  text-decoration: none;
+  color: #bababa;
+  display: inline-block;
+}
+
+.footer_logo{
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.footer_social{
+  width: auto;
+  max-height: 20px;
+  filter: invert(100%);
+  display: inline-flex;
+}
+
+.bottom_footer{
+  color: white;
+  text-decoration: none;
+  padding-bottom: 7rem;
+}
+
+.bottom_footer a{
+  text-decoration: none;
+}
+
 /****************************Bootstrap overrides***************************/
 
 .bg-primary {
   background-color: #28a745 !important;
 }
 
-.btn-outline-primary {
+.btn-outline-primary{
   --bs-btn-color: #28a745;
   --bs-btn-border-color: #28a745;
   --bs-btn-hover-color: #fff;
@@ -167,4 +206,21 @@ div input::placeholder{
   --bs-btn-disabled-bg: transparent;
   --bs-btn-disabled-border-color: #28a745;
   --bs-gradient: none
+}
+
+.btn-primary{
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #28a745;
+  --bs-btn-border-color: #28a745;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #23993f;
+  --bs-btn-hover-border-color: #218f3b;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #1f8f39;
+  --bs-btn-active-border-color: #1f8537;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #28a745;
+  --bs-btn-disabled-border-color: #28a745
 }
