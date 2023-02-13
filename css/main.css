@@ -136,10 +136,9 @@ div input::placeholder {
 }
 
 .login_input {
-  width: 80%;
+  width: 100%;
   height: calc(1.5em + 0.75rem);
   padding: 0.375rem 0.75rem;
-  font-family: 'ibm plex sans';
   font-size: .85rem;
   font-weight: 400;
   line-height: 1.5;
@@ -148,6 +147,10 @@ div input::placeholder {
   background-clip: padding-box;
   border: 0px;
   border-radius: 2rem;
+}
+
+.login_field{
+  display: flex;
 }
 
 .footer{
