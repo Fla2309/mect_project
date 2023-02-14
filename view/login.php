@@ -37,6 +37,7 @@
                                     <input class="bg-primary" type="submit" value="INGRESAR" id="submit">
                                 </div>-->
 
+                    <h2 class="login_title">INICIAR SESIÓN</h2>
                     <div class="align-items-center mb-4 d-flex">
                         <div class="login_icon">
                             <img src="../img/user-icon.png" alt="" class="icon">
