@@ -4,7 +4,7 @@
 <body>
     <nav class="navbar navbar-expand-lg" id="nav_bar">
         <div class="container-fluid">
-            <a href="/index.php" class="navbar-brand"><img src="../img/fridamental_banner1.png" id="nav_logo"></a>
+            <a href="/index.php" class="navbar-brand"><img src="../img/mect_logo.png" id="nav_logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
