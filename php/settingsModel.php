@@ -25,7 +25,7 @@ class Settings
         $this->conn = (new DB)->connect();
     }
 
-    public function retrieveSettings()
+    function retrieveSettings()
     {
         $query = (new DB)->connect()->query('SELECT id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
         FROM usuarios, grupos 
@@ -59,18 +59,36 @@ class Settings
                 }
             }
         }
-        $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = \'' . $this->userId . '\'');
+        $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = \'' . $this->userId . '\'') or die($this->conn->error);
         echo 200;
         return $this->retrieveUser()->fetch_object();
     }
 
-    public function validateLogin($username)
+    function validateLogin($username)
     {
         return $this->conn->query('SELECT id FROM `usuarios` WHERE login_user = \'' . $username . '\'')->fetch_row() !== null;
     }
 
-    public function retrieveUser(){
+    function retrieveUser()
+    {
         return $this->conn->query("SELECT * FROM usuarios WHERE id = " . $this->userId);
+    }
+
+    public function savePassword($userId, $password)
+    {
+        if ($this->validatePassword($userId, $password)){
+            //$query = $this->conn->query('UPDATE usuarios SET login_pass' . md5($password) . ' WHERE id = \'' . $this->userId . '\'') or die($this->conn->error);
+            echo 200;
+        }
+        else {
+            echo 406;
+        }
+        return;
+    }
+
+    function validatePassword($userId, $password)
+    {
+        return $this->conn->query("SELECT login_pass FROM usuarios WHERE id=" . $userId)->fetch_row()["login_pass"] == md5($password);
     }
 }
 

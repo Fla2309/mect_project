@@ -7,10 +7,11 @@ $row = $settings->retrieveSettings();
 <html lang="en">
 
 <head>
+    <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/main.scss">
     <meta charset="utf-8">
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -27,8 +28,9 @@ $row = $settings->retrieveSettings();
 
 <body>
     <?php include_once('navbar.php') ?>
-    <h1 class="pt-3 ms-4">Configuración de la cuenta</h1>
-    <div class="col-sm mx-5 my-5">
+    <h1 class="pt-5 ms-5">Configuración de la cuenta</h1>
+    <hr class="divider px-5">
+    <div class="col-sm mx-5 my-5 pb-5">
         <form action="post" id="settingsForm">
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3" hidden>
@@ -96,7 +98,7 @@ $row = $settings->retrieveSettings();
             <div class="d-flex justify-content-center">
                 <button type="button" class="btn btn-outline-secondary me-2" onclick="discardSettings()">Descartar
                     cambios</button>
-                <button type="button" class="btn btn-outline-primary" onclick="saveSettings()">Guardar</button>
+                <button type="button" class="btn btn-outline-primary" onclick="saveSettings(0)">Guardar</button>
             </div>
             <div class="d-flex justify-content-center mt-3 visually-hidden" id="loadingSpinner">
                 <div class="spinner-border text-primary" role="status">
@@ -115,7 +117,7 @@ $row = $settings->retrieveSettings();
                     <h5 class="modal-title">Cambiar contraseña</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="passwordChange">
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Contraseña
                             actual</span>
@@ -131,10 +133,11 @@ $row = $settings->retrieveSettings();
                             contraseña</span>
                         <input type="password" id="confirmNewPass" class="form-control" placeholder="Contraseña">
                     </div>
+                    <p id="errorPassword" class="text-danger" hidden></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar
+                    <button type="button" class="btn btn-primary" onclick="saveSettings(1)">Guardar
                         cambios</button>
                 </div>
             </div>
@@ -191,7 +194,7 @@ $row = $settings->retrieveSettings();
             </div>
         </div>
     </div>
-    <?php include_once('view/footer.html')?>
+    <?php include_once('footer.html') ?>
 </body>
 
 </html>
