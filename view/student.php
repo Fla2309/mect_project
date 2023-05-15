@@ -48,7 +48,7 @@
                 </li>
             </ul>
         </div>
-        <div class="tab-content" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
+        <div class="tab-content">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
                 <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>

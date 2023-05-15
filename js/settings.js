@@ -43,17 +43,10 @@ function savePasswordChanged(data) {
         $('#loadingSpinner').removeClass('visually-hidden');
         $.ajax({
             method: "GET",
-            url: "../php/settingsController.php?type=1&" + prepareUrl(data[0].value, data)
-        }).done(function (response) {
-            if (response == 406) {
-                $('p#errorPassword').html("La contraseña actual no coincide")
-                    .removeAttr('hidden');
-                $('#loadingSpinner').addClass('visually-hidden');
-            }
-            else if (response == 200){
-                $('#passModal').hide();
-                $('#changesMadeModal').modal('show');
-            }
+            url: "../php/settingsController.php?type=1&" + prepareUrl(data[0].value, data),
+        }).done(function () {
+            $('#passModal').hide();
+            $('#changesMadeModal').modal('show');
             $('#changesMadeModal').on('shown.bs.modal', function () {
                 var seconds = 3;
                 function redirect() {
@@ -65,6 +58,10 @@ function savePasswordChanged(data) {
                     }
                 } setInterval(redirect, 1000);
             })
+        }).fail(function () {
+            $('p#errorPassword').html("La contraseña actual es incorrecta")
+                .removeAttr('hidden');
+            $('#loadingSpinner').addClass('visually-hidden');
         });
     } else {
         $('p#errorPassword').html("La nueva contraseña no coincide en los campos")

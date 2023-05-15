@@ -1,5 +1,6 @@
 <?php
 include_once('connection.php');
+session_start();
 
 class Settings
 {
@@ -27,6 +28,8 @@ class Settings
 
     function retrieveSettings()
     {
+        if ($this->userId !== $_SESSION['userId'])
+            return 406;
         $query = (new DB)->connect()->query('SELECT id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
         FROM usuarios, grupos 
         WHERE id=\'' . $this->userId . '\' AND usuarios.id_grupo = grupos.id_grupo;');
@@ -74,21 +77,21 @@ class Settings
         return $this->conn->query("SELECT * FROM usuarios WHERE id = " . $this->userId);
     }
 
-    public function savePassword($userId, $password)
+    public function savePassword($userId, $oldPassword, $newPassword)
     {
-        if ($this->validatePassword($userId, $password)){
-            //$query = $this->conn->query('UPDATE usuarios SET login_pass' . md5($password) . ' WHERE id = \'' . $this->userId . '\'') or die($this->conn->error);
-            echo 200;
+        if ($this->isPasswordValid($userId, $oldPassword)){
+            $this->conn->query('UPDATE usuarios SET login_pass = \'' . md5($newPassword) . '\' WHERE id = \'' . $this->userId . '\'') or die($this->conn->error);
+            http_response_code(200);
         }
         else {
-            echo 406;
+            http_response_code(403);
         }
         return;
     }
 
-    function validatePassword($userId, $password)
+    function isPasswordValid($userId, $password)
     {
-        return $this->conn->query("SELECT login_pass FROM usuarios WHERE id=" . $userId)->fetch_row()["login_pass"] == md5($password);
+        return $this->conn->query("SELECT login_pass FROM usuarios WHERE id=" . $userId)->fetch_row()[0] === md5($password);
     }
 }
 

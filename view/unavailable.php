@@ -15,7 +15,7 @@
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
-    <title>Ayuda</title>
+    <title>Usuario No Autorizado</title>
 </head>
 
 <body>
@@ -60,32 +60,9 @@
         </div>
     </nav>
 
-    <div id="background">
-        <div class="help_content">
-            <h2>Yaremí Elizabeth Aké Sustersick</h2>
-            <img src="../resources/users/Yaremí Aké Sustersick/mect-director.png" alt="yaremi.ake">
-            <p class="director_info">
-                <h4>Dirección Instituto de Coaching Fridamental</h4>
-                Coach Trainer Ontológico Grupal Mat M-030103-038
-                <br>
-                <a href="mailto:yaremi.ake@fridamental.com">yaremi.ake@fridamental.com</a>
-            </p>
-            <p class="business_info">
-                <small>
-                    Corporativo Fridamental®
-                    <br>
-                    Antonio de Montes 2114 colonia San Felipe II Etapa
-                    <br>
-                    C.P. 31203
-                    <br>
-                    Chihuahua, Chih. México
-                    <br>
-                    Teléfono: (999) 169 5722
-                    <br>
-                    <a href="https://www.fridamental.com">fridamental.com</a>
-                </small>
-            </p>
-        </div>
+    <div class="text-center" style="min-height: 768px" >
+        <img src="../img/access_denied.png" alt="">
+        <h1>No estás autorizado para ver esta página</h1>
     </div>
     <?php include_once('../view/footer.html') ?>
 </body>

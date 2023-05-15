@@ -12,7 +12,7 @@ switch ($_GET['type']) {
         $_SESSION['nivel_usuario'] = $user->nivel_usuario;
         break;
     case 1:
-        $settings->savePassword($_GET['userId'], $_GET['newPass']);
+        $settings->savePassword($_GET['userId'], $_GET['currentPass'], $_GET['newPass']);
         break;
     default:
         break;

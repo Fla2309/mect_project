@@ -1,7 +1,10 @@
 <?php
-include_once('../php/settingsModel.php');
-$settings = new Settings($_GET['userId']);
-$row = $settings->retrieveSettings();
+
+    include_once('../php/settingsModel.php');
+    $settings = new Settings($_GET['userId']);
+    $row = $settings->retrieveSettings();
+    if($row == 406)
+        header('Location:./unavailable.php');
 ?>
 
 <html lang="en">
@@ -18,6 +21,7 @@ $row = $settings->retrieveSettings();
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
+    <script src="http://www.myersdaily.org/joseph/javascript/md5.js"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
     <script src="../js/settings.js"></script>
     <?php if ($row['nivel_usuario'] > 1)

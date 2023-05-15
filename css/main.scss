@@ -333,6 +333,13 @@ div input::placeholder {
 
 /****************************Bootstrap overrides***************************/
 
+.tab-content {
+  background-color: #e2e2e2; 
+  width: calc(100% - 88px);
+  height: auto;
+  min-height: 768px;
+}
+
 .bg-primary {
   background-color: #28a745 !important;
 }
