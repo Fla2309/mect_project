@@ -68,7 +68,7 @@
                 <div class="row w-100">
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11">Grupos</h4>
+                            <h4 class="col-md-11 mt-3 ms-2">Grupos</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
                                     href="#grupos">Ir→</a></small>
                         </div>
@@ -93,7 +93,7 @@
                     </div>
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11">Módulos</h4>
+                            <h4 class="col-md-11 mt-3 ms-2">Módulos</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
                                     href="#coaching">Ir→</a></small>
                         </div>
@@ -108,7 +108,7 @@
                     </div>
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11">Presentaciones</h4>
+                            <h4 class="col-md-11 mt-3 ms-2">Presentaciones</h4>
                             <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
                                     href="#presentaciones">Ir→</a></small>
                         </div>
