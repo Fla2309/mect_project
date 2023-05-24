@@ -37,8 +37,8 @@
                 <div class="input-group d-flex">
                     <span class="input-group-text bg-primary text-white">
                         Currículum
-                        <img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar">
-                        <img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar">
+                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input style="display: none;" id="upload-resume" name="foto" type="file">
+                        <a href="resources/users/" download="" id="download-resume"><img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Descargar"></a>
                     </span>
                     <div class="col-3">
                         <input type="text" id="userResume" readonly class="form-control-plaintext ms-3">
@@ -49,35 +49,34 @@
                 <div class="input-group me-3">
                     <span class="input-group-text bg-primary text-white">
                         Formato de inscripción
-                    <img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar">
-                    <img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></span>
+                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input style="display: none;" id="upload-registration" name="foto" type="file">
+                        <a href="resources/users/" download="" id="download-registration"><img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Descargar"></a>
+                    </span>
                     <div class="col-3">
-                        <input type="text" id="userRegistration" readonly class="form-control-plaintext ms-3"
-                        value="Patatas Friuas">
+                        <input type="text" id="userRegistration" readonly class="form-control-plaintext ms-3">
                     </div>
                 </div>
             </div>
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
-                    <span class="input-group-text bg-primary text-white">Identificación (parte frontal)
-                    <img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar">
-                    <img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></span>
+                    <span class="input-group-text bg-primary text-white">
+                        Identificación (parte frontal)
+                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input style="display: none;" id="upload-id-front" name="foto" type="file">
+                        <a href="resources/users/" download="" id="download-id-front"><img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Descargar"></a>
                     </span>
                     <div class="col-3">
-                        <input type="text" id="userIdFront" readonly class="form-control-plaintext ms-3"
-                        value="Patatas Friuas">
+                        <input type="text" id="userIdFront" readonly class="form-control-plaintext ms-3">
                     </div>
                 </div>
             </div>
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
                     <span class="input-group-text bg-primary text-white">Identificación (parte trasera)
-                    <img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar">
-                    <img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></span>
+                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento" class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input style="display: none;" id="upload-id-back" name="foto" type="file">
+                        <a href="resources/users/" download="" id="download-id-back"><img src="../img/download.png" title="Descargar documento" class="dashboard_icon ms-2 color_invert" alt="Descargar"></a>
                     </span>
                     <div class="col-3">
-                        <input type="text" id="userIdBack" readonly class="form-control-plaintext ms-3"
-                        value="Patatas Friuas">
+                        <input type="text" id="userIdBack" readonly class="form-control-plaintext ms-3">
                     </div>
                 </div>
             </div>
