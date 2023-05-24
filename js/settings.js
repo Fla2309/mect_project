@@ -123,6 +123,24 @@ function prepareUrl(userId, data) {
     return result.join('&');
 }
 
+function getPersonalModuleDocuments(){
+    $.ajax({
+        method: "GET",
+        url: "../php/settingsController.php?type=2&userId=" + document.getElementById("userId").value,
+    }).done(function (data) {
+        if (data['cvName'] != null) $('#userResume').attr('value', data['cvName']); 
+            else $('#userResume').attr('value', "No hay documentos para mostrar");
+        if (data['registrationName'] != null) $('#userRegistration').attr('value', data['registrationName']); 
+            else $('#userRegistration').attr('value', "No hay documentos para mostrar");
+        if (data['idFrontName'] != null) $('#userIdFront').attr('value', data['idFrontName']); 
+            else $('#userIdFront').attr('value', "No hay documentos para mostrar");
+        if (data['idBackName'] != null) $('#userIdBack').attr('value', data['idBackName']); 
+            else $('#userIdBack').attr('value', "No hay documentos para mostrar");
+    }).fail(function (result) {
+        console.log(result);
+    });
+}
+
 function goHome() {
     window.location = '/index.php';
 }

@@ -97,7 +97,7 @@ div input::placeholder {
     #28a745 !important;
 }
 
-.nav-pills li a.active img {
+.nav-pills li a.active img, .color_invert {
   filter: invert(100%);
 }
 

@@ -93,6 +93,19 @@ class Settings
     {
         return $this->conn->query("SELECT login_pass FROM usuarios WHERE id=" . $userId)->fetch_row()[0] === md5($password);
     }
+    
+    public function getPersonalModuleDocuments($userId)
+    {
+        $row = $this->conn->query("SELECT * FROM modulo_personal WHERE id_usuario=" . $userId)->fetch_row() ;
+        $data = [
+            'userId' => $row[1],
+            'cvName' => $row[2],
+            'registrationName' => $row[3],
+            'idFrontName' => $row[4],
+            'idBackName' => $row[5],
+        ];
+        return $data;
+    }
 }
 
 ?>
