@@ -69,6 +69,11 @@ class User extends DB
     public function getUserLevel(){
         return $this->userLevel;
     }
+
+    public function getUserProfilePic(){
+        $row = $this->connect()->query("SELECT foto_perfil FROM usuario_web WHERE id_usuario = ".$this->id)->fetch_row();
+        return $row !== null ? $row[0] : "none";
+    }
 }
 
 

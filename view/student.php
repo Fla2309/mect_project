@@ -50,9 +50,12 @@
         </div>
         <div class="tab-content">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
-                <h2 style="padding: 2rem;">Bienvenid@,
+                <div class="d-flex">
+                    <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>
-                </h2>
+                    </h2>
+                    <img src="../<?php echo $_SESSION['foto_perfil'] ?>" class="profile_pic" alt="Foto de Perfil">
+                </div>
                 <div class="row w-100">
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">

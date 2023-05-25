@@ -36,8 +36,8 @@
                             <img src="../img/user.png" alt="" class="nav_bar_icon nav-item">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <?php echo isset($_SESSION['user']) ? '<a href="../view/personal.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Módulo personal</a>' : '';?>
-                            <?php echo isset($_SESSION['user']) ? '<a href="../view/settings.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Configuración</a>' : '';?>
+                            <?php echo isset($_SESSION['userId']) ? '<a href="../view/personal.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Módulo personal</a>' : '';?>
+                            <?php echo isset($_SESSION['userId']) ? '<a href="../view/settings.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Configuración</a>' : '';?>
                             <hr class="divider">
                             <a href="../php/logout.php" class="dropdown-item">Cerrar sesión</a>
                         </div>

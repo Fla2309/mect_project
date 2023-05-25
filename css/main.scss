@@ -316,6 +316,12 @@ div input::placeholder {
   filter: brightness(125%);
 }
 
+.profile_pic {
+  border-radius: 50%;
+  height: 125px;
+  width: 125px;
+}
+
 .show-fade {
   display: block;
   animation-name: appear;
