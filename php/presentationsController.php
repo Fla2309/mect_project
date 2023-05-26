@@ -5,9 +5,9 @@ $presentations = new Presentations($_GET['userId']);
 
 switch ($_GET['type']) {
     case 0:
-        $query = $presentations->retrievePresentationsFeedbackPerUser();
+        $rows = $presentations->retrievePresentationsFeedbackPerUser();
         $html = "";
-        while ($row = mysqli_fetch_array($query)) {
+        foreach ($rows as $row) {
             $html = $html . "<tr><td scope=\"row\">" . $row['nombre_feedback'] . "</td>";
             $html = $html . "<td>" . $row['autor'] . "</td>";
             $html = $html . "<td>" . $row['fecha_subido'] . "</td>";

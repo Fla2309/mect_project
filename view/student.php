@@ -46,7 +46,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" title="Exámenes" href="#examen" data-bs-toggle="tab"><img src="../img/test.png"
-                            class="left_bar_icon"></a>
+                            class="left_bar_icon" onclick="generateTestsPage()"></a>
                 </li>
             </ul>
         </div>
@@ -154,12 +154,31 @@
                     </table>
                 </div>
             </div>
-            <div class="tab-pane fade" id="examen">Examen Examen Examen Examen Examen Examen Examen Examen Examen
-                Examen
-                Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen
-                Examen
-                Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen
-                Examen
+            <div class="tab-pane fade" id="examen">
+            <div class="row w-100">
+                    <div class="col-sm mx-3 my-5" style="background-color: white">
+                        <div class="d-flex align-items-center" style="margin: 0">
+                            <h4 class="col-md-11 mt-3 ms-2">Exámenes Terminados</h4>
+                        </div>
+                        <hr class="divider">
+                        <div class="px-3 py-2">
+                            <div class="list-group" id="finishedTests" role="tablist">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm mx-3 my-5" style="background-color: white">
+                        <div class="d-flex align-items-center" style="margin: 0">
+                            <h4 class="col-md-11 mt-3 ms-2">Exámenes Activos</h4>
+                        </div>
+                        <hr class="divider">
+                        <div class="px-3 py-2">
+                            <div class="list-group" id="activeTests" role="tablist">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
