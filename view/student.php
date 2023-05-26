@@ -12,6 +12,7 @@
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
+    <script src="../js/student.js"></script>
     <title>Portal del alumno</title>
 </head>
 
@@ -19,7 +20,8 @@
     <?php include_once('view/navbar.php') ?>
     <table hidden="true">
         <tr>
-            <td><input type="text" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>" value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
     </table>
 
@@ -40,7 +42,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" title="Presentaciones" href="#presentaciones" data-bs-toggle="tab"><img
-                            src="../img/presentation.png" class="left_bar_icon"></a>
+                            src="../img/presentation.png" class="left_bar_icon" onclick="generatePresentationsPage()"></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" title="Exámenes" href="#examen" data-bs-toggle="tab"><img src="../img/test.png"
@@ -136,17 +138,22 @@
                     </table>
                 </div>
             </div>
-            <div class="tab-pane fade" id="presentaciones">Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones </div>
+            <div class="tab-pane fade" id="presentaciones">
+            <div class="mx-3 my-5" style="background-color: white">
+                    <h2 class="px-3 py-3">Presentaciones y Feedback</h2>
+                    <hr class="divider">
+                    <table class="table table-hover" id="presentationsTable">
+                        <thead>
+                            <th scope="col">Nombre del feedback</th>
+                            <th scope="col">Autor</th>
+                            <th scope="col">Fecha de subida</th>
+                            <th scope="col">Archivo</th>
+                        </thead>
+                        <tbody id="presentationsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div class="tab-pane fade" id="examen">Examen Examen Examen Examen Examen Examen Examen Examen Examen
                 Examen
                 Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen
