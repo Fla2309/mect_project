@@ -39,7 +39,6 @@ class Settings
     public function saveSettings()
     {
         $string = '';
-        $getCount = 1;
         $query = $this->retrieveUser();
         $user = $query->fetch_object();
         if (isset($_GET[$this->settings[9][0]])) {
@@ -52,19 +51,25 @@ class Settings
             if (isset($_GET[$this->settings[$param][0]])) {
                 if ($user->nivel_usuario >= $this->settings[$param][2]) {
                     $string = $string . $this->settings[$param][1] . ' = \'' . $_GET[$this->settings[$param][0]] . '\'';
-                    $getCount++;
-                    if ($getCount >= count($_GET))
+                    $param++;
+                    if ($param >= count($_GET))
                         break;
                     $string = $string . ', ';
                 } else {
                     echo 'Usuario no autorizado para registrar los cambios hechos';
+                    http_response_code(403);
                     return;
                 }
             }
         }
-        $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = \'' . $this->userId . '\'') or die($this->conn->error);
-        echo 200;
-        return $this->retrieveUser()->fetch_object();
+        try{
+            $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = ' . $this->userId) or die($this->conn->error);
+            http_response_code(201);
+            return $this->retrieveUser()->fetch_object();
+        }catch(Exception){
+            echo $string;
+            http_response_code(400);
+        }
     }
 
     function validateLogin($username)

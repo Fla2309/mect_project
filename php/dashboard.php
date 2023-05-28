@@ -107,7 +107,7 @@ class Dashboard
             $html = $html . "<small class=\"text-muted\">Fecha de inicio: {$row['fecha_inicio']}</small>";
             $html = $html . "</a>";
         }
-        return utf8_encode($html);
+        return $html;
     }
 }
 
