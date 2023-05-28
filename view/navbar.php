@@ -1,6 +1,8 @@
 <html lang="en">
+
 <head>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg" id="nav_bar">
         <div class="container-fluid">
@@ -12,11 +14,26 @@
             <div class="collapse navbar-collapse" id="navbarContent">
                 <form class="d-flex"
                     style="display: inline-block; margin-left: auto; margin-right: auto; text-align: left;"
-                    role="search">
-                    <input class="form-control me-2" type="search" placeholder="Buscar en el sitio..."
+                    role="search" id="search">
+                    <input class="form-control me-2" type="search" placeholder="Buscar en el sitio..." id="searchBox"
                         aria-label="Search">
                     <button class="btn btn-outline-primary" type="submit" style="color: #ffffff;">Buscar</button>
                 </form>
+                <script>
+                    const f = document.getElementById('search');
+                    const q = document.getElementById('searchBox');
+                    const google = 'https://www.google.com/search?q=site%3A+';
+                    const site = 'mect.com.mx';
+
+                    function submitted(event) {
+                        event.preventDefault();
+                        const url = google + site + '+' + q.value;
+                        const win = window.open(url, '_blank');
+                        win.focus();
+                    }
+
+                    f.addEventListener('submit', submitted);
+                </script>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="position: absolute; right: 1%;">
                     <li class="nav-item">
                         <a class="nav-link" href="../view/help.php"><img src="../img/help.png" title="Ayuda" alt=""
@@ -36,8 +53,8 @@
                             <img src="../img/user.png" alt="" class="nav_bar_icon nav-item">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <?php echo isset($_SESSION['userId']) ? '<a href="../view/personal.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Módulo personal</a>' : '';?>
-                            <?php echo isset($_SESSION['userId']) ? '<a href="../view/settings.php?userId='.$_SESSION['userId'].'" class="dropdown-item">Configuración</a>' : '';?>
+                            <?php echo isset($_SESSION['userId']) ? '<a href="../view/personal.php?userId=' . $_SESSION['userId'] . '" class="dropdown-item">Módulo personal</a>' : ''; ?>
+                            <?php echo isset($_SESSION['userId']) ? '<a href="../view/settings.php?userId=' . $_SESSION['userId'] . '" class="dropdown-item">Configuración</a>' : ''; ?>
                             <hr class="divider">
                             <a href="../php/logout.php" class="dropdown-item">Cerrar sesión</a>
                         </div>
@@ -47,4 +64,5 @@
         </div>
     </nav>
 </body>
+
 </html>
