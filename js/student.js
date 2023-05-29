@@ -50,3 +50,8 @@ function getActiveTests(userId){
         console.log(result);
     });
 }
+
+function goToTab(link) {
+    id=link.getAttribute("href").replace('#',"") + "NavItem";
+    document.getElementById(id).getElementsByTagName("a")[0].click();
+}

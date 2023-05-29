@@ -28,24 +28,24 @@
     <div class="row">
         <div style="width: auto;">
             <ul class="nav nav-pills mb-1 flex-column">
-                <li class="nav-item active">
-                    <a class="nav-link active" title="Inicio" href="#inicio" data-bs-toggle="tab"><img
+                <li id="inicioNavItem" class="nav-item active">
+                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-toggle="tab"><img
                             src="../img/home.png" class="left_bar_icon"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" title="Módulos" href="#modulos" data-bs-toggle="tab"><img src="../img/book.png"
+                <li id="modulosNavItem" class="nav-item">
+                    <a class="nav-link" title="Módulos" data-bs-target="#modulos" data-bs-toggle="tab"><img src="../img/book.png"
                             class="left_bar_icon"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" title="Coaching" href="#coaching" data-bs-toggle="tab"><img
+                <li id="coachingNavItem" class="nav-item">
+                    <a class="nav-link" title="Coaching" data-bs-target="#coaching" data-bs-toggle="tab"><img
                             src="../img/coaching.png" class="left_bar_icon"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" title="Presentaciones" href="#presentaciones" data-bs-toggle="tab"><img
+                <li id="presentacionesNavItem" class="nav-item">
+                    <a class="nav-link" title="Presentaciones" data-bs-target="#presentaciones" data-bs-toggle="tab"><img
                             src="../img/presentation.png" class="left_bar_icon" onclick="generatePresentationsPage()"></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" title="Exámenes" href="#examen" data-bs-toggle="tab"><img src="../img/test.png"
+                <li id="examenesNavItem" class="nav-item">
+                    <a class="nav-link" title="Exámenes" data-bs-target="#examen" data-bs-toggle="tab"><img src="../img/test.png"
                             class="left_bar_icon" onclick="generateTestsPage()"></a>
                 </li>
             </ul>
@@ -62,7 +62,7 @@
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Módulos Activos</h4>
-                            <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
+                            <small><a class="nav-link col-md-1" onclick="goToTab(this)"
                                     href="#modulos">Ir→</a></small>
                         </div>
                         <hr class="divider">
@@ -70,7 +70,8 @@
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
                                 include_once('./php/dashboard.php');
-                                echo (new Dashboard)->generateModulesFrame($_SESSION['grupo']);
+                                $dashboard = new Dashboard();
+                                echo $dashboard->generateModulesFrame($_SESSION['grupo']);
                                 ?>
                             </div>
                         </div>
@@ -78,14 +79,14 @@
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Coaching Recientes</h4>
-                            <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
+                            <small><a class="nav-link col-md-1" onclick="goToTab(this)" 
                                     href="#coaching">Ir→</a></small>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
-                                echo (new Dashboard)->generateCoachingFrame($_SESSION['user']);
+                                echo $dashboard->generateCoachingFrame($_SESSION['user']);
                                 ?>
                             </div>
                         </div>
@@ -93,14 +94,14 @@
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Presentaciones</h4>
-                            <small><a class="nav-link col-md-1" style="font-family: IBM Plex Sans;" data-bs-toggle="tab"
+                            <small><a class="nav-link col-md-1" onclick="goToTab(this)"
                                     href="#presentaciones">Ir→</a></small>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
                             <div class="list-group" id="list-tab" role="tablist">
                                 <?php
-                                echo (new Dashboard)->generatePresentationsFrame($_SESSION['user']);
+                                echo $dashboard->generatePresentationsFrame($_SESSION['user']);
                                 ?>
                             </div>
                         </div>
@@ -116,7 +117,7 @@
                 ?>
             </div>
 
-            <div class="tab-pane fade" id="coaching">
+            <div class="tab-pane fade" role="tabpanel" id="coaching">
                 <div class="mx-3 my-5" style="background-color: white">
                     <h2 class="px-3 py-3">Coachings Registrados</h2>
                     <hr class="divider">

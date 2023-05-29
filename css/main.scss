@@ -339,6 +339,10 @@ div input::placeholder {
 
 /****************************Bootstrap overrides***************************/
 
+.nav-link{
+  font-family: IBM Plex Sans;
+}
+
 .tab-content {
   background-color: #e2e2e2; 
   width: calc(100% - 88px);

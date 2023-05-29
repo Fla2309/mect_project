@@ -34,9 +34,21 @@ class Dashboard
         return $html;
     }
 
-    function generatePresentationsFrame($username)
+    function generatePresentationsFrame($username, $admin = false)
     {
-
+        $html = "";
+        $query = $admin ?
+            $this->conn->query('SELECT presentaciones_feedback.id, usuarios.nombre, usuarios.apellidos, presentaciones_feedback.nombre_feedback, presentaciones_feedback.autor, presentaciones_feedback.fecha_subido 
+            FROM presentaciones_feedback, usuarios WHERE presentaciones_feedback.id_usuario = usuarios.id ORDER BY fecha_subido ASC') :
+            $this->conn->query('SELECT * FROM presentaciones_feedback WHERE id_usuario IN 
+            (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\') ORDER BY fecha_subido ASC') or die($this->conn->error);
+        while ($row = mysqli_fetch_array($query)) {
+            $html = $html . "<a class=\"list-group-item list-group-item-action align-items-center\" id=\"presentation_{$row['id']}\" data-toggle=\"list\" 
+            role=\"tab\" aria-controls=\"home\">{$row['nombre_feedback']}<br>Presentador: {$row['nombre']} {$row['apellidos']}<div class=\"d-flex justify-content-between\">";
+            $html = $html . '<div class="pr-2"><small class="text-muted" style="font-size: 10px">Autor: ' . $row['autor'] . '</small></div>';
+            $html = $html . '<div class="pr-2"><small class="text-muted" style="font-size: 10px">Subido: ' . $row['fecha_subido'] . '</small></div></div></a>';
+        }
+        return $html;
     }
 
     function generateGroupsFrame($userLevel)

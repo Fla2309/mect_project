@@ -16,13 +16,7 @@ function saveGeneralSettings(data) {
     $.ajax({
         method: "GET",
         url: "../php/settingsController.php?type=0&" + prepareUrl(data[0].value, getFormChanges(data))
-    }).done(function (response) {
-        // if (response != 201) {
-        //     $('#usernameErrorModalBody').html(response);
-        //     $('#usernameErrorModal').modal('show');
-        //     $('#loadingSpinner').addClass('visually-hidden');
-        // }
-        // else
+    }).done(function () {
             $('#changesMadeModal').modal('show');
         $('#changesMadeModal').on('shown.bs.modal', function () {
             var seconds = 3;

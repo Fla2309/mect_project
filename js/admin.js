@@ -30,3 +30,8 @@ function prepareUrl(data) {
     });
     return result.join('&');
 }
+
+function goToTab(link) {
+    id=link.getAttribute("href").replace('#',"") + "NavItem";
+    document.getElementById(id).getElementsByTagName("a")[0].click();
+}
