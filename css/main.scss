@@ -339,6 +339,15 @@ div input::placeholder {
 
 /****************************Bootstrap overrides***************************/
 
+#nav_bar.navbar .nav-item a:hover{
+  opacity: 50%;
+}
+
+.nav-pills .nav-item:hover{
+  background-color: #bababa;
+  border-radius: 15%;
+}
+
 .nav-link{
   font-family: IBM Plex Sans;
 }
