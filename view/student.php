@@ -56,7 +56,7 @@
                     <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>
                     </h2>
-                    <img src="../<?php echo $_SESSION['foto_perfil'] ?>" class="profile_pic" alt="Foto de Perfil">
+                    <img src="../<?php echo $_SESSION['foto_perfil']!=='none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png' ?>" class="profile_pic" alt="Foto de Perfil">
                 </div>
                 <div class="row w-100">
                     <div class="col-sm mx-3 my-2" style="background-color: white">

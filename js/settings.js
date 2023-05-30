@@ -17,7 +17,7 @@ function saveGeneralSettings(data) {
         method: "GET",
         url: "../php/settingsController.php?type=0&" + prepareUrl(data[0].value, getFormChanges(data))
     }).done(function () {
-            $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').modal('show');
         $('#changesMadeModal').on('shown.bs.modal', function () {
             var seconds = 3;
             function redirect() {
@@ -29,10 +29,10 @@ function saveGeneralSettings(data) {
                 }
             } setInterval(redirect, 1000);
         })
-    }).fail(function (response){
+    }).fail(function (response) {
         $('#usernameErrorModalBody').html(response);
-            $('#usernameErrorModal').modal('show');
-            $('#loadingSpinner').addClass('visually-hidden');
+        $('#usernameErrorModal').modal('show');
+        $('#loadingSpinner').addClass('visually-hidden');
     });
 }
 
@@ -153,6 +153,16 @@ function getPersonalModuleDocuments() {
     }).fail(function (result) {
         console.log(result);
     });
+}
+
+function showImage(input) {
+    var src = URL.createObjectURL(input.files[0]);
+    var image = new Image();
+    image.src = src;
+    console.log(input.files);
+    $("#imageUploaded").attr('src', src);
+    $("#profilePicInput").attr('placeholder', input.files[0].webkitRelativePath);
+    $("#imageViewer").removeClass("visually-hidden");
 }
 
 function goHome() {

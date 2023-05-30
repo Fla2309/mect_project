@@ -29,6 +29,10 @@ div input::placeholder {
   font-weight: bolder;
 }
 
+#imageUploaded{
+  max-height: 30rem;
+}
+
 #main {
   padding: 8rem;
   margin: 5% auto;
@@ -320,6 +324,10 @@ div input::placeholder {
   border-radius: 50%;
   height: 125px;
   width: 125px;
+}
+
+.settings_profile_pic{
+  height: 15rem;
 }
 
 .show-fade {
