@@ -62,11 +62,11 @@ class Settings
                 }
             }
         }
-        try{
+        try {
             $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = ' . $this->userId) or die($this->conn->error);
             http_response_code(201);
             return $this->retrieveUser()->fetch_object();
-        }catch(Exception){
+        } catch (Exception) {
             echo $string;
             http_response_code(400);
         }
@@ -84,11 +84,10 @@ class Settings
 
     public function savePassword($userId, $oldPassword, $newPassword)
     {
-        if ($this->isPasswordValid($userId, $oldPassword)){
+        if ($this->isPasswordValid($userId, $oldPassword)) {
             $this->conn->query('UPDATE usuarios SET login_pass = \'' . md5($newPassword) . '\' WHERE id = \'' . $this->userId . '\'') or die($this->conn->error);
             http_response_code(200);
-        }
-        else {
+        } else {
             http_response_code(403);
         }
         return;
@@ -98,10 +97,10 @@ class Settings
     {
         return $this->conn->query("SELECT login_pass FROM usuarios WHERE id=" . $userId)->fetch_row()[0] === md5($password);
     }
-    
+
     public function getPersonalModuleDocuments($userId)
     {
-        $row = $this->conn->query("SELECT * FROM modulo_personal WHERE id_usuario=" . $userId)->fetch_row() ;
+        $row = $this->conn->query("SELECT * FROM modulo_personal WHERE id_usuario=" . $userId)->fetch_row();
         $data = [
             'userId' => $row[1],
             'cvName' => $row[2],
@@ -109,7 +108,32 @@ class Settings
             'idFrontName' => $row[4],
             'idBackName' => $row[5],
         ];
+        http_response_code(201);
         return $data;
+    }
+
+    public function setProfilePicture($userId, $pictureName, $pictureBody)
+    {
+        if (unlink('../' . $_SESSION['foto_perfil'])) {
+            $pictureFileName = $pictureName;
+            $pictureName = str_replace(
+                explode('/', $_SESSION['foto_perfil'])[count(explode('/', $_SESSION['foto_perfil'])) - 1],
+                $pictureName,
+                $_SESSION['foto_perfil']
+            );
+            $file_pointer = fopen('../' . $pictureName, 'w+');
+            fwrite($file_pointer, $pictureBody);
+            fclose($file_pointer);
+            $this->conn->query("UPDATE usuario_web SET foto_perfil = '{$pictureName}' WHERE id_usuario = '{$userId}'") or die($this->conn->error);
+            $_SESSION['foto_perfil'] = $pictureName;
+            http_response_code(201);
+        } else {
+            http_response_code(400);
+        }
+        return [
+            'profilePicName' => $pictureFileName,
+            'profilePicPath' => '../' . $pictureName,
+        ];
     }
 }
 

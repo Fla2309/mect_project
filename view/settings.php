@@ -14,6 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../resources/api/cropperjs/cropper.min.css">
     <link rel="stylesheet" href="../css/main.scss">
     <meta charset="utf-8">
 
@@ -156,18 +157,19 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="passModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Cambiar foto de perfil</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="profilePicChange">
+                <script src="../resources/api/cropperjs/cropper.min.js"></script>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Nombre</span>
                         <input type="text" id="profilePicInput" class="form-control" 
-                                placeholder="Directorio de la imagen">
+                                placeholder="Nombre de la imagen">
                         <input type="file" id="openProfilePic" class="form-control visually-hidden" 
                                 accept="image/*" onchange="showImage(this)">
                         <label class="btn btn-outline-primary" for="openProfilePic">Examinar...</label>
@@ -178,8 +180,24 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveSettings(1)">Guardar
+                    <button type="button" class="btn btn-primary" onclick="saveProfilePic()">Guardar
                         cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="profilePicChangedModal" tabindex="-1" aria-labelledby="profilePicChangedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title output_title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="profilePicChanged">
+                    <p class="output_message"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
                 </div>
             </div>
         </div>

@@ -1,3 +1,7 @@
+var image;
+var cropper;
+var profilePicModal = document.getElementById('profilePicModal');
+
 function saveSettings(type) {
     data = type == 1 ? getPasswordTextboxes() : getSettings();
     if (type == 1) {
@@ -156,13 +160,50 @@ function getPersonalModuleDocuments() {
 }
 
 function showImage(input) {
+    clearImageCanvas();
     var src = URL.createObjectURL(input.files[0]);
     var image = new Image();
     image.src = src;
-    console.log(input.files);
     $("#imageUploaded").attr('src', src);
-    $("#profilePicInput").attr('placeholder', input.files[0].webkitRelativePath);
+    $("#profilePicInput").attr('value', input.files[0].name);
     $("#imageViewer").removeClass("visually-hidden");
+    this.image = document.getElementById("imageUploaded");
+    this.cropper = new Cropper(this.image, {
+        aspectRatio: 1,
+        viewMode: 0
+    });
+}
+
+function saveProfilePic() {
+    $('#loadingSpinner').removeClass('visually-hidden');
+    this.cropper.getCroppedCanvas().toBlob((blob) => {
+        $.ajax({
+            method: 'POST',
+            url: "../php/settingsController.php?type=3&userId=" + document.getElementById("userId").value +
+                '&pictureName=' + $("#profilePicInput").attr('value'),
+            data: blob,
+            processData: false,
+            contentType: false,
+        }).done((data) => {
+            $('#profilePic').attr('value', data['profilePicName']);
+            $('img.settings_profile_pic').attr('src', data['profilePicPath']);
+            $('#profilePicChangedModal .modal-title.output_title').html('¡Listo!');
+            $('#profilePicChangedModal .output_message').html('Foto de perfil cambiada con éxito');
+            $('#profilePicModal').modal('hide');
+            $('#profilePicChangedModal').modal('show');
+        }).fail(function () {
+            $('#profilePicChangedModal .output_title').html('Error al cambiar foto');
+            $('#profilePicChangedModal .output_message').html('Hubo un problema al guardar la nueva foto. Si el problema persis, contacta al soporte del sitio');
+            $('#profilePicModal').modal('hide');
+            $('#profilePicChangedModal').modal('show');
+        });
+    });
+    $('#loadingSpinner').addClass('visually-hidden');
+}
+
+function clearImageCanvas() {
+    if (this.cropper != null)
+        this.cropper.destroy();
 }
 
 function goHome() {
