@@ -1,6 +1,5 @@
 var image;
 var cropper;
-var profilePicModal = document.getElementById('profilePicModal');
 
 function saveSettings(type) {
     data = type == 1 ? getPasswordTextboxes() : getSettings();
@@ -164,6 +163,7 @@ function showImage(input) {
     var src = URL.createObjectURL(input.files[0]);
     var image = new Image();
     image.src = src;
+    $('#profilePicModal .modal-dialog').addClass('modal-xl');
     $("#imageUploaded").attr('src', src);
     $("#profilePicInput").attr('value', input.files[0].name);
     $("#imageViewer").removeClass("visually-hidden");
@@ -204,6 +204,10 @@ function saveProfilePic() {
 function clearImageCanvas() {
     if (this.cropper != null)
         this.cropper.destroy();
+    $('#profilePicModal .modal-dialog').removeClass('modal-xl');
+    $("#imageUploaded").attr('src', '');
+    $("#profilePicInput").attr('value', '');
+    $("#imageViewer").addClass("visually-hidden");
 }
 
 function goHome() {

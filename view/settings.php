@@ -1,10 +1,10 @@
 <?php
 
-    include_once('../php/settingsModel.php');
-    $settings = new Settings($_GET['userId']);
-    $row = $settings->retrieveSettings();
-    if($row == 406)
-        header('Location:./unavailable.php');
+include_once('../php/settingsModel.php');
+$settings = new Settings($_GET['userId']);
+$row = $settings->retrieveSettings();
+if ($row == 406)
+    header('Location:./unavailable.php');
 ?>
 
 <html lang="en">
@@ -102,11 +102,14 @@
             <div class="mx-2 my-3 col-4">
                 <div class="input-group">
                     <span class="input-group-text bg-primary text-white">Foto de perfil</span>
-                    <input type="text" id="profilePic" class="form-control text-truncate" value="<?php echo $_SESSION['foto_perfil']!=='none' ? explode('/', $_SESSION['foto_perfil'])[3] : 'Ninguna imagen seleccionada'; ?>" disabled>
+                    <input type="text" id="profilePic" class="form-control text-truncate"
+                        value="<?php echo $_SESSION['foto_perfil'] !== 'none' ? explode('/', $_SESSION['foto_perfil'])[3] : 'Ninguna imagen seleccionada'; ?>"
+                        disabled>
                     <button class="btn btn-outline-primary" type="button" id="changeProfilePic" data-bs-toggle="modal"
                         data-bs-target="#profilePicModal">Cambiar foto</button>
                 </div>
-                <img src="../<?php echo $_SESSION['foto_perfil']!=='none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png'; ?>" alt="Foto de perfil" class="mt-2 settings_profile_pic">
+                <img src="../<?php echo $_SESSION['foto_perfil'] !== 'none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png'; ?>"
+                    alt="Foto de perfil" class="mt-2 settings_profile_pic">
             </div>
             <hr class="divider px-5">
             <div class="d-flex justify-content-center">
@@ -157,21 +160,21 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+    <div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Cambiar foto de perfil</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="profilePicChange">
-                <script src="../resources/api/cropperjs/cropper.min.js"></script>
+                    <script src="../resources/api/cropperjs/cropper.min.js"></script>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Nombre</span>
-                        <input type="text" id="profilePicInput" class="form-control" 
-                                placeholder="Nombre de la imagen">
-                        <input type="file" id="openProfilePic" class="form-control visually-hidden" 
-                                accept="image/*" onchange="showImage(this)">
+                        <input type="text" id="profilePicInput" class="form-control" placeholder="Nombre de la imagen">
+                        <input type="file" id="openProfilePic" class="form-control visually-hidden" accept="image/*"
+                            onchange="showImage(this)">
                         <label class="btn btn-outline-primary" for="openProfilePic">Examinar...</label>
                     </div>
                     <div id="imageViewer" class="text-center visually-hidden">
@@ -186,7 +189,12 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="profilePicChangedModal" tabindex="-1" aria-labelledby="profilePicChangedModalLabel" aria-hidden="true">
+    <script>
+        var profilePicModal = document.getElementById('profilePicModal');
+        profilePicModal.addEventListener('hidden.bs.modal', clearImageCanvas);
+    </script>
+    <div class="modal fade" id="profilePicChangedModal" tabindex="-1" aria-labelledby="profilePicChangedModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

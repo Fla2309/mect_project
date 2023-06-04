@@ -165,25 +165,24 @@ class UserModule
                         <a class="nav-link" href="#tareas" data-bs-toggle="tab">Tareas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#informacion" data-bs-toggle="tab">Información</a>
+                        <a class="nav-link" href="#feedback" data-bs-toggle="tab">Información</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content">
                 <div class="tab-pane card-body active" id="trabajos">
                     <?php
-                    echo $userModule->prepareHtmlTrabajos($userModule->getTrabajosPerUser())
-                        ?>
+                    echo $userModule->prepareHtmlTrabajos($userModule->getTrabajosPerUser());
+                    ?>
                 </div>
                 <div class="tab-pane card-body" id="tareas">
                     <?php
                     echo $userModule->prepareHtmlTareas($userModule->getTareasPerUser());
                     ?>
                 </div>
-                <div class="tab-pane card-body" id="informacion">
-                    <h5 class="card-title">Info</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="tab-pane card-body" id="feedback">
+                    <h5 class="card-title">Feedback</h5>
+                    <p class="card-text">Aquí se presenta el feedback por parte de los observadores y profesores</p>
                 </div>
             </div>
         </div>
