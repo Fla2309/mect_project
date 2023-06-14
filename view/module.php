@@ -2,43 +2,52 @@
 include_once('../php/connection.php');
 class UserModule
 {
-    private $username;
+    private $userId;
     private $moduleId;
+    private $conn;
 
     public function __construct()
     {
-        $this->username = $_GET['user'];
+        $this->userId = $_GET['userId'];
         $this->moduleId = $_GET['module'];
+        $this->conn = (new DB())->connect();
     }
 
     public function getTareasPerUser()
     {
-        $conn = (new DB())->connect();
-        $query = $conn
+        $query = $this->conn
             ->query('SELECT tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
         tareas_modulos.comentarios, tareas_usuarios.revisado FROM tareas_modulos 
         INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
         WHERE id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
-        (SELECT id FROM usuarios WHERE login_user = \'' . $this->username . '\')') or die($conn->error);
+        (SELECT id FROM usuarios WHERE id = \'' . $this->userId . '\')') or die($this->conn->error);
         return $query;
     }
 
     public function getTrabajosPerUser()
     {
-        $conn = (new DB())->connect();
-        $query = $conn
+        $query = $this->conn
             ->query('SELECT trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
         trabajos_usuarios.revisado FROM trabajos_modulos 
         INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
         WHERE id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
-        (SELECT id FROM usuarios WHERE login_user = \'' . $this->username . '\')') or die($conn->error);
-        ;
+        (SELECT id FROM usuarios WHERE id = \'' . $this->userId . '\')') or die($this->conn->error);
+        return $query;
+    }
+
+    public function getFeedbackPerUser()
+    {
+        $query = $this->conn->query("SELECT feedback_usuarios.id, modulos.id_modulo, modulos.nombre_modulo, feedback_usuarios.feedback, feedback_usuarios.autor, feedback_usuarios.fecha 
+        FROM feedback_usuarios, modulos 
+        WHERE modulos.id_modulo = feedback_usuarios.id_modulo 
+        AND feedback_usuarios.id_modulo={$this->moduleId} 
+        AND feedback_usuarios.id_usuario={$this->userId}") or die($this->conn->error);
         return $query;
     }
 
     public function getUsername()
     {
-        return $this->username;
+        return $this->userId;
     }
 
     public function getModule()
@@ -140,6 +149,24 @@ class UserModule
 
         return $html;
     }
+
+    public function prepareHtmlFeedback($rows)
+    {
+        $html = "";
+
+        while ($row = mysqli_fetch_array($rows)) {
+            $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
+            $html = $html . '<h5 class="mb-1">Publicado por: ' . $row['autor'] . '</h5>';
+            $html = $html . '<small>Fecha de subido: ' . $row['fecha'] . '</small>';
+            $html = $html . '</div>';
+            $html = $html . '<div style="display: inline-block"><div class="text-start">';
+            $html = $html . "{$row['feedback']}</div>";
+            $html = $html . '</div><hr class="divider">';
+            $html = $html . '</a>';
+        }
+
+        return $html;
+    }
 }
 ?>
 
@@ -165,24 +192,28 @@ class UserModule
                         <a class="nav-link" href="#tareas" data-bs-toggle="tab">Tareas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#feedback" data-bs-toggle="tab">Información</a>
+                        <a class="nav-link" href="#feedback" data-bs-toggle="tab">Feedback</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-content">
                 <div class="tab-pane card-body active" id="trabajos">
                     <?php
-                    echo $userModule->prepareHtmlTrabajos($userModule->getTrabajosPerUser());
+                    $htmlTrabajos = $userModule->prepareHtmlTrabajos($userModule->getTrabajosPerUser());
+                    echo $htmlTrabajos !== "" ? $htmlTrabajos : "<h5>No hay trabajos para mostrar</h5>"
                     ?>
                 </div>
                 <div class="tab-pane card-body" id="tareas">
                     <?php
-                    echo $userModule->prepareHtmlTareas($userModule->getTareasPerUser());
+                    $htmltareas = $userModule->prepareHtmlTareas($userModule->getTareasPerUser());
+                    echo $htmltareas !== "" ? $htmltareas : "<h5>No hay tareas para mostrar</h5>"
                     ?>
                 </div>
                 <div class="tab-pane card-body" id="feedback">
-                    <h5 class="card-title">Feedback</h5>
-                    <p class="card-text">Aquí se presenta el feedback por parte de los observadores y profesores</p>
+                    <?php
+                    $htmlFeedback = $userModule->prepareHtmlFeedback($userModule->getFeedbackPerUser());
+                    echo $htmlFeedback !== "" ? $htmlFeedback : "<h5>No hay feedback para mostrar</h5>"
+                    ?>
                 </div>
             </div>
         </div>

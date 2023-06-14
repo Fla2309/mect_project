@@ -2,7 +2,7 @@ var html="";
 
 function prepareUrl(data, module_id) {
     let result = [];
-    result.push('user' + '=' + data[0].attributes['placeholder'].value);
+    result.push('userId' + '=' + data[1].attributes['placeholder'].value);
     result.push('module' + '=' + module_id);
     return result.join('&');
 }
