@@ -1,5 +1,6 @@
 <?php
 include_once('connection.php');
+include_once('feedback.php');
 class Dashboard
 {
     private $conn;
@@ -10,11 +11,11 @@ class Dashboard
     function generateModulesFrame($group, $admin = false)
     {
         $html = "";
-        $query = $admin ? 
-            $this->conn->query('SELECT * FROM modulos') : 
+        $query = $admin ?
+            $this->conn->query('SELECT * FROM modulos') :
             $this->conn->query('SELECT * FROM modulos WHERE id_modulo IN 
-            (SELECT id_modulo FROM modulos_grupos WHERE id_grupo = ' . 
-            $group . ' AND disponible > 0)') or die($this->conn->error);
+            (SELECT id_modulo FROM modulos_grupos WHERE id_grupo = ' .
+                $group . ' AND disponible > 0)') or die($this->conn->error);
         while ($row = mysqli_fetch_array($query)) {
             $html = $html . '<a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" role="tab" aria-controls="home">' . $row['nombre_modulo'] . '</a>';
         }
@@ -43,10 +44,10 @@ class Dashboard
             $this->conn->query('SELECT * FROM presentaciones_feedback WHERE id_usuario IN 
             (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\') ORDER BY fecha_subido ASC') or die($this->conn->error);
         while ($row = mysqli_fetch_array($query)) {
-            $html = $admin ? 
-                    $html . "<a class=\"list-group-item list-group-item-action align-items-center\" id=\"presentation_{$row['id']}\" data-toggle=\"list\" 
+            $html = $admin ?
+                $html . "<a class=\"list-group-item list-group-item-action align-items-center\" id=\"presentation_{$row['id']}\" data-toggle=\"list\" 
                     role=\"tab\" aria-controls=\"home\">{$row['nombre_feedback']}<br>Presentador: {$row['nombre']} {$row['apellidos']}<div class=\"d-flex justify-content-between\">" :
-                    $html . '<a class="list-group-item list-group-item-action align-items-center" id="presentation_' . $row['id'] . '" data-toggle="list" 
+                $html . '<a class="list-group-item list-group-item-action align-items-center" id="presentation_' . $row['id'] . '" data-toggle="list" 
                     role="tab" aria-controls="home">' . $row['nombre_feedback'] . '<div class="d-flex justify-content-between">';
             $html = $html . '<div class="pr-2"><small class="text-muted" style="font-size: 10px">Autor: ' . $row['autor'] . '</small></div>';
             $html = $html . '<div class="pr-2"><small class="text-muted" style="font-size: 10px">Subido: ' . $row['fecha_subido'] . '</small></div></div></a>';
@@ -110,8 +111,8 @@ class Dashboard
     function generateValidGroupsFrame($args)
     {
         $query = $args === '' ?
-            $this->conn->query("SELECT * FROM grupos") : 
-            $this->conn->query("SELECT * FROM grupos where ".$args);
+            $this->conn->query("SELECT * FROM grupos") :
+            $this->conn->query("SELECT * FROM grupos where " . $args);
         $html = '';
         while ($row = mysqli_fetch_array($query)) {
             $html = $html . "<a href=\"#\" id=gr_\"{$row['id_grupo']}\" class=\"list-group-item list-group-item-action\" aria-current=\"true\">";
@@ -122,6 +123,22 @@ class Dashboard
             $html = $html . "<small class=\"text-muted\">Fecha de inicio: {$row['fecha_inicio']}</small>";
             $html = $html . "</a>";
         }
+        return $html;
+    }
+
+    function generateFeedbackFrame($userId, $admin = false)
+    {
+        $feedbackData = (new Feedback($userId))->retrieveFeedbackDashboard();
+        $html = '';
+        foreach ($feedbackData as $row) {
+            $html = $html . "<div class=\"accordion-item\"><h2 class=\"accordion-header\" id=\"feedback_{$row['id']}\">";
+            $html = $html . "<button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse_{$row['id']}\" aria-expanded=\"false\" aria-controls=\"collapse_{$row['id']}\">";
+            $html = $html . "{$row['module_name']}<span class=\"text-black-50\">({$row['date']})</span></button></h2>";
+            $html = $html . "<div id=\"collapse_{$row['id']}\" class=\"accordion-collapse collapse\" aria-labelledby=\"heading_{$row['id']}\" data-bs-parent=\"#feedback-accordion\">";
+            $html = $html . "<div class=\"accordion-body\"><small class=\"text-muted\">{$row['feedback']}</small><br><strong>Autor: </strong>{$row['author']}";
+            $html = $html . "<small><a class=\"nav-link text-primary\" onclick=\"goToTab(this)\" href=\"#modulos\">Ir al feedback→</a></small></div></div></div>";
+        }
+
         return $html;
     }
 }

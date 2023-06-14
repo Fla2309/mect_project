@@ -67,7 +67,7 @@
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
-                            <div class="list-group" id="list-tab" role="tablist">
+                            <div class="list-group" id="modules-list-tab" role="tablist">
                                 <?php
                                 include_once('./php/dashboard.php');
                                 $dashboard = new Dashboard();
@@ -84,7 +84,7 @@
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
-                            <div class="list-group" id="list-tab" role="tablist">
+                            <div class="list-group" id="coaching-list-tab" role="tablist">
                                 <?php
                                 echo $dashboard->generateCoachingFrame($_SESSION['user']);
                                 ?>
@@ -93,15 +93,13 @@
                     </div>
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11 mt-3 ms-2">Presentaciones</h4>
-                            <small><a class="nav-link col-md-1" onclick="goToTab(this)"
-                                    href="#presentaciones">Ir→</a></small>
+                            <h4 class="col-md-11 mt-3 ms-2">Feedback</h4>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
-                            <div class="list-group" id="list-tab" role="tablist">
+                            <div class="accordion" id="feedback-accordion">
                                 <?php
-                                echo $dashboard->generatePresentationsFrame($_SESSION['user']);
+                                echo $dashboard->generateFeedbackFrame($_SESSION['userId']);
                                 ?>
                             </div>
                         </div>
