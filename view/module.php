@@ -17,7 +17,7 @@ class UserModule
     {
         $query = $this->conn
             ->query('SELECT tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
-        tareas_modulos.comentarios, tareas_usuarios.revisado FROM tareas_modulos 
+        tareas_modulos.comentarios, tareas_usuarios.adjunto, tareas_usuarios.revisado FROM tareas_modulos 
         INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
         WHERE id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
         (SELECT id FROM usuarios WHERE id = \'' . $this->userId . '\')') or die($this->conn->error);
@@ -28,7 +28,7 @@ class UserModule
     {
         $query = $this->conn
             ->query('SELECT trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
-        trabajos_usuarios.revisado FROM trabajos_modulos 
+        trabajos_usuarios.revisado, trabajos_usuarios.adjunto FROM trabajos_modulos 
         INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
         WHERE id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
         (SELECT id FROM usuarios WHERE id = \'' . $this->userId . '\')') or die($this->conn->error);
@@ -95,7 +95,7 @@ class UserModule
             $html = $html . '<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
             $html = $html . '<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
             $html = $uplEnabled ? $html . '<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
-            $html = ($status !== $statusLayout) ? $html . '<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a>' : $html;
+            $html = ($status !== $statusLayout) ? $html . "<a href=\"".$this->getUserLocalPath()."tareas/{$row['adjunto']}\" download=\"{$row['adjunto']}\"><img src=\"img/download.png\" class=\"dashboard_icon m-2\" title=\"Descargar tarea\"></a>" : $html;
             $html = $html . '</form></div><hr class="divider">';
             $html = $html . '</a>';
         }
@@ -141,8 +141,8 @@ class UserModule
             $html = $html . '<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
             $html = $html . '<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
             $html = $html . '<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
-            $html = $uplEnabled ? $html . '<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
-            $html = ($status !== $statusLayout) ? $html . '<a href="resources/users/" download="plantilla tarea 1.docx"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a>' : $html;
+            $html = $uplEnabled ? $html . '<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir trabajo"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
+            $html = ($status !== $statusLayout) ? $html . "<a href=\"".$this->getUserLocalPath()."trabajos/{$row['adjunto']}\" download=\"{$row['adjunto']}\"><img src=\"img/download.png\" class=\"dashboard_icon m-2\" title=\"Descargar trabajo\"></a>" : $html;
             $html = $html . '</form></div><hr class="divider">';
             $html = $html . '</a>';
         }
@@ -166,6 +166,12 @@ class UserModule
         }
 
         return $html;
+    }
+
+    function getUserLocalPath(){
+        $path = $this->conn->query("SELECT directorio_local 
+        FROM usuario_web WHERE id_usuario={$this->userId}") or die($this->conn->error);
+        return mysqli_fetch_row($path)[0];
     }
 }
 ?>
