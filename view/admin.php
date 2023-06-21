@@ -23,7 +23,8 @@
     <script src="../js/admin.js" type="text/javascript"></script>
     <table hidden="true">
         <tr>
-            <td><input type="text" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>" value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
     </table>
     <div class="row">
@@ -163,12 +164,14 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="modulos">Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos
-                Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos
-                Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos
-                Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos
-                Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos Módulos
-                Módulos </div>
+            <script src="../js/module.js" type="text/javascript"></script>
+            <div class="tab-pane fade" id="modulos">
+            <?php
+                include_once('./php/modules.php');
+                $moduleClass = new Module();
+                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
+                ?>
+            </div>
 
             <div class="tab-pane fade" id="coaching">Coaching Coaching Coaching Coaching Coaching Coaching Coaching
                 Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching
