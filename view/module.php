@@ -28,7 +28,9 @@ $userModule = new UserModule();
                     </li>';
                     }
                     ?>
-                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#informacion" data-bs-toggle="tab">Información</a>
+                    </li>
                 </ul>
             </div>
             <div class="tab-content">
@@ -52,6 +54,12 @@ $userModule = new UserModule();
                     echo $htmlFeedback !== "" ? $htmlFeedback : "<h5>No hay feedback para mostrar</h5>".
                 '</div>';}
                 ?>
+                <div class="tab-pane card-body" id="informacion">
+                    <?php
+                    // $htmltareas = $userModule->prepareHtmlTareas();
+                    // echo $htmltareas !== "" ? $htmltareas : "<h5>No hay tareas para mostrar</h5>"
+                    ?>
+                </div>
             </div>
         </div>
     </div>
