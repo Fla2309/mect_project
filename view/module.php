@@ -10,7 +10,8 @@ $userModule = new UserModule();
 
 <body>
     <button type="button" class="btn btn-primary" onclick="reloadModules()"><img src="../img/left-arrow.png" width="20">
-        Volver</button>
+        Volver
+    </button>
     <div class="px-2 py-2 mx-2 my-2">
         <div class="card text-center">
             <div class="card-header">
@@ -22,7 +23,7 @@ $userModule = new UserModule();
                         <a class="nav-link" href="#tareas" data-bs-toggle="tab">Tareas</a>
                     </li>
                     <?php
-                    if(!$userModule->getAdminPermissions()){
+                    if (!$userModule->getAdminPermissions()) {
                         echo '<li class="nav-item">
                         <a class="nav-link" href="#feedback" data-bs-toggle="tab">Feedback</a>
                     </li>';
@@ -36,23 +37,28 @@ $userModule = new UserModule();
             <div class="tab-content">
                 <div class="tab-pane card-body active" id="trabajos">
                     <?php
+                    if ($userModule->getAdminPermissions())
+                        echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addHomework()"><img src="../img/plus.png" width="20"> Añadir</button></div>';
                     $htmlTrabajos = $userModule->prepareHtmlTrabajos();
                     echo $htmlTrabajos !== "" ? $htmlTrabajos : "<h5>No hay trabajos para mostrar</h5>"
                         ?>
                 </div>
                 <div class="tab-pane card-body" id="tareas">
                     <?php
+                    if ($userModule->getAdminPermissions())
+                        echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addHomework()"><img src="../img/plus.png" width="20"> Añadir</button></div>';
                     $htmltareas = $userModule->prepareHtmlTareas();
                     echo $htmltareas !== "" ? $htmltareas : "<h5>No hay tareas para mostrar</h5>"
                         ?>
                 </div>
                 <?php
-                if(!$userModule->getAdminPermissions()){
-                echo '
-                <div class="tab-pane card-body" id="feedback">' . 
-                    $htmlFeedback = $userModule->prepareHtmlFeedback();
-                    echo $htmlFeedback !== "" ? $htmlFeedback : "<h5>No hay feedback para mostrar</h5>".
-                '</div>';}
+                if (!$userModule->getAdminPermissions()) {
+                    echo '
+                <div class="tab-pane card-body" id="feedback">' .
+                        $htmlFeedback = $userModule->prepareHtmlFeedback();
+                    echo $htmlFeedback !== "" ? $htmlFeedback : "<h5>No hay feedback para mostrar</h5>" .
+                        '</div>';
+                }
                 ?>
                 <div class="tab-pane card-body" id="informacion">
                     <?php

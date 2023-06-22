@@ -166,10 +166,10 @@
             </div>
             <script src="../js/module.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="modulos">
-            <?php
+                <?php
                 include_once('./php/modules.php');
                 $moduleClass = new Module();
-                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
+                echo ($moduleClass)->retrieveModules($_SESSION['grupo'], true);
                 ?>
             </div>
 

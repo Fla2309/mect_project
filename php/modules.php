@@ -11,7 +11,7 @@ class Module extends DB
             $this->connect()->query('SELECT * FROM modulos WHERE id_modulo IN (SELECT id_modulo FROM modulos_grupos WHERE id_grupo = ' . $group . ' AND disponible > 0)') :
             $this->connect()->query('SELECT * FROM modulos');
         $cardHtml = "";
-        $count = 1;
+        $count = 0;
         $percentage = 0;
         $totalCount = 0;
         $trabajosCount = 0;
@@ -19,6 +19,7 @@ class Module extends DB
 
 
         while ($row = mysqli_fetch_array($query)) {
+            $count++;
             $totalCount = $this->getTotalTrabajosTareas($row['id_modulo'])[0];
             $trabajosCount = $this->getCountTrabajos($_SESSION['user'], $row['id_modulo'])[0];
             $tareasCount = $this->getCountTareas($_SESSION['user'], $row['id_modulo'])[0];
@@ -39,7 +40,6 @@ class Module extends DB
                 $cardHtml = $cardHtml . "</div>";
                 $count = 0;
             }
-            $count++;
         }
         if ($count != 0) {
             $cardHtml = $cardHtml . "</div>";
@@ -152,8 +152,7 @@ class UserModule
 
     function prepareHtmlTareasAdmin()
     {
-        $html = '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addHomework()"><img src="../img/plus.png" width="20">
-        Añadir</button></div>';
+        $html = '';
 
         foreach ($this->getTareasPerUser() as $row) {
             $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-start">';
@@ -222,8 +221,7 @@ class UserModule
 
     function prepareHtmlTrabajosAdmin()
     {
-        $html = '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addActivity()"><img src="../img/plus.png" width="20">
-        Añadir</button></div>';
+        $html = '';
 
         foreach ($this->getTrabajosPerUser() as $row) {
             $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
