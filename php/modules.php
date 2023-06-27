@@ -155,10 +155,10 @@ class UserModule
         $html = '';
 
         foreach ($this->getTareasPerUser() as $row) {
-            $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-start">';
+            $html = $html . "<a class=\"list-group-item list-group-item-action\"><div id=\"mod_hw_{$row['id_tarea']}\" class=\"d-flex w-100 justify-content-start\">";
             $html = $html . "<h5 class=\"mb-1\">{$row['nombre_tarea']}</h5>";
-            $html = $html . '<a><img class="dashboard_icon m-2" src="img/edit.png"></a>';
-            $html = $html . '<a><img class="dashboard_icon m-2" src="img/delete.png"></a>';
+            $html = $html . '<a href="#" onclick="showEditPanel(this)" title="Editar"><img class="dashboard_icon m-2" src="img/edit.png"></a>';
+            $html = $html . '<a title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
             $html = $html . '</div>';
             $html = $html . '</a><hr class="divider">';
         }
@@ -224,10 +224,10 @@ class UserModule
         $html = '';
 
         foreach ($this->getTrabajosPerUser() as $row) {
-            $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
+            $html = $html . "<a class=\"list-group-item list-group-item-action\"><div id=\"mod_act_{$row['id_trabajo']}\" class=\"d-flex w-100 justify-content-between\">";
             $html = $html . "<h5 class=\"mb-1\">{$row['nombre_trabajo']}</h5>";
-            $html = $html . '<a><img class="dashboard_icon m-2" src="img/edit.png"></a>';
-            $html = $html . '<a><img class="dashboard_icon m-2" src="img/delete.png"></a>';
+            $html = $html . '<a href="#" onclick="showEditPanel(this)" title="Editar"><img class="dashboard_icon m-2" src="img/edit.png"></a>';
+            $html = $html . '<a title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
             $html = $html . '</div>';
             $html = $html . '</a><hr class="divider">';
         }
