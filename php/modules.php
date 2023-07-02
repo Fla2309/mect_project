@@ -4,7 +4,6 @@ include_once('connection.php');
 
 class Module extends DB
 {
-
     public function retrieveModules($group)
     {
         $query = $group != 0 ?
@@ -67,6 +66,36 @@ class Module extends DB
         return mysqli_fetch_array($this->connect()->query('SELECT COUNT(id_trabajo) FROM trabajos_usuarios WHERE revisado = 3 
         AND id_trabajo IN (SELECT id_trabajo FROM trabajos_modulos WHERE id_modulo = ' . $moduleId . ')
         AND id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\')'));
+    }
+
+    public function getModuleActivitiesDetails($type, $id)
+    {
+        $row = null;
+        $actType = '';
+        switch ($type) {
+            case 1:
+                $row = $this->connect()->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, modulos.nombre_modulo, tareas_modulos.comentarios 
+                FROM tareas_modulos, modulos 
+                WHERE tareas_modulos.id_modulo = modulos.id_modulo 
+                AND id_tarea = {$id}")->fetch_row();
+                $actType = 'homework';
+                break;
+            case 2:
+                $row = $this->connect()->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, modulos.nombre_modulo, trabajos_modulos.comentarios 
+                FROM trabajos_modulos, modulos 
+                WHERE trabajos_modulos.id_modulo = modulos.id_modulo 
+                AND id_trabajo = {$id}")->fetch_row();
+                $actType = 'activity';
+                break;
+        }
+        http_response_code(200);
+        return [
+            'actId' => $row[0],
+            'actName' => $row[1],
+            'moduleName' => $row[2],
+            'comments' => $row[3],
+            'actType' => $actType
+        ];
     }
 }
 

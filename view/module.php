@@ -84,9 +84,21 @@ $userModule = new UserModule();
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="passwordChange">
+                        <div class="input-group mb-2" hidden>
+                            <span class="input-group-text bg-primary text-white">ID</span>
+                            <input class="form-control" placeholder="Nombre" id="actId">
+                        </div>
+                        <div class="input-group mb-2" hidden>
+                            <span class="input-group-text bg-primary text-white">Tipo de actividad</span>
+                            <input class="form-control" placeholder="Nombre" id="actType">
+                        </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text bg-primary text-white">Nombre</span>
-                            <input class="form-control" placeholder="Nombre">
+                            <input class="form-control" placeholder="Nombre" id="actName">
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Módulo</span>
+                            <input class="form-control" placeholder="Nombre" id="moduleName">
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text bg-primary text-white">Plantilla</span>
@@ -94,9 +106,9 @@ $userModule = new UserModule();
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text bg-primary text-white">Comentarios</span>
-                            <textarea class="form-control" placeholder="Comentarios"></textarea>
+                            <textarea class="form-control" placeholder="Comentarios" id="comments"></textarea>
                         </div>
-                        <p id="errorPassword" class="text-danger" hidden></p>
+                        <p id="errorAct" class="text-danger" hidden></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
