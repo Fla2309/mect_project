@@ -13,6 +13,13 @@ $userModule = new UserModule();
     if ($userModule->getAdminPermissions())
         echo '<script src="../js/moduleAdmin.js"></script>';
     ?>
+    <table hidden="true">
+        <tr>
+            <td><input type="text" id="user" value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userId" value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
+            <td><input type="text" id="moduleId" value="<?php echo $_GET['module'] ?>" class="module_properties"></td>
+        </tr>
+    </table>
     <button type="button" class="btn btn-primary" onclick="reloadModules()"><img src="../img/left-arrow.png" width="20">
         Volver
     </button>
@@ -42,7 +49,7 @@ $userModule = new UserModule();
                 <div class="tab-pane card-body active" id="trabajos">
                     <?php
                     if ($userModule->getAdminPermissions())
-                        echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addHomework()"><img src="../img/plus.png" width="20"> Añadir</button></div>';
+                        echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addActivity(2)"><img src="../img/plus.png" width="20"> Añadir</button></div>';
                     $htmlTrabajos = $userModule->prepareHtmlTrabajos();
                     echo $htmlTrabajos !== "" ? $htmlTrabajos : "<h5>No hay trabajos para mostrar</h5>"
                         ?>
@@ -50,7 +57,7 @@ $userModule = new UserModule();
                 <div class="tab-pane card-body" id="tareas">
                     <?php
                     if ($userModule->getAdminPermissions())
-                        echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addHomework()"><img src="../img/plus.png" width="20"> Añadir</button></div>';
+                        echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addActivity(1)"><img src="../img/plus.png" width="20"> Añadir</button></div>';
                     $htmltareas = $userModule->prepareHtmlTareas();
                     echo $htmltareas !== "" ? $htmltareas : "<h5>No hay tareas para mostrar</h5>"
                         ?>
@@ -83,7 +90,7 @@ $userModule = new UserModule();
                         <h5 class="modal-title"></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" id="passwordChange">
+                    <div class="modal-body" id="editModule">
                         <div class="input-group mb-2" hidden>
                             <span class="input-group-text bg-primary text-white">ID</span>
                             <input class="form-control" placeholder="Nombre" id="actId">
@@ -98,11 +105,17 @@ $userModule = new UserModule();
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text bg-primary text-white">Módulo</span>
-                            <input class="form-control" placeholder="Nombre" id="moduleName">
+                            <select class="form-select" aria-label="Select module" id="modulesDropdown">
+                                <?php
+                                echo $userModule->getModuleHtmlDropdownTags();
+                                ?>
+                            </select>
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text bg-primary text-white">Plantilla</span>
-                            <input class="form-control" placeholder="Plantilla">
+                            <input class="form-control" placeholder="Plantilla" id="templateName">
+                            <a href="" download="" class="template"><img src="img/template.png" class="dashboard_icon m-2"
+                                    title="Descargar plantilla"></a>
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text bg-primary text-white">Comentarios</span>
@@ -118,7 +131,23 @@ $userModule = new UserModule();
                 </div>
             </div>
         </div>
-
+        <div class="modal fade" id="changesMadeModal" tabindex="-1" aria-labelledby="changesMadeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changesMadeModalLabel">Atención</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="changesMadeModalBody">
+                        Información actualizada con éxito
+                    </div>
+                    <div class="modal-footer">
+                        <p id="modal-footer_text">Serás redirigido al inicio en 3 segundos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="spinner" tabindex="-1" aria-labelledby="spinnerLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

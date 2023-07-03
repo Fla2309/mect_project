@@ -31,10 +31,10 @@
         <div style="width: auto;">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
-                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-toggle="tab"><img
+                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-target="#inicio" data-bs-toggle="tab"><img
                             src="../img/home.png" class="left_bar_icon"></a>
                 </li>
-                <li id="gruposNavItem" class="nav-item ">
+                <li id="gruposNavItem" class="nav-item">
                     <a class="nav-link " title="Grupos" data-bs-target="#grupos" data-bs-toggle="tab"><img
                             src="../img/group.png" class="left_bar_icon"></a>
                 </li>
@@ -46,25 +46,12 @@
                     <a class="nav-link" title="Módulos" data-bs-target="#modulos" data-bs-toggle="tab"><img
                             src="../img/book.png" class="left_bar_icon"></a>
                 </li>
-                <li id="coachingNavItem" class="nav-item">
-                    <a class="nav-link" title="Coachings" data-bs-target="#coaching" data-bs-toggle="tab"><img
-                            src="../img/coaching.png" class="left_bar_icon"></a>
-                </li>
-                <li id="presentacionesNavItem" class="nav-item">
-                    <a class="nav-link" title="Presentaciones" data-bs-target="#presentaciones"
-                        data-bs-toggle="tab"><img src="../img/presentation.png" class="left_bar_icon"></a>
-                </li>
                 <li id="examenesNavItem" class="nav-item">
                     <a class="nav-link" title="Exámenes" data-bs-target="#examen" data-bs-toggle="tab"><img
                             src="../img/test.png" class="left_bar_icon"></a>
                 </li>
             </ul>
         </div>
-        <table hidden="true">
-            <tr>
-                <td><input type="text" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
-            </tr>
-        </table>
         <div class="tab-content" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
                 <h2 style="padding: 2rem;">Bienvenid@,
@@ -169,25 +156,9 @@
                 <?php
                 include_once('./php/modules.php');
                 $moduleClass = new Module();
-                echo ($moduleClass)->retrieveModules($_SESSION['grupo'], true);
+                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
                 ?>
             </div>
-
-            <div class="tab-pane fade" id="coaching">Coaching Coaching Coaching Coaching Coaching Coaching Coaching
-                Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching
-                Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching Coaching
-                Coaching Coaching Coaching Coaching </div>
-            <div class="tab-pane fade" id="presentaciones">Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones Presentaciones
-                Presentaciones
-                Presentaciones </div>
             <div class="tab-pane fade" id="examen">Examen Examen Examen Examen Examen Examen Examen Examen Examen
                 Examen
                 Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen

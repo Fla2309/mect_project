@@ -74,14 +74,14 @@ class Module extends DB
         $actType = '';
         switch ($type) {
             case 1:
-                $row = $this->connect()->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, modulos.nombre_modulo, tareas_modulos.comentarios 
+                $row = $this->connect()->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, modulos.nombre_modulo, tareas_modulos.comentarios, tareas_modulos.plantilla 
                 FROM tareas_modulos, modulos 
                 WHERE tareas_modulos.id_modulo = modulos.id_modulo 
                 AND id_tarea = {$id}")->fetch_row();
                 $actType = 'homework';
                 break;
             case 2:
-                $row = $this->connect()->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, modulos.nombre_modulo, trabajos_modulos.comentarios 
+                $row = $this->connect()->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, modulos.nombre_modulo, trabajos_modulos.comentarios, trabajos_modulos.plantilla 
                 FROM trabajos_modulos, modulos 
                 WHERE trabajos_modulos.id_modulo = modulos.id_modulo 
                 AND id_trabajo = {$id}")->fetch_row();
@@ -94,8 +94,49 @@ class Module extends DB
             'actName' => $row[1],
             'moduleName' => $row[2],
             'comments' => $row[3],
+            'templateName' => $row[4],
             'actType' => $actType
         ];
+    }
+
+    public function deleteActivityFromModule($type, $actId)
+    {
+        $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
+        $idCol = $type == 1 ? 'id_tarea' : 'id_trabajo';
+        $query = $this->connect()->query("UPDATE {$table} SET status = 1 WHERE {$idCol} = {$actId}");
+        if ($query)
+            http_response_code(201);
+        else
+            http_response_code(400);
+
+    }
+
+    public function updateActivityFromModule($type, $actId, $values)
+    {
+        $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
+        $idCol = $type == 1 ? 'id_tarea' : 'id_trabajo';
+        $nameCol = $type == 1 ? 'nombre_tarea' : 'nombre_trabajo';
+        $query = $this->connect()->query("UPDATE {$table} SET 
+        {$nameCol} = '{$values['actName']}', 
+        id_modulo = {$values['moduleId']}, 
+        comentarios = '{$values['comments']}', 
+        plantilla = '{$values['templateName']}' 
+        WHERE {$idCol} = {$actId}");
+        if ($query)
+            http_response_code(201);
+        else
+            http_response_code(400);
+    }
+
+    public function createActivityFromModule($type, $values){
+        $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
+        $nameCol = $type == 1 ? 'nombre_tarea' : 'nombre_trabajo';
+        $query = $this->connect()->query("INSERT INTO {$table} (`nombre_tarea`, `id_modulo`, `comentarios`, `plantilla`, `status`) 
+            VALUES ('{$values['actName']}', {$values['moduleId']}, '{$values['comments']}', '{$values['templateName']}', 0)");
+        if ($query)
+            http_response_code(201);
+        else
+            http_response_code(400);
     }
 }
 
@@ -117,12 +158,12 @@ class UserModule
     public function getTareasPerUser()
     {
         if ($this->admin) {
-            $query = $this->conn->query('SELECT * FROM tareas_modulos WHERE id_modulo = ' . $this->moduleId) or die($this->conn->error);
+            $query = $this->conn->query('SELECT * FROM tareas_modulos WHERE status = 0 AND id_modulo = ' . $this->moduleId) or die($this->conn->error);
         } else {
             $query = $this->conn->query('SELECT tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
             tareas_modulos.comentarios, tareas_usuarios.adjunto, tareas_usuarios.revisado FROM tareas_modulos 
             INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
-            WHERE id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
+            WHERE status = 0 AND id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
             (SELECT id FROM usuarios WHERE id = \'' . $this->userId . '\')') or die($this->conn->error);
         }
         return $query;
@@ -131,12 +172,12 @@ class UserModule
     public function getTrabajosPerUser()
     {
         if ($this->admin) {
-            $query = $this->conn->query("SELECT * FROM trabajos_modulos WHERE id_modulo = {$this->moduleId}") or die($this->conn->error);
+            $query = $this->conn->query("SELECT * FROM trabajos_modulos WHERE status = 0 AND id_modulo = {$this->moduleId}") or die($this->conn->error);
         } else {
             $query = $this->conn->query("SELECT trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
             trabajos_usuarios.revisado, trabajos_usuarios.adjunto FROM trabajos_modulos 
             INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
-            WHERE id_modulo = {$this->moduleId} AND id_usuario IN 
+            WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
             (SELECT id FROM usuarios WHERE id = '{$this->userId}')") or die($this->conn->error);
         }
 
@@ -187,7 +228,7 @@ class UserModule
             $html = $html . "<a class=\"list-group-item list-group-item-action\"><div id=\"mod_hw_{$row['id_tarea']}\" class=\"d-flex w-100 justify-content-start\">";
             $html = $html . "<h5 class=\"mb-1\">{$row['nombre_tarea']}</h5>";
             $html = $html . '<a href="#" onclick="showEditPanel(this)" title="Editar"><img class="dashboard_icon m-2" src="img/edit.png"></a>';
-            $html = $html . '<a title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
+            $html = $html . '<a href="#" onclick="deleteActivity(this)" title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
             $html = $html . '</div>';
             $html = $html . '</a><hr class="divider">';
         }
@@ -256,7 +297,7 @@ class UserModule
             $html = $html . "<a class=\"list-group-item list-group-item-action\"><div id=\"mod_act_{$row['id_trabajo']}\" class=\"d-flex w-100 justify-content-between\">";
             $html = $html . "<h5 class=\"mb-1\">{$row['nombre_trabajo']}</h5>";
             $html = $html . '<a href="#" onclick="showEditPanel(this)" title="Editar"><img class="dashboard_icon m-2" src="img/edit.png"></a>';
-            $html = $html . '<a title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
+            $html = $html . '<a href="#" onclick="deleteActivity(this)" title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
             $html = $html . '</div>';
             $html = $html . '</a><hr class="divider">';
         }
@@ -332,6 +373,15 @@ class UserModule
         $path = $this->conn->query("SELECT directorio_local 
         FROM usuario_web WHERE id_usuario={$this->userId}") or die($this->conn->error);
         return mysqli_fetch_row($path)[0];
+    }
+
+    public function getModuleHtmlDropdownTags(){
+        $modules = $this->conn->query("SELECT id_modulo, nombre_modulo FROM modulos") or die($this->conn->error);
+        $html = '';
+        foreach ($modules as $module) {
+            $html = $html . "<option id=\"mod_{$module['id_modulo']}\" href=\"#\">{$module['nombre_modulo']}</option>";
+        }
+        return $html;
     }
 }
 ?>
