@@ -24,15 +24,16 @@
     <table hidden="true">
         <tr>
             <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
-            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>" value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
+                    value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
     </table>
     <div class="row">
         <div style="width: auto;">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
-                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-target="#inicio" data-bs-toggle="tab"><img
-                            src="../img/home.png" class="left_bar_icon"></a>
+                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-target="#inicio"
+                        data-bs-toggle="tab"><img src="../img/home.png" class="left_bar_icon"></a>
                 </li>
                 <li id="gruposNavItem" class="nav-item">
                     <a class="nav-link " title="Grupos" data-bs-target="#grupos" data-bs-toggle="tab"><img
@@ -47,8 +48,8 @@
                             src="../img/book.png" class="left_bar_icon"></a>
                 </li>
                 <li id="examenesNavItem" class="nav-item">
-                    <a class="nav-link" title="Exámenes" data-bs-target="#examen" data-bs-toggle="tab"><img
-                            src="../img/test.png" class="left_bar_icon"></a>
+                    <a class="nav-link" title="Exámenes" onclick="retrieveTests(setTestsHtml)" data-bs-target="#examen"
+                        data-bs-toggle="tab"><img src="../img/test.png" class="left_bar_icon"></a>
                 </li>
             </ul>
         </div>
@@ -127,7 +128,7 @@
                         <h1 class="mb-3">Usuarios Registrados</h1>
                         <hr class="divider">
                         <div class="col-4 mb-3 d-flex">
-                            <div class="col-7" id="controlPanel">
+                            <div class="col-7" id="usersControlPanel">
                                 <input class="form-control" type="text" id="txtUser"
                                     onkeyup="searchInList('txtUser','usersList')" placeholder="Buscar por nombre..."
                                     title="Escribe el nombre">
@@ -136,7 +137,7 @@
                                 <button type="button" class="btn btn-primary">Agregar Usuario</button>
                             </div>
                         </div>
-                        <div class="row mt-3 col-4" id="groupSelects">
+                        <div class="row mt-3 col-4" id="groupSelectsUsers">
                             <?php
                             include_once('./php/dashboard.php');
                             $dashboard = new Dashboard();
@@ -159,12 +160,41 @@
                 echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
                 ?>
             </div>
-            <div class="tab-pane fade" id="examen">Examen Examen Examen Examen Examen Examen Examen Examen Examen
-                Examen
-                Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen
-                Examen
-                Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen Examen
-                Examen
+            <script src="../js/testAdmin.js" type="text/javascript"></script>
+            <div class="tab-pane fade" id="examen">
+                <div class="d-flex">
+                    <div class="px-2 py-2 mx-2 my-2 col-6">
+                        <div class="px-3 py-3" style="background-color: white;">
+                            <h1 class="mb-3">Exámenes</h1>
+                            <hr class="divider">
+                            <div class="col-4 mb-3 d-flex">
+                                <button type="button" class="btn btn-primary">Crear Examen</button>
+                            </div>
+                            <div class="accordion" id="testsAccordion">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-2 py-2 mx-2 my-2 col-6">
+                        <div class="px-3 py-3" style="background-color: white;">
+                            <h1 class="mb-3">Búsqueda de exámenes</h1>
+                            <hr class="divider">
+                            <div class="col-4 mb-3 d-flex">
+                                <div class="col-10" id="testsControlPanel">
+                                    <input class="form-control" type="text" id="txtTest"
+                                        onkeyup="searchInList('txtTest','testsList')" placeholder="Buscar por nombre..."
+                                        title="Escribe el nombre">
+                                </div>
+                            </div>
+                            <div class="row mt-3 col-7" id="groupSelectsTests">
+                                <?php
+                                $dashboard = new Dashboard();
+                                echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

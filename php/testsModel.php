@@ -7,10 +7,18 @@ class Tests
 {
     private $userId;
     private $conn;
+    private $admin;
     public function __construct($userId)
     {
         $this->userId = $userId;
         $this->conn = (new DB)->connect();
+        $this->setAdminPermissions($_GET['userId']);
+    }
+
+    function setAdminPermissions($userId)
+    {
+        $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
+        $this->admin = $query[0] > 1 ? true : false;
     }
 
     public function retrieveTestsPerUser()
@@ -36,6 +44,72 @@ class Tests
         AND examenes_grupos.id_examen = examenes.id_examen 
         AND examenes_grupos.id_grupo=usuarios.id_grupo 
         AND usuarios.id=" . $this->userId);
+    }
+
+    public function retrieveTestsAdmin()
+    {
+        if ($this->admin) {
+            $rows = $this->conn->query("SELECT * FROM examenes");
+            $data = [];
+            foreach ($rows as $row) {
+                array_push($data, [
+                    'testId' => $row['id_examen'],
+                    'testName' => $row['nombre'],
+                    'comments' => $row['comentarios'],
+                    'questions' => $this->retrieveTestQuestions($row['id_examen'])
+                ]);
+            }
+            http_response_code(200);
+            return $data;
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
+    }
+
+    function retrieveTestQuestions($testId)
+    {
+        if ($this->admin) {
+            $data = [];
+            $rows = $this->conn->query("SELECT * FROM examenes_reactivos WHERE id_examen = {$testId}");
+            $data = [];
+            foreach ($rows as $row) {
+                array_push($data, [
+                    'questionId' => $row['id_reactivo'],
+                    'question' => $row['reactivo'],
+                ]);
+            }
+            http_response_code(200);
+            return $data;
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
+    }
+
+    public function retrieveFinishedExamsAdmin()
+    {
+        if ($this->admin) {
+            $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre, usuarios.nombre, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
+                FROM examenes_usuarios, examenes, usuarios 
+                WHERE examenes_usuarios.id_usuario = usuarios_id
+                AND examenes.id_examen=examenes_usuarios.id_examen");
+            $data = [];
+            foreach ($rows as $row) {
+                array_push($data, [
+                    'id' => $row['id'],
+                    'testName' => $row['examenes.nombre'],
+                    'userName' => $row['usuarios.nombre'],
+                    'result' => $row['resultado'],
+                    'dateApplied' => $row['fecha_aplicacion']
+                ]);
+            }
+            http_response_code(200);
+            return $data;
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
     }
 }
 
