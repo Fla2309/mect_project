@@ -14,6 +14,7 @@ class UserGroup
         $this->conn = (new DB())->connect();
     }
 
+    //duplicated code (users.php)
     public function prepareHtmlUsuarios($users = 0)
     {
         $html = '';
@@ -22,10 +23,10 @@ class UserGroup
             while ($user = mysqli_fetch_array($users)) {
                 $html = $html . '<li class="list-group-item" id="user_' . $user['id'] . '"><a>';
                 $html = $html . $user['nombre'] . ' ' . $user['apellidos'] . '</a>';
-                $html = $html . '<a><img src="img/del_user.png" title="Eliminar usuario" class="dashboard_icon ms-4 me-1"></a>';
-                $html = $html . '<a><img src="img/settings.png" title="Configuración" class="dashboard_icon m-1"></a>';
-                $html = $html . '<a><img src="img/payment.png" title="Pagos" class="dashboard_icon  m-1"></a>';
-                $html = $html . '<a><img src="img/books.png" title="Perfil académico" class="dashboard_icon  m-1"></a>';
+                $html = $html . '<a href="#" onclick="deleteStudent(this)"><img src="img/del_user.png" title="Eliminar usuario" class="dashboard_icon ms-4 me-1"></a>';
+                $html = $html . '<a href="#" onclick="showUserSettings(this, setParametersInSettingsModal)"><img src="img/settings.png" title="Configuración" class="dashboard_icon m-1"></a>';
+                $html = $html . '<a href="#" onclick="showPaymentModal(this)"><img src="img/payment.png" title="Pagos" class="dashboard_icon  m-1"></a>';
+                $html = $html . '<a href="#" onclick="showStudentSchoolProfile(this)"><img src="img/books.png" title="Perfil académico" class="dashboard_icon  m-1"></a>';
                 $html = $html . '</li>';
             }
         } else {
@@ -64,6 +65,7 @@ class UserGroup
         return $html;
     }
 
+    //duplicado con users.php
     public function prepareHtmlPagos($payments = 0)
     {
         $html = '';

@@ -137,16 +137,16 @@
                                 <button type="button" class="btn btn-primary">Agregar Usuario</button>
                             </div>
                         </div>
-                        <div class="row mt-3 col-4" id="groupSelectsUsers">
-                            <?php
-                            include_once('./php/dashboard.php');
-                            $dashboard = new Dashboard();
-                            echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
-                            ?>
-                        </div>
+                        <!-- <div class="row mt-3 col-4" id="groupSelectsUsers">
+                            //<?php
+                            //include_once('./php/dashboard.php');
+                            //$dashboard = new Dashboard();
+                            //echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
+                            //?>
+                        </div> -->
                         <?php
                         include_once('./php/users.php');
-                        $userGroup = new Users($_SESSION['user']);
+                        $userGroup = new Users($_SESSION['userId']);
                         echo $userGroup->prepareHtmlUsuarios($userGroup->getUsuarios());
                         ?>
                     </div>
@@ -194,6 +194,94 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modals-->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="userSettings">
+                    <div class="input-group mb-2" hidden>
+                        <span class="input-group-text bg-primary text-white">ID</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserId">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nombre y Apellidos</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserName">
+                        <input class="form-control" placeholder="Nombre" id="targetUserLastname">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nombre/Alias Preferido</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserPrefName">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Grupo de PL/AM</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserPlId">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Grupo de MECT</span>
+                        <select class="form-select" aria-label="Select module" id="groupsDropdown">
+                            <?php
+                            $moduleClass = new Groups();
+                            echo $moduleClass->getGroupHtmlDropdownTags();
+                            ?>
+                        </select>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Fecha de Ingreso MECT</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserDate">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Correo</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserMail">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Teléfono</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserPhone">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Usuario</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserLogin">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nivel de Usuario</span>
+                        <select class="form-select" aria-label="Select module" id="levelsDropdown">
+                            <?php
+                            echo $moduleClass->getUserLevelHtmlDropdownTags();
+                            ?>
+                        </select>
+                    </div>
+
+                    <p id="errorAct" class="text-danger" hidden></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUserChanges()">Guardar
+                        cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changesMadeModal" tabindex="-1" aria-labelledby="changesMadeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changesMadeModalLabel">Atención</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="changesMadeModalBody">
+                    Información actualizada con éxito
+                </div>
+                <div class="modal-footer">
+                    <p id="modal-footer_text">Serás redirigido al inicio en 3 segundos</p>
                 </div>
             </div>
         </div>

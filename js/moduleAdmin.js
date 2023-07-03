@@ -123,5 +123,5 @@ function saveChanges() {
                 }
             } setInterval(redirect, 1000);
         })
-    })
+    });
 }

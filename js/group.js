@@ -5,7 +5,6 @@ function showGroupHtml(button) {
     var url =
         prepareUrlGroups(document.getElementsByClassName("user_properties"), group_id);
     groupHtml = $('#grupos').html();
-    console.log(url);
     $('#grupos').load("../view/group.php?" + url);
 }
 

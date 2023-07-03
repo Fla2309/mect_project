@@ -20,6 +20,13 @@ if (isset($_GET['type'])) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($settings->setProfilePicture($_GET['userId'], $_GET['pictureName'], file_get_contents('php://input')));
             break;
+        case 4:
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($settings->retrieveSettings($_GET['targetUser']));
+            break;
+            case 5:
+                $user = $settings->saveSettings();
+                break;
         default:
             http_response_code(404);
             break;

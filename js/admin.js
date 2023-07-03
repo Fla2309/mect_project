@@ -32,7 +32,7 @@ function prepareUrl(data) {
 }
 
 function goToTab(link) {
-    id=link.getAttribute("href").replace('#',"") + "NavItem";
+    id = link.getAttribute("href").replace('#', "") + "NavItem";
     document.getElementById(id).getElementsByTagName("a")[0].click();
 }
 
@@ -51,4 +51,133 @@ function searchInList(txtName, ulName) {
             li[i].style.display = "none";
         }
     }
+}
+
+function deleteStudent(data) {
+    parent = $(data).parent();
+    idString = "targetUser=" + $(parent).attr('id').replace('user_', '');
+    console.log("../php/usersController.php?" + idString + "&userId=" + $('#userId').val() + "&data=delete");
+    if (confirm("¿Eliminar usuario " + $(parent).find('a:first-of-type').text() + "? Esta acción no se puede deshacer")) {
+        $.ajax({
+            method: "POST",
+            url: "../php/usersController.php?" + idString + "&userId=" + $('#userId').val() + "&data=delete"
+        }).done(function () {
+            if (alert("Usuario eliminado exitosamente. Serás redirigido a la pantalla de inicio")) {
+                window.location = './index.php';
+            } else {
+                window.location = './index.php';
+            }
+        }).fail(function () {
+            alert("Hubo un problema al eliminar el usuario. Inténtalo más tarde o contacta a soporte");
+        });
+    }
+}
+
+function showUserSettings(data, callback) {
+    parent = $(data).parent();
+    idString = "targetUser=" + $(parent).attr('id').replace('user_', '');
+    console.log("../php/settingsController.php?type=4&" + idString + "&userId=" + $('#userId').val());
+    $.ajax({
+        method: "POST",
+        url: "../php/settingsController.php?type=4&" + idString + "&userId=" + $('#userId').val(),
+        success: function (json) {
+            callback(json);
+        }
+    });
+}
+
+function setParametersInSettingsModal(json) {
+    $('#targetUserId').val(json['targetUserId']);
+    $('#targetUserName').val(json['targetUserName']);
+    $('#targetUserLastname').val(json['targetUserLastname']);
+    $('#targetUserPrefName').val(json['targetUserPrefName']);
+    $('#targetUserPlId').val(json['targetUserPlId']);
+    const groupSelectElement = document.getElementById('groupsDropdown');
+    for (let i = 0; i < groupSelectElement.options.length; i++) {
+        const option = groupSelectElement.options[i];
+        if (option.value === json['targetUserGroupName']) {
+            option.selected = true;
+            break;
+        }
+    }
+    $('#targetUserDate').val(json['targetUserDate']);
+    $('#targetUserMail').val(json['targetUserMail']);
+    $('#targetUserPhone').val(json['targetUserPhone']);
+    $('#targetUserLogin').val(json['targetUserLogin']);
+    $('#userLevel').val(json['userLevel']);
+    const levelSelectElement = document.getElementById('levelsDropdown');
+    for (let i = 0; i < levelSelectElement.options.length; i++) {
+        const option = levelSelectElement.options[i];
+        if (option.value === json['targetUserLevel']) {
+            option.selected = true;
+            break;
+        }
+    }
+    $('#settingsModal').modal('show');
+}
+
+function showPaymentFrame(data, callback) {
+    parent = $(data).parent();
+    id = $(parent).attr('id').replace('user_', '');
+    if (!$('#payments_frame_' + id).length) {
+        idString = "targetUser=" + id;
+        console.log("../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val());
+        $.ajax({
+            method: "POST",
+            url: "../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val(),
+            success: function (html) {
+                callback(html, $(parent).attr('id').replace('user_', ''));
+            }
+        });
+    } else {
+        $('#payments_frame_' + id).fadeOut();
+    }
+}
+
+function setPaymentsFrameInUser(html, id) {
+    var div = document.createElement("div");
+    div.id = "payments_frame_" + id;
+    div.innerHTML = html
+    document.getElementById('user_' + id).appendChild(div);
+}
+
+function showStudentSchoolProfile(data) {
+
+}
+
+function saveUserChanges() {
+    var url = "";
+    data = [
+        "userId=" + $('#targetUserId').attr('value'),
+        "userName=" + $('#targetUserName').attr('value'),
+        "UserLastname=" + $('#targetUserLastname').attr('value'),
+        "userPL=" + $('#targetUserPlId').attr('value'),
+        "userGroup=" + $('#groupsDropdown option:selected').attr('id').replace('group_', ''),
+        "userDate=" + $('#targetUserDate').attr('value'),
+        "userAlias=" + $('#targetUserPrefName').attr('value'),
+        "userLevel=" + $('#levelsDropdown option:selected').attr('id').replace('level_', ''),
+        "userLogin=" + $('#targetUserLogin').attr('value'),
+        "userMail=" + $('#targetUserMail').attr('value'),
+        "userPhone=" + $('#targetUserPhone').attr('value')
+    ];
+    url = "../php/settingsController.php?type=5&" + data.join('&');
+    console.log(url);
+    $.ajax({
+        method: "POST",
+        url: url
+    }).done(function () {
+        $('#settingsModal').modal('hide');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            function redirect() {
+                if (seconds <= 0) {
+                    window.location = '/index.php';
+                } else {
+                    seconds--;
+                    document.getElementById("modal-footer_text").innerHTML = "Serás redirigido al inicio en " + seconds + " segundos"
+                }
+            } setInterval(redirect, 1000);
+        })
+    });
 }

@@ -20,20 +20,50 @@ class Settings
         12 => array('userPhone', 'telefono', 1)
     ];
     private $userId;
+    private $admin;
     public function __construct($userId)
     {
         $this->userId = $userId;
         $this->conn = (new DB)->connect();
+        $this->setAdminPermissions($userId);
     }
 
-    function retrieveSettings()
+    function setAdminPermissions($userId)
     {
-        if ($this->userId !== $_SESSION['userId'])
+        $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
+        $this->admin = $query[0] > 1 ? true : false;
+    }
+
+    public function retrieveSettings($targetUser = null)
+    {
+        if ($this->userId !== $_SESSION['userId'] && !$this->admin)
             return 406;
-        $query = (new DB)->connect()->query('SELECT id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
-        FROM usuarios, grupos 
-        WHERE id=\'' . $this->userId . '\' AND usuarios.id_grupo = grupos.id_grupo;');
-        return mysqli_fetch_assoc($query);
+        if ($targetUser != null) {
+            $data = [];
+            $query = mysqli_fetch_assoc($this->conn->query("SELECT id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
+                FROM usuarios, grupos 
+                WHERE id={$targetUser} AND usuarios.id_grupo = grupos.id_grupo;"));
+            $data = [
+                'targetUserId' => $query['id'],
+                'targetUserName' => $query['nombre'],
+                'targetUserLastname' => $query['apellidos'],
+                'targetUserPlId' => $query['id_pl'],
+                'targetUserGroupId' => $query['id_grupo'],
+                'targetUserGroupName' => $query['nombre_grupo'],
+                'targetUserDate' => $query['fecha_ingreso'],
+                'targetUserPrefName' => $query['nombre_preferido'],
+                'targetUserLevel' => $query['nivel_usuario'],
+                'targetUserLogin' => $query['login_user'],
+                'targetUserMail' => $query['correo'],
+                'targetUserPhone' => $query['telefono']
+            ];
+            return $data;
+        } else {
+            $query = $this->conn->query("SELECT id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
+                FROM usuarios, grupos 
+                WHERE id={$this->userId} AND usuarios.id_grupo = grupos.id_grupo;");
+            return mysqli_fetch_assoc($query);
+        }
     }
 
     public function saveSettings()
@@ -41,15 +71,16 @@ class Settings
         $string = '';
         $query = $this->retrieveUser();
         $user = $query->fetch_object();
-        if (isset($_GET[$this->settings[9][0]])) {
+        if (isset($_GET[$this->settings[9][0]]) && $_GET['type'] != 5) {
             if ($this->validateLogin($_GET[$this->settings[9][0]])) {
+                http_response_code(406);
                 echo 'El usuario ingresado ya existe';
                 return;
             }
         }
         for ($param = 2; $param <= count($this->settings); $param++) {
             if (isset($_GET[$this->settings[$param][0]])) {
-                if ($user->nivel_usuario >= $this->settings[$param][2]) {
+                if ($user->nivel_usuario >= $this->settings[$param][2] || $_GET['type'] == 5) {
                     $string = $string . $this->settings[$param][1] . ' = \'' . $_GET[$this->settings[$param][0]] . '\'';
                     $param++;
                     if ($param >= count($_GET))
