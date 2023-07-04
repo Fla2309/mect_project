@@ -119,6 +119,7 @@
                 <div class="mx-3 my-5" style="background-color: white">
                     <h2 class="px-3 py-3">Coachings Registrados</h2>
                     <hr class="divider">
+                    <input type="button" class="btn btn-primary ms-2" value="Agregar Sesión" onclick="showCoachingModal()">
                     <table class="table table-hover">
                         <thead>
                             <th scope="col">Nombre del archivo</th>
@@ -177,6 +178,96 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modals-->
+    <div class="modal fade" id="coachingModal" tabindex="-1" aria-labelledby="coachingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar coaching</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="coachingBody">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Coach</span>
+                        <input type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción...">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Descripción del lugar</span>
+                        <input type="password" id="newPass" class="form-control" placeholder="Escriba una descripción...">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Fecha</span>
+                        <input type="password" id="newPass" class="form-control" placeholder="Escriba una descripción...">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Lugar</span>
+                        <input type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción...">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Tiempo de interacción</span>
+                        <input type="password" id="newPass" class="form-control" placeholder="Escriba una descripción...">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Coachee</span>
+                        <input type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción...">
+                    </div>
+                    <div class="mt-5 text-center">
+                        <h5>SOBRE LA SESIÓN</h5>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Cuál fue el quiebre declarado?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Cuál fue el quiebre que se trabajó?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Cómo fue el proceso de indagación? ¿Qué valor le agregó a la conversación?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Cuál fue la interpretación que tuviste del quiebre?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Cómo fue la emoción de la interacción?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Cómo fue la corporalidad del coachee durante la interacción?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Qué nuevas acciones son posibles para el coachee después de tu intervención?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="mt-5 text-center">
+                        <h5>REFLEXIONES POSTERIORES AL COACHING (información de la experiencia del coach)</h5>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Qué emociones vivencié?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Qué áreas de aprendizaje puedo declarar?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">¿Qué nuevas preguntas surgen a partir de esta experiencia?</span>
+                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                    </div>
+                    <p id="errorPassword" class="text-danger" hidden></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCoaching(1)">Guardar
+                        cambios</button>
                 </div>
             </div>
         </div>

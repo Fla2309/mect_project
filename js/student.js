@@ -55,3 +55,7 @@ function goToTab(link) {
     id=link.getAttribute("href").replace('#',"") + "NavItem";
     document.getElementById(id).getElementsByTagName("a")[0].click();
 }
+
+function showCoachingModal(){
+    $('#coachingModal').modal('show');
+}
