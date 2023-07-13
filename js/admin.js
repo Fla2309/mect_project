@@ -129,7 +129,7 @@ function showPaymentFrame(data, callback) {
             }
         });
     } else {
-        $('#payments_frame_' + id).fadeOut();
+        $('#payments_frame_' + id).remove();
     }
 }
 

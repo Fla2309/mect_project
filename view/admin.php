@@ -200,14 +200,14 @@
     </div>
 
     <!--Modals-->
-    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="paymentsModal" tabindex="-1" aria-labelledby="paymentsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Configuración del Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="userSettings">
+                <div class="modal-body" id="userpayments">
                     <div class="input-group mb-2" hidden>
                         <span class="input-group-text bg-primary text-white">ID</span>
                         <input class="form-control" placeholder="Nombre" id="targetUserId">

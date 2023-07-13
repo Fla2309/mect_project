@@ -20,7 +20,7 @@ class Users
         $this->admin = $query[0] > 1 ? true : false;
     }
 
-    //duplicated code (group.php)
+    //duplicated code (groupModel.php)
     public function prepareHtmlUsuarios($users)
     {
         $html = '';
@@ -68,7 +68,7 @@ class Users
         }
     }
     
-    //duplicado con group.php
+    //duplicado con groupModel.php
     public function prepareHtmlPagos($userId)
     {
         $rows = $this->conn->query('SELECT pagos.id_pago, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre, usuarios.apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo 
