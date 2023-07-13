@@ -76,7 +76,6 @@ function deleteStudent(data) {
 function showUserSettings(data, callback) {
     parent = $(data).parent();
     idString = "targetUser=" + $(parent).attr('id').replace('user_', '');
-    console.log("../php/settingsController.php?type=4&" + idString + "&userId=" + $('#userId').val());
     $.ajax({
         method: "POST",
         url: "../php/settingsController.php?type=4&" + idString + "&userId=" + $('#userId').val(),
@@ -148,17 +147,17 @@ function showStudentSchoolProfile(data) {
 function saveUserChanges() {
     var url = "";
     data = [
-        "userId=" + $('#targetUserId').attr('value'),
-        "userName=" + $('#targetUserName').attr('value'),
-        "UserLastname=" + $('#targetUserLastname').attr('value'),
-        "userPL=" + $('#targetUserPlId').attr('value'),
+        "userId=" + document.getElementById('targetUserId').value,
+        "userName=" + document.getElementById('targetUserName').value,
+        "userLastname=" + document.getElementById('targetUserLastname').value,
+        "userPL=" + document.getElementById('targetUserPlId').value,
         "userGroup=" + $('#groupsDropdown option:selected').attr('id').replace('group_', ''),
-        "userDate=" + $('#targetUserDate').attr('value'),
-        "userAlias=" + $('#targetUserPrefName').attr('value'),
+        "userDate=" + document.getElementById('targetUserDate').value,
+        "userAlias=" + document.getElementById('targetUserPrefName').value,
         "userLevel=" + $('#levelsDropdown option:selected').attr('id').replace('level_', ''),
-        "userLogin=" + $('#targetUserLogin').attr('value'),
-        "userMail=" + $('#targetUserMail').attr('value'),
-        "userPhone=" + $('#targetUserPhone').attr('value')
+        "userLogin=" + document.getElementById('targetUserLogin').value,
+        "userMail=" + document.getElementById('targetUserMail').value,
+        "userPhone=" + document.getElementById('targetUserPhone').value
     ];
     url = "../php/settingsController.php?type=5&" + data.join('&');
     console.log(url);

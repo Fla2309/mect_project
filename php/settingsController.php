@@ -26,6 +26,7 @@ if (isset($_GET['type'])) {
             break;
             case 5:
                 $user = $settings->saveSettings();
+                //echo json_encode($user);
                 break;
         default:
             http_response_code(404);

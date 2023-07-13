@@ -7,13 +7,13 @@ class Settings
     private $conn;
     private $settings = [
         1 => array('userId', 'id', 3),
-        2 => array('userName', 'nombre', 2),
-        3 => array('UserLastname', 'apellidos', 2),
-        4 => array('userPL', 'id_pl', 2),
-        5 => array('userGroup', 'id_grupo', 2),
-        6 => array('userDate', 'fecha_ingreso', 2),
+        2 => array('userName', 'nombre', 3),
+        3 => array('userLastname', 'apellidos', 3),
+        4 => array('userPL', 'id_pl', 3),
+        5 => array('userGroup', 'id_grupo', 3),
+        6 => array('userDate', 'fecha_ingreso', 3),
         7 => array('userAlias', 'nombre_preferido', 1),
-        8 => array('userLevel', 'nivel_usuario', 2),
+        8 => array('userLevel', 'nivel_usuario', 3),
         9 => array('userLogin', 'login_user', 1),
         10 => array('userPass', 'login_pass', 1),
         11 => array('userMail', 'correo', 1),
@@ -71,6 +71,7 @@ class Settings
         $string = '';
         $query = $this->retrieveUser();
         $user = $query->fetch_object();
+        //$console = '';
         if (isset($_GET[$this->settings[9][0]]) && $_GET['type'] != 5) {
             if ($this->validateLogin($_GET[$this->settings[9][0]])) {
                 http_response_code(406);
@@ -82,7 +83,8 @@ class Settings
             if (isset($_GET[$this->settings[$param][0]])) {
                 if ($user->nivel_usuario >= $this->settings[$param][2] || $_GET['type'] == 5) {
                     $string = $string . $this->settings[$param][1] . ' = \'' . $_GET[$this->settings[$param][0]] . '\'';
-                    $param++;
+                    //$param++;
+                    //$console = $console.' -- ' . "{$this->settings[$param][0]} = {$_GET[$this->settings[$param][0]]} / $param";
                     if ($param >= count($_GET))
                         break;
                     $string = $string . ', ';
