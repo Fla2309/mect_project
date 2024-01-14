@@ -141,7 +141,14 @@ function setPaymentsFrameInUser(html, id) {
 }
 
 function showStudentSchoolProfile(data) {
-
+    parent = $(data).parent();
+    id = $(parent).attr('id').replace('user_', '');
+    $.ajax({
+        method: "POST",
+        url: "../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val(),
+    }).done({
+        
+    });
 }
 
 function saveUserChanges() {

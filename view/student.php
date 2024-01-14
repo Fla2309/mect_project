@@ -25,8 +25,8 @@
         </tr>
     </table>
 
-    <div class="row">
-        <div style="width: auto;">
+    <div class="row g-0">
+        <div style="width: 55px;" class="col-auto">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
                     <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-toggle="tab"><img
@@ -50,15 +50,15 @@
                 </li>
             </ul>
         </div>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
-                <div class="d-flex">
+        <div class="tab-content col-auto">
+            <div class="tab-pane fade show active" style="width: auto;" id="inicio">
+                <div class="d-flex mt-2 ms-2">
+                    <img src="../<?php echo $_SESSION['foto_perfil']!=='none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png' ?>" class="profile_pic" alt="Foto de Perfil">
                     <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>
                     </h2>
-                    <img src="../<?php echo $_SESSION['foto_perfil']!=='none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png' ?>" class="profile_pic" alt="Foto de Perfil">
                 </div>
-                <div class="row w-100">
+                <div class="row">
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Módulos Activos</h4>
