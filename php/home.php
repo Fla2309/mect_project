@@ -10,6 +10,8 @@ switch ($_SESSION['nivel_usuario']) {
         include_once "view/student.php";
         break;
     case 2:
+    case 3:
+    case 4:
         include_once "view/admin.php";
         break;
     default:

@@ -90,16 +90,16 @@ class Tests
     public function retrieveFinishedExamsAdmin()
     {
         if ($this->admin) {
-            $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre, usuarios.nombre, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
+            $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre AS examen_nombre, usuarios.nombre AS usuario_nombre, usuarios.apellidos, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
                 FROM examenes_usuarios, examenes, usuarios 
-                WHERE examenes_usuarios.id_usuario = usuarios_id
+                WHERE examenes_usuarios.id_usuario = usuarios.id
                 AND examenes.id_examen=examenes_usuarios.id_examen");
             $data = [];
             foreach ($rows as $row) {
                 array_push($data, [
                     'id' => $row['id'],
-                    'testName' => $row['examenes.nombre'],
-                    'userName' => $row['usuarios.nombre'],
+                    'testName' => $row['examen_nombre'],
+                    'userName' => $row['usuario_nombre'] . ' ' . $row['apellidos'],
                     'result' => $row['resultado'],
                     'dateApplied' => $row['fecha_aplicacion']
                 ]);

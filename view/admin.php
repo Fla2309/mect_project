@@ -28,8 +28,8 @@
                     value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
     </table>
-    <div class="row">
-        <div style="width: auto;">
+    <div class="row g-0">
+    <div style="width: 55px;" class="col-auto">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
                     <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-target="#inicio"
@@ -48,12 +48,12 @@
                             src="../img/book.png" class="left_bar_icon"></a>
                 </li>
                 <li id="examenesNavItem" class="nav-item">
-                    <a class="nav-link" title="Exámenes" onclick="retrieveTests(setTestsHtml)" data-bs-target="#examen"
+                    <a class="nav-link" title="Exámenes" onclick="loadTestsPage()" data-bs-target="#examen"
                         data-bs-toggle="tab"><img src="../img/test.png" class="left_bar_icon"></a>
                 </li>
             </ul>
         </div>
-        <div class="tab-content" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
+        <div class="tab-content col-auto" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
                 <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>
@@ -191,6 +191,8 @@
                                 $dashboard = new Dashboard();
                                 echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
                                 ?>
+                            </div>
+                            <div class="list-group" id="testsList" role="tablist">
                             </div>
                         </div>
                     </div>

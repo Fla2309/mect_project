@@ -35,6 +35,10 @@ switch ($_GET['type']) {
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($tests->retrieveTestsAdmin());
         break;
+    case 4:
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($tests->retrieveFinishedExamsAdmin());
+        break;
     default:
         break;
 }
