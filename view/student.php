@@ -13,6 +13,7 @@
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
     <script src="../js/student.js"></script>
+    <script src="../js/file.js"></script>
     <title>Portal del alumno</title>
 </head>
 

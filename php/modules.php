@@ -160,7 +160,7 @@ class UserModule
         if ($this->admin) {
             $query = $this->conn->query('SELECT * FROM tareas_modulos WHERE status = 0 AND id_modulo = ' . $this->moduleId) or die($this->conn->error);
         } else {
-            $query = $this->conn->query('SELECT tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
+            $query = $this->conn->query('SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
             tareas_modulos.comentarios, tareas_usuarios.adjunto, tareas_usuarios.revisado FROM tareas_modulos 
             INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
             WHERE status = 0 AND id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
@@ -174,7 +174,7 @@ class UserModule
         if ($this->admin) {
             $query = $this->conn->query("SELECT * FROM trabajos_modulos WHERE status = 0 AND id_modulo = {$this->moduleId}") or die($this->conn->error);
         } else {
-            $query = $this->conn->query("SELECT trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
+            $query = $this->conn->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
             trabajos_usuarios.revisado, trabajos_usuarios.adjunto FROM trabajos_modulos 
             INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
             WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
@@ -275,7 +275,7 @@ class UserModule
             $html = $html . '<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
             $html = $html . '<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
             $html = $html . '<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
-            $html = $uplEnabled ? $html . '<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
+            $html = $uplEnabled ? $html . '<label for="tareas-file-input-' . $row['id_tarea'] . '" onclick="selectFile(this)"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" onchange="uploadFile(this, 2)" id="tareas-file-input-' . $row['id_tarea'] . '" name="foto" type="file">' : $html;
             $html = ($status !== $statusLayout) ? $html . "<a href=\"" . $this->getUserLocalPath() . "tareas/{$row['adjunto']}\" download=\"{$row['adjunto']}\"><img src=\"img/download.png\" class=\"dashboard_icon m-2\" title=\"Descargar tarea\"></a>" : $html;
             $html = $html . '</form></div><hr class="divider">';
             $html = $html . '</a>';
@@ -343,7 +343,7 @@ class UserModule
             $html = $html . '<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
             $html = $html . '<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
             $html = $html . '<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
-            $html = $uplEnabled ? $html . '<label for="file-input"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir trabajo"></label><input style="display: none;" id="file-input" name="foto" type="file">' : $html;
+            $html = $uplEnabled ? $html . '<label for="trabajos-file-input-' . $row['id_trabajo'] . '" onclick="uploadFile(this, 1)"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir trabajo"></label><input style="display: none;" id="trabajos-file-input-' . $row['id_trabajo'] . '" name="foto" type="file">' : $html;
             $html = ($status !== $statusLayout) ? $html . "<a href=\"" . $this->getUserLocalPath() . "trabajos/{$row['adjunto']}\" download=\"{$row['adjunto']}\"><img src=\"img/download.png\" class=\"dashboard_icon m-2\" title=\"Descargar trabajo\"></a>" : $html;
             $html = $html . '</form></div></a><hr class="divider">';
         }
@@ -384,4 +384,3 @@ class UserModule
         return $html;
     }
 }
-?>
