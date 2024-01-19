@@ -107,16 +107,16 @@ class Files extends DB
 
     function deletePreviousFile($type, $username, $previousFile)
     {
-        // $folder = $type == 1 ? 'trabajos' : 'tareas';
-        // $srcPath = "../resources/users/{$username}/{$folder}/{$previousFile}";
-        // if (file_exists($srcPath)) {
-        //     if (unlink($srcPath)) {
-        //         echo 'Archivo borrado exitosamente.';
-        //     } else {
-        //         echo 'Error al borrar el archivo.';
-        //     }
-        // } else {
-        //     echo 'El archivo no existe.';
-        // }
+        $folder = $type == 1 ? 'trabajos' : 'tareas';
+        $srcPath = "../resources/users/{$username}/{$folder}/{$previousFile}";
+        if (file_exists($srcPath)) {
+            if (unlink($srcPath)) {
+                echo 'Archivo borrado exitosamente.';
+            } else {
+                echo 'Error al borrar el archivo.';
+            }
+        } else {
+            echo 'El archivo no existe.';
+        }
     }
 }

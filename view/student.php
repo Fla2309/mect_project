@@ -21,8 +21,12 @@
     <?php include_once('view/navbar.php') ?>
     <table hidden="true">
         <tr>
-            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
-            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>" value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
+            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>"
+                    value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
+                    value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userFullName" placeholder="<?php echo $_SESSION['userId'] ?>"
+                    value="<?php echo $_SESSION['fullname'] ?>" class="user_properties"></td>
         </tr>
     </table>
 
@@ -34,37 +38,38 @@
                             src="../img/home.png" class="left_bar_icon"></a>
                 </li>
                 <li id="modulosNavItem" class="nav-item">
-                    <a class="nav-link" title="Módulos" data-bs-target="#modulos" data-bs-toggle="tab"><img src="../img/book.png"
-                            class="left_bar_icon"></a>
+                    <a class="nav-link" title="Módulos" data-bs-target="#modulos" data-bs-toggle="tab"><img
+                            src="../img/book.png" class="left_bar_icon"></a>
                 </li>
                 <li id="coachingNavItem" class="nav-item">
-                    <a class="nav-link" title="Coaching" data-bs-target="#coaching" data-bs-toggle="tab"><img
-                            src="../img/coaching.png" class="left_bar_icon"></a>
+                    <a class="nav-link" title="Coaching" onclick="generateCoachingPage()" data-bs-target="#coaching"
+                        data-bs-toggle="tab"><img src="../img/coaching.png" class="left_bar_icon"></a>
                 </li>
                 <li id="presentacionesNavItem" class="nav-item">
-                    <a class="nav-link" title="Presentaciones" data-bs-target="#presentaciones" data-bs-toggle="tab"><img
-                            src="../img/presentation.png" class="left_bar_icon" onclick="generatePresentationsPage()"></a>
+                    <a class="nav-link" title="Presentaciones" data-bs-target="#presentaciones"
+                        data-bs-toggle="tab"><img src="../img/presentation.png" class="left_bar_icon"
+                            onclick="generatePresentationsPage()"></a>
                 </li>
                 <li id="examenesNavItem" class="nav-item">
-                    <a class="nav-link" title="Exámenes" data-bs-target="#examen" data-bs-toggle="tab"><img src="../img/test.png"
-                            class="left_bar_icon" onclick="generateTestsPage()"></a>
+                    <a class="nav-link" title="Exámenes" data-bs-target="#examen" data-bs-toggle="tab"><img
+                            src="../img/test.png" class="left_bar_icon" onclick="generateTestsPage()"></a>
                 </li>
             </ul>
         </div>
         <div class="tab-content col-auto">
             <div class="tab-pane fade show active" style="width: auto;" id="inicio">
                 <div class="d-flex mt-2 ms-2">
-                    <img src="../<?php echo $_SESSION['foto_perfil']!=='none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png' ?>" class="profile_pic" alt="Foto de Perfil">
+                    <img src="../<?php echo $_SESSION['foto_perfil'] !== 'none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png' ?>"
+                        class="profile_pic" alt="Foto de Perfil">
                     <h2 style="padding: 2rem;">Bienvenid@,
-                    <?php echo $_SESSION['pref_name'] ?>
+                        <?php echo $_SESSION['pref_name'] ?>
                     </h2>
                 </div>
                 <div class="row">
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Módulos Activos</h4>
-                            <small><a class="nav-link col-md-1" onclick="goToTab(this)"
-                                    href="#modulos">Ir→</a></small>
+                            <small><a class="nav-link col-md-1" onclick="goToTab(this)" href="#modulos">Ir→</a></small>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
@@ -80,8 +85,7 @@
                     <div class="col-sm mx-3 my-2" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Coaching Recientes</h4>
-                            <small><a class="nav-link col-md-1" onclick="goToTab(this)" 
-                                    href="#coaching">Ir→</a></small>
+                            <small><a class="nav-link col-md-1" onclick="goToTab(this)" href="#coaching">Ir→</a></small>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
@@ -120,27 +124,25 @@
                 <div class="mx-3 my-5" style="background-color: white">
                     <h2 class="px-3 py-3">Coachings Registrados</h2>
                     <hr class="divider">
-                    <input type="button" class="btn btn-primary ms-2" value="Agregar Sesión" onclick="showCoachingModal()">
+                    <input type="button" class="btn btn-primary ms-2" value="Agregar Sesión"
+                        onclick="showCoachingModal(true)">
                     <table class="table table-hover">
                         <thead>
-                            <th scope="col">Nombre del archivo</th>
+                            <th scope="col">Nombre de la sesión</th>
+                            <th scope="col">Coachee</th>
                             <th scope="col">Fecha de subida</th>
                             <th scope="col">Opciones <a href="resources/templates/prueba 2.docx"
                                     download="plantilla coaching.docx"><img src="img/template.png"
-                                        class="dashboard_icon m-2" title="Descargar tarea"></a></th>
+                                        class="dashboard_icon m-2" title="Descargar plantilla"></a></th>
                         </thead>
                         <tbody>
-                            <?php
-                            include_once('./php/coaching.php');
-                            $moduleClass = new Coaching();
-                            echo ($moduleClass)->retrieveCoachings($_SESSION['user']);
-                            ?>
+                            
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="tab-pane fade" id="presentaciones">
-            <div class="mx-3 my-5" style="background-color: white">
+                <div class="mx-3 my-5" style="background-color: white">
                     <h2 class="px-3 py-3">Presentaciones y Feedback</h2>
                     <hr class="divider">
                     <table class="table table-hover" id="presentationsTable">
@@ -156,7 +158,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="examen">
-            <div class="row w-100">
+                <div class="row w-100">
                     <div class="col-sm mx-3 my-5" style="background-color: white">
                         <div class="d-flex align-items-center" style="margin: 0">
                             <h4 class="col-md-11 mt-3 ms-2">Exámenes Terminados</h4>
@@ -195,73 +197,96 @@
                 <div class="modal-body" id="coachingBody">
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Coach</span>
-                        <input type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción...">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Descripción del lugar</span>
-                        <input type="password" id="newPass" class="form-control" placeholder="Escriba una descripción...">
+                        <input type="text" id="coachingUserName" class="form-control"
+                            placeholder="Nombre...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Fecha</span>
-                        <input type="password" id="newPass" class="form-control" placeholder="Escriba una descripción...">
+                        <input type="text" id="coachingDate" class="form-control"
+                            placeholder="Fecha...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Lugar</span>
-                        <input type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción...">
+                        <input type="text" id="coachingPlace" class="form-control"
+                            placeholder="Lugar...">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Descripción del lugar</span>
+                        <input type="text" id="placeDesc" class="form-control"
+                            placeholder="Descripción...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Tiempo de interacción</span>
-                        <input type="password" id="newPass" class="form-control" placeholder="Escriba una descripción...">
+                        <input type="text" id="timeOfInteraction" class="form-control"
+                            placeholder="Tiempo...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Coachee</span>
-                        <input type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción...">
+                        <input type="text" id="coacheeName" class="form-control"
+                            placeholder="Nombre...">
                     </div>
                     <div class="mt-5 text-center">
                         <h5>SOBRE LA SESIÓN</h5>
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">¿Cuál fue el quiebre declarado?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <textarea type="password" id="topicDeclared" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">¿Cuál fue el quiebre que se trabajó?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <textarea type="password" id="topicHandled" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Cómo fue el proceso de indagación? ¿Qué valor le agregó a la conversación?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Cómo fue el proceso de indagación? ¿Qué
+                            valor le agregó a la conversación?</span>
+                        <textarea type="password" id="coachingProcess" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Cuál fue la interpretación que tuviste del quiebre?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Cuál fue la interpretación que tuviste del
+                            quiebre?</span>
+                        <textarea type="password" id="coachingInterpretation" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Cómo fue la emoción de la interacción?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Cómo fue la emoción de la
+                            interacción?</span>
+                        <textarea type="password" id="interactionEmotions" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Cómo fue la corporalidad del coachee durante la interacción?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Cómo fue la corporalidad del coachee
+                            durante la interacción?</span>
+                        <textarea type="password" id="bodyLang" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Qué nuevas acciones son posibles para el coachee después de tu intervención?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Qué nuevas acciones son posibles para el
+                            coachee después de tu intervención?</span>
+                        <textarea type="password" id="newActions" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="mt-5 text-center">
                         <h5>REFLEXIONES POSTERIORES AL COACHING (información de la experiencia del coach)</h5>
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">¿Qué emociones vivencié?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <textarea type="password" id="myEmotions" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Qué áreas de aprendizaje puedo declarar?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Qué áreas de aprendizaje puedo
+                            declarar?</span>
+                        <textarea type="password" id="areasOfOportunity" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">¿Qué nuevas preguntas surgen a partir de esta experiencia?</span>
-                        <textarea type="password" id="currentPass" class="form-control" placeholder="Escriba una descripción..."></textarea>
+                        <span class="input-group-text bg-primary text-white">¿Qué nuevas preguntas surgen a partir de
+                            esta experiencia?</span>
+                        <textarea type="password" id="newQuestions" class="form-control"
+                            placeholder="Escriba una descripción..."></textarea>
                     </div>
                     <p id="errorPassword" class="text-danger" hidden></p>
                 </div>
