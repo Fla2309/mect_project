@@ -28,17 +28,10 @@ function reloadModules() {
 
 
 function pushStateHistoryTab(event) {
-    // Obtener el tab actual
     const tab = event.target;
-
-    // Obtener el ID del tab
     const tabId = tab.getAttribute('data-bs-target');
-
-    // Crear un estado en el historial con el ID del tab
     history.pushState({ tabId: tabId }, '', `${tabId}`);
 }
-
-// Escuchar el evento 'shown.bs.tab'
 const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
 tabs.forEach(tab => {
     tab.addEventListener('shown.bs.tab', pushStateHistoryTab);

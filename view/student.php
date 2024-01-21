@@ -91,7 +91,7 @@
                         <div class="px-3 py-2">
                             <div class="list-group" id="coaching-list-tab" role="tablist">
                                 <?php
-                                echo $dashboard->generateCoachingFrame($_SESSION['user']);
+                                echo $dashboard->generateCoachingFrame($_SESSION['userId']);
                                 ?>
                             </div>
                         </div>
@@ -124,19 +124,19 @@
                 <div class="mx-3 my-5" style="background-color: white">
                     <h2 class="px-3 py-3">Coachings Registrados</h2>
                     <hr class="divider">
-                    <input type="button" class="btn btn-primary ms-2" value="Agregar Sesión"
-                        onclick="showCoachingModal(true)">
                     <table class="table table-hover">
                         <thead>
-                            <th scope="col">Nombre de la sesión</th>
-                            <th scope="col">Coachee</th>
-                            <th scope="col">Fecha de subida</th>
-                            <th scope="col">Opciones <a href="resources/templates/prueba 2.docx"
+                            <th scope="col" class="align-middle">Nombre de la sesión</th>
+                            <th scope="col" class="align-middle">Coachee</th>
+                            <th scope="col" class="align-middle">Fecha de subida</th>
+                            <th scope="col" class="align-middle">Opciones <a href="resources/templates/prueba 2.docx"
                                     download="plantilla coaching.docx"><img src="img/template.png"
-                                        class="dashboard_icon m-2" title="Descargar plantilla"></a></th>
+                                        class="dashboard_icon m-2" title="Descargar plantilla"></a>
+                    <input type="button" class="btn btn-primary ms-2" value="+ Agregar Sesión"
+                        onclick="showCoachingModal(true)"></th>
                         </thead>
                         <tbody>
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -195,35 +195,37 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="coachingBody">
+                    <div class="input-group mb-2" hidden="true">
+                        <span class="input-group-text bg-primary text-white">ID</span>
+                        <input type="text" id="coachingId" class="form-control" placeholder="">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nombre de la sesión</span>
+                        <input type="text" id="coachingName" class="form-control" placeholder="Nombre de la sesión...">
+                    </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Coach</span>
-                        <input type="text" id="coachingUserName" class="form-control"
-                            placeholder="Nombre...">
+                        <input type="text" id="coachingUserName" class="form-control" placeholder="Nombre..." disabled>
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Fecha</span>
-                        <input type="text" id="coachingDate" class="form-control"
-                            placeholder="Fecha...">
+                        <input type="text" id="coachingDate" class="form-control" placeholder="Fecha..." disabled>
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Lugar</span>
-                        <input type="text" id="coachingPlace" class="form-control"
-                            placeholder="Lugar...">
+                        <input type="text" id="coachingPlace" class="form-control" placeholder="Lugar...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Descripción del lugar</span>
-                        <input type="text" id="placeDesc" class="form-control"
-                            placeholder="Descripción...">
+                        <input type="text" id="placeDesc" class="form-control" placeholder="Descripción...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Tiempo de interacción</span>
-                        <input type="text" id="timeOfInteraction" class="form-control"
-                            placeholder="Tiempo...">
+                        <input type="text" id="timeOfInteraction" class="form-control" placeholder="Tiempo...">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Coachee</span>
-                        <input type="text" id="coacheeName" class="form-control"
-                            placeholder="Nombre...">
+                        <input type="text" id="coacheeName" class="form-control" placeholder="Nombre...">
                     </div>
                     <div class="mt-5 text-center">
                         <h5>SOBRE LA SESIÓN</h5>
@@ -292,7 +294,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveCoaching(1)">Guardar
+                    <button type="button" class="btn btn-primary" onclick="saveCoaching()">Guardar
                         cambios</button>
                 </div>
             </div>

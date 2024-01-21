@@ -65,6 +65,10 @@ function showCoachingModal(newCoaching) {
         day = (day < 10) ? '0' + day : day;
         month = (month < 10) ? '0' + month : month;
         var dateFormatted = year + '-' + month + '-' + day;
+        $('#coachingId').val('');
+        $('#coachingName').val('');
+        if ($('#coachingName').attr('disabled') !== undefined)
+            $('#coachingName').removeAttr('disabled');
         $('#coachingUserName').val($('#userFullName').val());
         $('#coachingDate').val(dateFormatted);
         $('#coachingPlace').val('');
@@ -83,6 +87,10 @@ function showCoachingModal(newCoaching) {
         $('#newQuestions').val('');
     }
     $('#coachingModal').modal('show');
+}
+
+function dismissCoachingModal() {
+    $('#coachingModal').modal('hide');
 }
 
 function generateCoachingPage() {
@@ -107,40 +115,36 @@ function generateCoachingPage() {
 }
 
 function convertCoachingJsonToHtml(data) {
-    var row = '<tr id="idCoaching-' + data.idCoaching + '">';
-    row += '<h2 class="accordion-header" id="heading-' + data.idCoaching + '">';
-    row += '<td>';
-    row += '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapse-' + data.idCoaching + '" aria-expanded="false" aria-controls="collapse-' + data.idCoaching + '">' + data.nameCoaching + '</button>';
-    row += '</td>';
-    row += '</h2>';
+    var row = 
+    row += '<tr id="idCoaching-' + data.idCoaching + '">';
+    row += '<th>' + data.nameCoaching;
+    row += '</th>';
     row += '<td>' + data.coacheeName + '</td>';
     row += '<td>' + data.date + '</td>';
     row += '<td>';
-    // Agrega las opciones que desees aquí
-    row += '<button class="btn btn-primary" onclick="setCoachingModal(this)">Editar</button>';
-    row += '<button class="btn btn-danger">Borrar</button>';
-    // ...
+    row += '<button class="btn btn-outline-secondary collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapse-' + data.idCoaching + '" aria-expanded="false" aria-controls="collapse-' + data.idCoaching + '">Ver Contenido</button>';
+    row += '<button class="btn btn-outline-primary ms-2" onclick="setCoachingModal(this)">Editar</button>';
+    row += '<button class="btn btn-outline-danger ms-2" onclick="deleteCoaching(this)">Borrar</button>';
     row += '</td>';
     row += '</tr>';
     row += '<tr>';
-    row += '<td colspan="3" class="p-0">';
+    row += '<td colspan="4" class="p-0" style="width: auto;">';
     row += '<div class="accordion-collapse collapse" id="collapse-' + data.idCoaching + '">';
-    row += '<div class="accordion-body mt-2">';
-    // Añade más contenido del accordion según tus necesidades
-    row += '<p class="ms-5"><strong>Lugar:</strong><br>' + data.place + '</p>';
-    row += '<p class="ms-5"><strong>Descripción del lugar:</strong><br>' + data.placeDesc + '</p>';
-    row += '<p class="ms-5"><strong>Tiempo de interacción:</strong><br>' + data.timeOfInteraction + '</p>';
-    row += '<p class="ms-5"><strong>¿Cuál fue el quiebre declarado?:</strong><br>' + data.topicDeclared + '</p>';
-    row += '<p class="ms-5"><strong>¿Cuál fue el quiebre que se trabajó?:</strong><br>' + data.topicHandled + '</p>';
-    row += '<p class="ms-5"><strong>¿Cómo fue el proceso de indagación? ¿Qué valor le agregó a la conversación?:</strong><br>' + data.process + '</p>';
-    row += '<p class="ms-5"><strong>¿Cuál fue la interpretación que tuviste del quiebre?:</strong><br>' + data.interpretation + '</p>';
-    row += '<p class="ms-5"><strong>¿Cómo fue la emoción de la interacción?:</strong><br>' + data.interactionEmotions + '</p>';
-    row += '<p class="ms-5"><strong>¿Cómo fue la corporalidad del coachee durante la interacción?:</strong><br>' + data.bodyLang + '</p>';
-    row += '<p class="ms-5"><strong>¿Qué nuevas acciones son posibles para el coachee después de tu intervención?:</strong><br>' + data.newActions + '</p>';
+    row += '<div class="accordion-body pt-2">';
+    row += '<p class="text-break ps-5"><strong>Lugar:</strong><br>' + data.place + '</p>';
+    row += '<p class="text-break ps-5"><strong>Descripción del lugar:</strong><br>' + data.placeDesc + '</p>';
+    row += '<p class="text-break ps-5"><strong>Tiempo de interacción:</strong><br>' + data.timeOfInteraction + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Cuál fue el quiebre declarado?:</strong><br>' + data.topicDeclared + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Cuál fue el quiebre que se trabajó?:</strong><br>' + data.topicHandled + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Cómo fue el proceso de indagación? ¿Qué valor le agregó a la conversación?:</strong><br>' + data.process + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Cuál fue la interpretación que tuviste del quiebre?:</strong><br>' + data.interpretation + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Cómo fue la emoción de la interacción?:</strong><br>' + data.interactionEmotions + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Cómo fue la corporalidad del coachee durante la interacción?:</strong><br>' + data.bodyLang + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Qué nuevas acciones son posibles para el coachee después de tu intervención?:</strong><br>' + data.newActions + '</p>';
     row += '<p><h5 class="ms-4">REFLEXIONES POSTERIORES AL COACHING</h5></p>';
-    row += '<p class="ms-5"><strong>¿Qué emociones vivencié?:</strong><br>' + data.myEmotions + '</p>';
-    row += '<p class="ms-5"><strong>¿Qué áreas de aprendizaje puedo declarar?:</strong><br>' + data.areasOfOportunity + '</p>';
-    row += '<p class="ms-5"><strong>¿Qué nuevas preguntas surgen a partir de esta experiencia?:</strong><br>' + data.newQuestions + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Qué emociones vivencié?:</strong><br>' + data.myEmotions + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Qué áreas de aprendizaje puedo declarar?:</strong><br>' + data.areasOfOportunity + '</p>';
+    row += '<p class="text-break ps-5"><strong>¿Qué nuevas preguntas surgen a partir de esta experiencia?:</strong><br>' + data.newQuestions + '</p>';
     row += '</div></div></td></tr>';
     return row;
 }
@@ -151,8 +155,8 @@ function setCoachingModal(button) {
     showCoachingModal(false);
 }
 
-function getCoachingId(button) {
-    currentElement = $(button);
+function getCoachingId(htmlElement) {
+    currentElement = $(htmlElement);
     while (currentElement.length > 0) {
         var currentId = currentElement.attr('id');
         if (currentId && currentId.includes('idCoaching-')) {
@@ -168,6 +172,9 @@ function setCoachingDataInModal(coachingId) {
         method: "GET",
         url: "../php/coachingController.php?type=1&coachingId=" + coachingId + "&user=" + user
     }).done(function (data) {
+        $('#coachingId').val(data.idCoaching);
+        $('#coachingName').val(data.nameCoaching);
+        $('#coachingName').attr('disabled', '');
         $('#coachingUserName').val($('#userFullName').val());
         $('#coachingDate').val(data.date);
         $('#coachingPlace').val(data.place);
@@ -187,4 +194,117 @@ function setCoachingDataInModal(coachingId) {
     }).fail(function (result) {
         alert(result);
     });
+}
+
+function saveCoaching() {
+    if ($('#coachingId').val() != '') {
+        updateCoaching($('#coachingId').val());
+    } else {
+        registerCoaching();
+    }
+}
+
+function updateCoaching(coachingId) {
+    var userId = document.getElementById('userId').getAttribute('value');
+    var jsonBody = {
+        idCoaching: coachingId,
+        nameCoaching: $('#coachingName').val(),
+        coachingUserName: $('#coachingUserName').val(),
+        date: $('#coachingDate').val(),
+        place: $('#coachingPlace').val(),
+        placeDesc: $('#placeDesc').val(),
+        timeOfInteraction: $('#timeOfInteraction').val(),
+        coacheeName: $('#coacheeName').val(),
+        topicDeclared: $('#topicDeclared').val(),
+        topicHandled: $('#topicHandled').val(),
+        process: $('#coachingProcess').val(),
+        interpretation: $('#coachingInterpretation').val(),
+        interactionEmotions: $('#interactionEmotions').val(),
+        bodyLang: $('#bodyLang').val(),
+        newActions: $('#newActions').val(),
+        myEmotions: $('#myEmotions').val(),
+        areasOfOportunity: $('#areasOfOportunity').val(),
+        newQuestions: $('#newQuestions').val(),
+    }
+    $.ajax({
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        url: "../php/coachingController.php?type=3&userId=" + userId,
+        data: JSON.stringify(jsonBody)
+    }).done(function (data) {
+        if (data == 1) {
+            dismissCoachingModal();
+            alert('Actualización de coaching exitoso');
+            setTimeout(generateCoachingPage(), 1000);
+        } else {
+            alert('Fallo al actualizar coaching: ' + data);
+        }
+    }).fail(function (result) {
+        alert(result);
+    });
+}
+
+function registerCoaching() {
+    var userId = document.getElementById('userId').getAttribute('value');
+    var jsonBody = {
+        nameCoaching: $('#coachingName').val(),
+        coachingUserName: $('#coachingUserName').val(),
+        date: $('#coachingDate').val(),
+        place: $('#coachingPlace').val(),
+        placeDesc: $('#placeDesc').val(),
+        timeOfInteraction: $('#timeOfInteraction').val(),
+        coacheeName: $('#coacheeName').val(),
+        topicDeclared: $('#topicDeclared').val(),
+        topicHandled: $('#topicHandled').val(),
+        process: $('#coachingProcess').val(),
+        interpretation: $('#coachingInterpretation').val(),
+        interactionEmotions: $('#interactionEmotions').val(),
+        bodyLang: $('#bodyLang').val(),
+        newActions: $('#newActions').val(),
+        myEmotions: $('#myEmotions').val(),
+        areasOfOportunity: $('#areasOfOportunity').val(),
+        newQuestions: $('#newQuestions').val(),
+    }
+    $.ajax({
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        url: "../php/coachingController.php?type=2&userId=" + userId,
+        data: JSON.stringify(jsonBody)
+    }).done(function (data) {
+        if (data == 1) {
+            dismissCoachingModal();
+            alert('Registro de coaching exitoso');
+            setTimeout(generateCoachingPage(), 1000);
+        } else {
+            alert('Fallo al registrar coaching: ' + data);
+        }
+    }).fail(function (result) {
+        alert(result);
+    });
+}
+
+function deleteCoaching(button) {
+    var coachingId = getCoachingId(button);
+    var userId = document.getElementById('userId').getAttribute('value');
+    var confirm = window.confirm("¿Estás seguro de que quieres eliminar " + $('#idCoaching-' + coachingId + ' .accordion-button').text() + "?");
+    if (confirm) {
+        $.ajax({
+            method: "POST",
+            url: "../php/coachingController.php?type=4&coachingId=" + coachingId + "&userId=" + userId,
+        }).done(function (data) {
+            if (data == 1) {
+                dismissCoachingModal();
+                alert('La sesión de coaching fue eliminada con éxito');
+                setTimeout(generateCoachingPage(), 1000);
+            } else {
+                alert('Fallo al eliminar coaching: ' + data);
+            }
+        }).fail(function (result) {
+            alert(result);
+        });
+    }
 }
