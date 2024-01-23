@@ -40,9 +40,6 @@ $userModule = new UserModule();
                     </li>';
                     }
                     ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#informacion" data-bs-toggle="tab">Información</a>
-                    </li>
                 </ul>
             </div>
             <div class="tab-content">
@@ -71,12 +68,12 @@ $userModule = new UserModule();
                         '</div>';
                 }
                 ?>
-                <div class="tab-pane card-body" id="informacion">
+                <!-- <div class="tab-pane card-body" id="informacion">
                     <?php
                     // $htmltareas = $userModule->prepareHtmlInfo();
                     // echo $htmlinfo !== "" ? $htmlinfo : "<h5>No hay información para mostrar</h5>"
                     ?>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

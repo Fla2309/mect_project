@@ -32,15 +32,15 @@ class Module extends DB
 
 
         while ($row = mysqli_fetch_array($query)) {
-            $totalCount = $this->getTotalTrabajosTareas($row['id_modulo'])[0];
-            $trabajosCount = $this->getCountTrabajos($this->user, $row['id_modulo'])[0];
-            $tareasCount = $this->getCountTareas($this->user, $row['id_modulo'])[0];
+            $totalCount = $this->getTotalTrabajosTareas($row['id_modulo']);
+            $trabajosCount = $this->getCountTrabajos($row['id_modulo']);
+            $tareasCount = $this->getCountTareas($row['id_modulo']);
             $progress = $totalCount > 0 ? (100 * ($trabajosCount + $tareasCount)) / $totalCount : 100;
             $module = array(
                 'moduleId' => $row['id_modulo'],
                 'moduleName' => $row['nombre_modulo'],
                 'description' => $row['descripcion'],
-                'progress' => $progress
+                'progress' => number_format ($progress, 1)
             );
             array_push($modules, $module);
         }
@@ -50,23 +50,23 @@ class Module extends DB
 
     private function getTotalTrabajosTareas($moduleId)
     {
-        return mysqli_fetch_array($this->conn->query('SELECT COUNT(*) FROM tareas_modulos 
-        INNER JOIN trabajos_modulos ON tareas_modulos.id_modulo = trabajos_modulos.id_modulo 
-        WHERE tareas_modulos.id_modulo IN (SELECT id_modulo FROM modulos WHERE id_modulo = ' . $moduleId . ')'));
+        $countTareas = mysqli_fetch_assoc($this->conn->query('SELECT COUNT(*) as count FROM tareas_modulos WHERE tareas_modulos.id_modulo = ' . $moduleId))['count'];
+        $countTrabajos = mysqli_fetch_assoc($this->conn->query('SELECT COUNT(*) as count FROM trabajos_modulos WHERE trabajos_modulos.id_modulo  = ' . $moduleId))['count'];
+        return $countTareas + $countTrabajos;
     }
 
-    private function getCountTareas($username, $moduleId)
+    private function getCountTareas($moduleId)
     {
-        return mysqli_fetch_array($this->conn->query('SELECT COUNT(id_tarea) FROM tareas_usuarios WHERE revisado = 3 
-        AND id_tarea IN (SELECT id_tarea FROM tareas_modulos WHERE id_modulo = ' . $moduleId . ') 
-        AND id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\')'));
+        return mysqli_fetch_assoc($this->conn->query("SELECT COUNT(id_tarea) as count FROM tareas_usuarios WHERE revisado = 3 
+        AND id_tarea IN (SELECT id_tarea FROM tareas_modulos WHERE id_modulo = {$moduleId}) 
+        AND id_usuario IN (SELECT id FROM usuarios WHERE id = {$this->userId})"))['count'];
     }
 
-    private function getCountTrabajos($username, $moduleId)
+    private function getCountTrabajos($moduleId)
     {
-        return mysqli_fetch_array($this->conn->query('SELECT COUNT(id_trabajo) FROM trabajos_usuarios WHERE revisado = 3 
-        AND id_trabajo IN (SELECT id_trabajo FROM trabajos_modulos WHERE id_modulo = ' . $moduleId . ')
-        AND id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\')'));
+        return mysqli_fetch_assoc($this->conn->query("SELECT COUNT(id_trabajo) as count FROM trabajos_usuarios WHERE revisado = 3 
+        AND id_trabajo IN (SELECT id_trabajo FROM trabajos_modulos WHERE id_modulo = {$moduleId}) 
+        AND id_usuario IN (SELECT id FROM usuarios WHERE id = {$this->userId})"))['count'];
     }
 
     public function getModuleActivitiesDetails($type, $id)
@@ -168,11 +168,11 @@ class UserModule
         if ($this->admin) {
             $query = $this->conn->query('SELECT * FROM tareas_modulos WHERE status = 0 AND id_modulo = ' . $this->moduleId) or die($this->conn->error);
         } else {
-            $query = $this->conn->query('SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
+            $query = $this->conn->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
             tareas_modulos.comentarios, tareas_usuarios.adjunto, tareas_usuarios.revisado FROM tareas_modulos 
             INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
-            WHERE status = 0 AND id_modulo = ' . $this->moduleId . ' AND id_usuario IN 
-            (SELECT id FROM usuarios WHERE id = \'' . $this->userId . '\')') or die($this->conn->error);
+            WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
+            (SELECT id FROM usuarios WHERE id = {$this->userId})") or die($this->conn->error);
         }
         return $query;
     }
@@ -186,7 +186,7 @@ class UserModule
             trabajos_usuarios.revisado, trabajos_usuarios.adjunto FROM trabajos_modulos 
             INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
             WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
-            (SELECT id FROM usuarios WHERE id = '{$this->userId}')") or die($this->conn->error);
+            (SELECT id FROM usuarios WHERE id = {$this->userId})") or die($this->conn->error);
         }
 
         return $query;

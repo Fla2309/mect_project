@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-06-2023 a las 03:16:51
+-- Tiempo de generación: 23-01-2024 a las 01:56:47
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.1.12
 
@@ -66,6 +66,45 @@ INSERT INTO `coaching` (`id`, `id_usuario`, `fecha_subida`, `adjunto`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `coaching_usuarios`
+--
+
+CREATE TABLE `coaching_usuarios` (
+  `id` int(11) NOT NULL,
+  `nombre_coaching` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `nombre_coachee` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `lugar` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `fecha` date DEFAULT current_timestamp(),
+  `tiempo_interaccion` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `descripcion_lugar` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `quiebre_declarado` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `quiebre_trabajado` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `proceso_indagacion` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `interpretacion_quiebre` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `emocion_interaccion` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `corporalidad` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `nuevas_acciones` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `emociones_vividas` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `areas_aprendizaje` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
+  `nuevas_preguntas` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `coaching_usuarios`
+--
+
+INSERT INTO `coaching_usuarios` (`id`, `nombre_coaching`, `id_usuario`, `nombre_coachee`, `lugar`, `fecha`, `tiempo_interaccion`, `descripcion_lugar`, `quiebre_declarado`, `quiebre_trabajado`, `proceso_indagacion`, `interpretacion_quiebre`, `emocion_interaccion`, `corporalidad`, `nuevas_acciones`, `emociones_vividas`, `areas_aprendizaje`, `nuevas_preguntas`) VALUES
+(2, 'Sesión 2', 1, 'Debug update', 'Debug update', '2024-01-18', 'Debug update', 'Debug update', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción', 'Texto de prueba descripción'),
+(9, 'Prueba Insert 5', 1, 'mucho texto', 'mucho texto', '2024-01-20', 'mucho texto', 'mucho texto', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto '),
+(10, 'Prueba refrescar página', 1, 'mucho texto', 'mucho texto', '2024-01-20', 'mucho texto', 'mucho texto', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto ', 'mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto mucho texto '),
+(14, 'Pruebas muchas', 1, 'Textoteeeeeeeee', 'Textote', '2024-01-20', 'Textote', 'Textote', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba ', 'textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba textos muchos de prueba '),
+(15, 'última prueba', 1, 'Textote', 'Textote', '2024-01-20', 'Debug update', 'tex', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto', 'muchotototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototototote texto'),
+(16, 'Coaching con Nora', 1, 'Flavio Almanza', 'Lugar', '2024-01-21', 'mucho tiempo', 'Descripción', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ', 'Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto Mucho texto ');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `examenes`
 --
 
@@ -104,6 +143,50 @@ CREATE TABLE `examenes_grupos` (
 
 INSERT INTO `examenes_grupos` (`id`, `id_examen`, `id_grupo`, `fecha_aplicacion`, `activo`) VALUES
 (1, 2, 11, '2023-05-25', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `examenes_reactivos`
+--
+
+CREATE TABLE `examenes_reactivos` (
+  `id_reactivo` int(11) NOT NULL,
+  `id_examen` int(11) NOT NULL,
+  `reactivo` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `examenes_reactivos`
+--
+
+INSERT INTO `examenes_reactivos` (`id_reactivo`, `id_examen`, `reactivo`) VALUES
+(1, 1, '¿Cuáles son los tres dominios en la coherencia del observador?'),
+(2, 1, 'Describe los principios del observador'),
+(3, 1, 'Describe un ejemplo de tu vida en el que te hayas movido de observador'),
+(4, 1, 'Menciona los 3 enemigos del aprendizaje que son con los que más te identificas y describe por qué'),
+(5, 1, 'Menciona los precios que has pagado a causa de estar apegado a esos enemigos del aprendizaje'),
+(6, 1, 'Menciona los postulados de la ontología del lenguaje'),
+(7, 2, '¿Qué es un juicio?'),
+(8, 2, 'Enuncia 3 juicios que has hecho sobre ti y explica cómo han impactado en tu realidad'),
+(9, 2, 'Menciona los 4 estados de ánimo básicos'),
+(10, 2, 'Explica lo que es un quiebre y lo que es una transparencia'),
+(11, 2, 'Explica un ejemplo de tu vida en el cual has sido víctima y uno en el que has sido responsable'),
+(12, 2, 'Menciona los pasos para una despedida');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `examenes_reactivos_usuarios`
+--
+
+CREATE TABLE `examenes_reactivos_usuarios` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_reactivo` int(11) NOT NULL,
+  `respuesta` longtext DEFAULT NULL,
+  `correcto` tinyint(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -247,8 +330,29 @@ INSERT INTO `modulos_grupos` (`id`, `id_modulo`, `id_grupo`, `fecha_impartido`, 
 CREATE TABLE `modulos_usuarios` (
   `id_mod_usu` int(11) NOT NULL,
   `id_modulo` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL
+  `id_usuario` int(11) NOT NULL,
+  `status` tinyint(4) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `modulos_usuarios`
+--
+
+INSERT INTO `modulos_usuarios` (`id_mod_usu`, `id_modulo`, `id_usuario`, `status`) VALUES
+(1, 1, 1, 1),
+(2, 2, 1, 1),
+(3, 3, 1, 1),
+(4, 4, 1, 1),
+(5, 5, 1, 1),
+(6, 6, 1, 1),
+(7, 7, 1, 1),
+(8, 1, 2, 1),
+(9, 2, 2, 1),
+(10, 3, 2, 1),
+(11, 4, 2, 1),
+(12, 5, 2, 1),
+(13, 6, 2, 1),
+(14, 7, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -280,6 +384,28 @@ INSERT INTO `modulo_personal` (`id`, `id_usuario`, `nombre_cv`, ` formato_inscri
 (8, 8, NULL, NULL, NULL, NULL),
 (9, 9, NULL, NULL, NULL, NULL),
 (10, 10, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `niveles_usuario`
+--
+
+CREATE TABLE `niveles_usuario` (
+  `id_nivel` int(11) NOT NULL,
+  `nombre_nivel` varchar(45) NOT NULL,
+  `permisos` longtext DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `niveles_usuario`
+--
+
+INSERT INTO `niveles_usuario` (`id_nivel`, `nombre_nivel`, `permisos`) VALUES
+(1, 'Estudiante', NULL),
+(2, 'Staff', NULL),
+(3, 'Administrador', NULL),
+(4, 'Master Coach', NULL);
 
 -- --------------------------------------------------------
 
@@ -345,20 +471,26 @@ INSERT INTO `presentaciones_feedback` (`id`, `id_usuario`, `nombre_feedback`, `a
 
 CREATE TABLE `tareas_modulos` (
   `id_tarea` int(11) NOT NULL,
-  `nombre_tarea` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre_tarea` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `id_modulo` int(11) NOT NULL,
-  `comentarios` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT ''
+  `comentarios` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Sin comentarios',
+  `plantilla` varchar(50) DEFAULT 'Sin plantilla',
+  `status` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Volcado de datos para la tabla `tareas_modulos`
 --
 
-INSERT INTO `tareas_modulos` (`id_tarea`, `nombre_tarea`, `id_modulo`, `comentarios`) VALUES
-(1, 'Autobiografía', 1, 'comentarios de Autobiografía'),
-(2, 'Desapego', 1, 'comentarios de Desapego'),
-(3, 'Bitácora emociones', 1, 'comentarios de Bitácora de emociones'),
-(4, '10P / 10S', 1, 'comentarios de 10p 10s');
+INSERT INTO `tareas_modulos` (`id_tarea`, `nombre_tarea`, `id_modulo`, `comentarios`, `plantilla`, `status`) VALUES
+(1, 'Autobiografía', 1, 'Comentario genérico', 'Sin plantilla', 0),
+(2, 'Desapego', 1, 'comentarios de Desapego', 'Sin plantilla', 0),
+(3, 'Bitácora emociones', 1, 'comentarios de Bitácora de emociones', 'Sin plantilla', 0),
+(4, '10P / 10S', 1, 'comentarios de 10p 10s', 'Sin plantilla', 0),
+(5, 'Erase Me', 6, 'Comentario genérico', 'Sin Plantilla', 0),
+(6, 'Erase Me 343', 3, 'prueba de insert', 'Sin Plantilla', 1),
+(7, 'Erase Me 343', 3, 'prueba de insert', 'Sin Plantilla', 1),
+(8, 'Erase Me 345', 3, 'prueba de insert', 'Sin Plantilla', 0);
 
 -- --------------------------------------------------------
 
@@ -380,9 +512,10 @@ CREATE TABLE `tareas_usuarios` (
 --
 
 INSERT INTO `tareas_usuarios` (`id`, `id_tarea`, `id_usuario`, `adjunto`, `fecha_subida`, `revisado`) VALUES
-(1, 1, 1, 'prueba-1_tareas.docx', '2022-08-26', 3),
+(1, 1, 1, 'Regimen Fiscal.xlsx', '2022-08-26', 3),
 (2, 2, 1, 'prueba 2_tareas.docx', '2022-08-26', 1),
-(3, 3, 1, 'prueba-1_tareas.docx', '2022-08-26', 2);
+(3, 3, 1, 'Contrato_de_servicio_cliente.docx', '2022-08-26', 1),
+(11, 4, 1, 'prueba 2_tareas.docx', '2024-01-22', 0);
 
 -- --------------------------------------------------------
 
@@ -393,21 +526,25 @@ INSERT INTO `tareas_usuarios` (`id`, `id_tarea`, `id_usuario`, `adjunto`, `fecha
 CREATE TABLE `trabajos_modulos` (
   `id_trabajo` int(11) NOT NULL,
   `nombre_trabajo` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `id_modulo` int(11) NOT NULL
+  `id_modulo` int(11) NOT NULL,
+  `comentarios` varchar(200) DEFAULT 'Sin comentarios',
+  `plantilla` varchar(50) DEFAULT 'Sin plantilla',
+  `status` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
 -- Volcado de datos para la tabla `trabajos_modulos`
 --
 
-INSERT INTO `trabajos_modulos` (`id_trabajo`, `nombre_trabajo`, `id_modulo`) VALUES
-(1, 'Maestro/Aprendiz', 1),
-(2, 'Claro/Oscuro', 1),
-(3, 'Estrategia de vida', 2),
-(4, 'Corporalidad', 3),
-(5, 'Emociones', 8),
-(6, 'Tapete', 8),
-(7, 'Feedback Exposición Emociones', 8);
+INSERT INTO `trabajos_modulos` (`id_trabajo`, `nombre_trabajo`, `id_modulo`, `comentarios`, `plantilla`, `status`) VALUES
+(1, 'Maestro/Aprendiz', 1, 'Sin comentarios', 'Sin plantilla', 0),
+(2, 'Claro/Oscuro', 1, 'Sin comentarios', 'Sin plantilla', 0),
+(3, 'Estrategia de vida', 2, 'Sin comentarios', 'Sin plantilla', 0),
+(4, 'Corporalidad', 3, 'Sin comentarios', 'Sin plantilla', 0),
+(5, 'Emociones', 8, 'Sin comentarios', 'Sin plantilla', 0),
+(6, 'Tapete', 8, 'Sin comentarios', 'Sin plantilla', 0),
+(7, 'Feedback Exposición Emociones', 8, 'Sin comentarios', 'Sin plantilla', 0),
+(8, 'Erase me', 2, 'Comentario genérico', 'Sin plantilla', 0);
 
 -- --------------------------------------------------------
 
@@ -419,18 +556,19 @@ CREATE TABLE `trabajos_usuarios` (
   `id` int(11) NOT NULL,
   `id_trabajo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
+  `adjunto` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'Sin adjunto',
   `fecha_subido` date NOT NULL DEFAULT current_timestamp(),
-  `revisado` tinyint(1) DEFAULT 0,
-  `adjunto` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'Sin adjunto'
+  `revisado` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin;
 
 --
 -- Volcado de datos para la tabla `trabajos_usuarios`
 --
 
-INSERT INTO `trabajos_usuarios` (`id`, `id_trabajo`, `id_usuario`, `fecha_subido`, `revisado`, `adjunto`) VALUES
-(1, 1, 1, '2022-11-07', 0, 'prueba-1_trabajos.docx'),
-(2, 2, 1, '2022-11-07', 1, 'prueba 2_trabajos.docx');
+INSERT INTO `trabajos_usuarios` (`id`, `id_trabajo`, `id_usuario`, `adjunto`, `fecha_subido`, `revisado`) VALUES
+(1, 1, 1, 'prueba-1_trabajos.docx', '2022-11-07', 0),
+(2, 2, 1, 'prueba 2_trabajos.docx', '2022-11-07', 1),
+(6, 1, 2, 'prueba 2_trabajos.docx', '2024-01-17', 0);
 
 -- --------------------------------------------------------
 
@@ -444,24 +582,26 @@ CREATE TABLE `usuarios` (
   `apellidos` varchar(50) NOT NULL,
   `id_pl` int(4) DEFAULT NULL,
   `id_grupo` int(11) NOT NULL,
-  `fecha_ingreso` date DEFAULT NULL,
+  `fecha_ingreso` date DEFAULT current_timestamp(),
   `nombre_preferido` varchar(45) DEFAULT NULL,
   `nivel_usuario` tinyint(1) NOT NULL,
   `login_user` varchar(45) NOT NULL,
   `login_pass` varchar(45) NOT NULL,
   `correo` varchar(50) NOT NULL,
-  `telefono` varchar(10) NOT NULL
+  `telefono` varchar(10) NOT NULL,
+  `status` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `id_pl`, `id_grupo`, `fecha_ingreso`, `nombre_preferido`, `nivel_usuario`, `login_user`, `login_pass`, `correo`, `telefono`) VALUES
-(0, 'Yaremí', 'Aké', NULL, 0, NULL, NULL, 2, 'yaremi.ake', '5f4dcc3b5aa765d61d8327deb882cf99', '', ''),
-(1, 'Flavio Ariel', 'Almanza Fierro', 78, 11, '2022-03-22', 'Yayo', 1, 'flavio.almanza', '5f4dcc3b5aa765d61d8327deb882cf99', 'flavio.almanza01@gmail.com', '6144074508'),
-(2, 'Flor Adriana', 'Almanza Sigala', 77, 11, '2022-03-22', 'Flor', 1, 'flor.almanza', '5f4dcc3b5aa765d61d8327deb882cf99', 'test@hotmail.com', '6141236544'),
-(3, 'Javier Iván', 'Almanza Fierro', 75, 10, '2021-03-15', 'Iván', 1, 'ivan.almanza', '5f4dcc3b5aa765d61d8327deb882cf99', 'almanza.fierro@gmail.com', '6141234567');
+INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `id_pl`, `id_grupo`, `fecha_ingreso`, `nombre_preferido`, `nivel_usuario`, `login_user`, `login_pass`, `correo`, `telefono`, `status`) VALUES
+(1, 'Flavio Ariel', 'Almanza Fierro', 78, 11, '2023-07-03', 'Yayo', 1, 'flavio.almanza', '5f4dcc3b5aa765d61d8327deb882cf99', 'flavio.almanza01@gmail.com', '6144074509', 0),
+(2, 'Flor Adriana', 'Almanza Sigala', 77, 11, '2022-03-22', 'Flor', 1, 'flor.almanza', '5f4dcc3b5aa765d61d8327deb882cf99', 'test@hotmail.com', '6141236544', 0),
+(3, 'Javier Iván', 'Almanza Fierro', 75, 10, '2021-03-15', 'Iván', 1, 'ivan.almanza', '5f4dcc3b5aa765d61d8327deb882cf99', 'almanza.fierro@gmail.com', '6141234567', 0),
+(4, 'Yaremí', 'Aké', NULL, 0, NULL, 'Yare', 3, 'yaremi.ake', '5f4dcc3b5aa765d61d8327deb882cf99', '', '', 0),
+(7, 'Cesar Omar', 'Olivas Domínguez', NULL, 10, '2023-07-10', 'César', 2, 'cesar.olivas', '5f4dcc3b5aa765d61d8327deb882cf99', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -499,8 +639,13 @@ ALTER TABLE `clases`
 -- Indices de la tabla `coaching`
 --
 ALTER TABLE `coaching`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `coaching_usuarios_idx` (`id_usuario`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `coaching_usuarios`
+--
+ALTER TABLE `coaching_usuarios`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `examenes`
@@ -512,6 +657,18 @@ ALTER TABLE `examenes`
 -- Indices de la tabla `examenes_grupos`
 --
 ALTER TABLE `examenes_grupos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `examenes_reactivos`
+--
+ALTER TABLE `examenes_reactivos`
+  ADD PRIMARY KEY (`id_reactivo`);
+
+--
+-- Indices de la tabla `examenes_reactivos_usuarios`
+--
+ALTER TABLE `examenes_reactivos_usuarios`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -552,9 +709,7 @@ ALTER TABLE `modulos_grupos`
 -- Indices de la tabla `modulos_usuarios`
 --
 ALTER TABLE `modulos_usuarios`
-  ADD PRIMARY KEY (`id_mod_usu`),
-  ADD KEY `fk_mod-usu_usuarios` (`id_usuario`),
-  ADD KEY `fk_mod-usu_modulos` (`id_modulo`);
+  ADD PRIMARY KEY (`id_mod_usu`);
 
 --
 -- Indices de la tabla `modulo_personal`
@@ -563,10 +718,10 @@ ALTER TABLE `modulo_personal`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `pagos`
+-- Indices de la tabla `niveles_usuario`
 --
-ALTER TABLE `pagos`
-  ADD KEY `fk_pago-usu` (`id_usuario`);
+ALTER TABLE `niveles_usuario`
+  ADD PRIMARY KEY (`id_nivel`);
 
 --
 -- Indices de la tabla `presentaciones`
@@ -591,9 +746,7 @@ ALTER TABLE `tareas_modulos`
 -- Indices de la tabla `tareas_usuarios`
 --
 ALTER TABLE `tareas_usuarios`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_tar-usu_usu` (`id_usuario`),
-  ADD KEY `fk_tar-usu_tar-mod` (`id_tarea`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `trabajos_modulos`
@@ -607,8 +760,7 @@ ALTER TABLE `trabajos_modulos`
 --
 ALTER TABLE `trabajos_usuarios`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_trab_usu-trab_mod` (`id_trabajo`),
-  ADD KEY `fk_trab_usu-usu` (`id_usuario`);
+  ADD KEY `fk_trab_usu-trab_mod` (`id_trabajo`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -635,6 +787,12 @@ ALTER TABLE `coaching`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de la tabla `coaching_usuarios`
+--
+ALTER TABLE `coaching_usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
@@ -645,6 +803,18 @@ ALTER TABLE `examenes`
 --
 ALTER TABLE `examenes_grupos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `examenes_reactivos`
+--
+ALTER TABLE `examenes_reactivos`
+  MODIFY `id_reactivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `examenes_reactivos_usuarios`
+--
+ALTER TABLE `examenes_reactivos_usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `examenes_usuarios`
@@ -665,10 +835,22 @@ ALTER TABLE `modulos_grupos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT de la tabla `modulos_usuarios`
+--
+ALTER TABLE `modulos_usuarios`
+  MODIFY `id_mod_usu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT de la tabla `modulo_personal`
 --
 ALTER TABLE `modulo_personal`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `niveles_usuario`
+--
+ALTER TABLE `niveles_usuario`
+  MODIFY `id_nivel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `presentaciones`
@@ -683,22 +865,34 @@ ALTER TABLE `presentaciones_feedback`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `tareas_modulos`
+--
+ALTER TABLE `tareas_modulos`
+  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT de la tabla `tareas_usuarios`
 --
 ALTER TABLE `tareas_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `trabajos_modulos`
 --
 ALTER TABLE `trabajos_modulos`
-  MODIFY `id_trabajo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_trabajo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `trabajos_usuarios`
 --
 ALTER TABLE `trabajos_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_web`
@@ -711,12 +905,6 @@ ALTER TABLE `usuario_web`
 --
 
 --
--- Filtros para la tabla `coaching`
---
-ALTER TABLE `coaching`
-  ADD CONSTRAINT `fk_coach_usu` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Filtros para la tabla `modulos_grupos`
 --
 ALTER TABLE `modulos_grupos`
@@ -724,30 +912,10 @@ ALTER TABLE `modulos_grupos`
   ADD CONSTRAINT `fk_mod-grup_modulos` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id_modulo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `modulos_usuarios`
---
-ALTER TABLE `modulos_usuarios`
-  ADD CONSTRAINT `fk_mod-usu_modulos` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id_modulo`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_mod-usu_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `pagos`
---
-ALTER TABLE `pagos`
-  ADD CONSTRAINT `fk_pago-usu` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Filtros para la tabla `tareas_modulos`
 --
 ALTER TABLE `tareas_modulos`
   ADD CONSTRAINT `fk_tar-mod_mod` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id_modulo`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `tareas_usuarios`
---
-ALTER TABLE `tareas_usuarios`
-  ADD CONSTRAINT `fk_tar-usu_tar-mod` FOREIGN KEY (`id_tarea`) REFERENCES `tareas_modulos` (`id_tarea`),
-  ADD CONSTRAINT `fk_tar-usu_usu` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `trabajos_modulos`
@@ -759,8 +927,7 @@ ALTER TABLE `trabajos_modulos`
 -- Filtros para la tabla `trabajos_usuarios`
 --
 ALTER TABLE `trabajos_usuarios`
-  ADD CONSTRAINT `fk_trab_usu-trab_mod` FOREIGN KEY (`id_trabajo`) REFERENCES `trabajos_modulos` (`id_trabajo`),
-  ADD CONSTRAINT `fk_trab_usu-usu` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `fk_trab_usu-trab_mod` FOREIGN KEY (`id_trabajo`) REFERENCES `trabajos_modulos` (`id_trabajo`);
 
 --
 -- Filtros para la tabla `usuarios`
