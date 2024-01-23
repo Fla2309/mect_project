@@ -4,66 +4,67 @@ include_once('connection.php');
 
 class Module extends DB
 {
-    public function retrieveModules($group)
+    private $conn;
+    private $userId;
+    private $user;
+    public $userLevel;
+    public function __construct()
     {
-        $query = $group != 0 ?
-            $this->connect()->query('SELECT * FROM modulos WHERE id_modulo IN (SELECT id_modulo FROM modulos_grupos WHERE id_grupo = ' . $group . ' AND disponible > 0)') :
-            $this->connect()->query('SELECT * FROM modulos');
-        $cardHtml = "";
-        $count = 0;
-        $percentage = 0;
+        $this->userId = $_GET['userId'];
+        $this->user = $_GET['user'];
+        $this->conn = (new DB())->connect();
+        $this->userLevel = $this->getUserLevel();
+    }
+
+    public function retrieveModules()
+    {
+        $query = $this->userLevel > 1 ? 
+        $this->conn->query('SELECT * FROM modulos') : 
+        $this->conn->query("SELECT * FROM modulos WHERE id_modulo IN 
+                (SELECT id_modulo FROM modulos_grupos WHERE id_grupo IN 
+                    (SELECT id_grupo FROM usuarios WHERE id={$this->userId}) 
+                AND disponible > 0)");
+        $modules = [];
+        $progress = 0;
         $totalCount = 0;
         $trabajosCount = 0;
         $tareasCount = 0;
 
 
         while ($row = mysqli_fetch_array($query)) {
-            $count++;
             $totalCount = $this->getTotalTrabajosTareas($row['id_modulo'])[0];
-            $trabajosCount = $this->getCountTrabajos($_SESSION['user'], $row['id_modulo'])[0];
-            $tareasCount = $this->getCountTareas($_SESSION['user'], $row['id_modulo'])[0];
-            $percentage = $totalCount > 0 ?
-                (100 * ($trabajosCount + $tareasCount)) / $totalCount :
-                100;
-            if ($count == 1)
-                $cardHtml = $cardHtml . "<div class=\"row\" style=\"align-content: center;\">";
-            $cardHtml = $cardHtml . "<div id=\"mod_{$row['id_modulo']}\" class=\"col-sm px-5 py-5 mx-3 my-3\" style=\"background-color: white;\">";
-            $cardHtml = $cardHtml . "<div class=\"p-1\">";
-            $cardHtml = $cardHtml . "<h2>{$row['nombre_modulo']}</h1>";
-            $cardHtml = $cardHtml . "<h4>{$row['descripcion']}</h4>";
-            $cardHtml = $group != 0 ? $cardHtml . "<p>{$percentage}% completado</p>" : $cardHtml;
-            $cardHtml = $cardHtml . "<button id=\"but_mod_{$row['id_modulo']}\" type=\"button\" onclick=\"showModuleHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">
-                Entrar<img src=\"../img/right-arrow.png\" style=\"float: right;\" width=\"20\"></button>";
-            $cardHtml = $cardHtml . "</div></div>";
-            if ($count == 3) {
-                $cardHtml = $cardHtml . "</div>";
-                $count = 0;
-            }
-        }
-        if ($count != 0) {
-            $cardHtml = $cardHtml . "</div>";
+            $trabajosCount = $this->getCountTrabajos($this->user, $row['id_modulo'])[0];
+            $tareasCount = $this->getCountTareas($this->user, $row['id_modulo'])[0];
+            $progress = $totalCount > 0 ? (100 * ($trabajosCount + $tareasCount)) / $totalCount : 100;
+            $module = array(
+                'moduleId' => $row['id_modulo'],
+                'moduleName' => $row['nombre_modulo'],
+                'description' => $row['descripcion'],
+                'progress' => $progress
+            );
+            array_push($modules, $module);
         }
 
-        return $cardHtml;
+        return json_encode($modules);
     }
 
     private function getTotalTrabajosTareas($moduleId)
     {
-        return mysqli_fetch_array($this->connect()->query('SELECT COUNT(*) FROM tareas_modulos 
+        return mysqli_fetch_array($this->conn->query('SELECT COUNT(*) FROM tareas_modulos 
         INNER JOIN trabajos_modulos ON tareas_modulos.id_modulo = trabajos_modulos.id_modulo 
         WHERE tareas_modulos.id_modulo IN (SELECT id_modulo FROM modulos WHERE id_modulo = ' . $moduleId . ')'));
     }
 
     private function getCountTareas($username, $moduleId)
     {
-        return mysqli_fetch_array($this->connect()->query('SELECT COUNT(id_tarea) FROM tareas_usuarios WHERE revisado = 3 
+        return mysqli_fetch_array($this->conn->query('SELECT COUNT(id_tarea) FROM tareas_usuarios WHERE revisado = 3 
         AND id_tarea IN (SELECT id_tarea FROM tareas_modulos WHERE id_modulo = ' . $moduleId . ') 
         AND id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\')'));
     }
 
     private function getCountTrabajos($username, $moduleId)
     {
-        return mysqli_fetch_array($this->connect()->query('SELECT COUNT(id_trabajo) FROM trabajos_usuarios WHERE revisado = 3 
+        return mysqli_fetch_array($this->conn->query('SELECT COUNT(id_trabajo) FROM trabajos_usuarios WHERE revisado = 3 
         AND id_trabajo IN (SELECT id_trabajo FROM trabajos_modulos WHERE id_modulo = ' . $moduleId . ')
         AND id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $username . '\')'));
     }
@@ -74,14 +75,14 @@ class Module extends DB
         $actType = '';
         switch ($type) {
             case 1:
-                $row = $this->connect()->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, modulos.nombre_modulo, tareas_modulos.comentarios, tareas_modulos.plantilla 
+                $row = $this->conn->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, modulos.nombre_modulo, tareas_modulos.comentarios, tareas_modulos.plantilla 
                 FROM tareas_modulos, modulos 
                 WHERE tareas_modulos.id_modulo = modulos.id_modulo 
                 AND id_tarea = {$id}")->fetch_row();
                 $actType = 'homework';
                 break;
             case 2:
-                $row = $this->connect()->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, modulos.nombre_modulo, trabajos_modulos.comentarios, trabajos_modulos.plantilla 
+                $row = $this->conn->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, modulos.nombre_modulo, trabajos_modulos.comentarios, trabajos_modulos.plantilla 
                 FROM trabajos_modulos, modulos 
                 WHERE trabajos_modulos.id_modulo = modulos.id_modulo 
                 AND id_trabajo = {$id}")->fetch_row();
@@ -103,7 +104,7 @@ class Module extends DB
     {
         $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
         $idCol = $type == 1 ? 'id_tarea' : 'id_trabajo';
-        $query = $this->connect()->query("UPDATE {$table} SET status = 1 WHERE {$idCol} = {$actId}");
+        $query = $this->conn->query("UPDATE {$table} SET status = 1 WHERE {$idCol} = {$actId}");
         if ($query)
             http_response_code(201);
         else
@@ -116,7 +117,7 @@ class Module extends DB
         $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
         $idCol = $type == 1 ? 'id_tarea' : 'id_trabajo';
         $nameCol = $type == 1 ? 'nombre_tarea' : 'nombre_trabajo';
-        $query = $this->connect()->query("UPDATE {$table} SET 
+        $query = $this->conn->query("UPDATE {$table} SET 
         {$nameCol} = '{$values['actName']}', 
         id_modulo = {$values['moduleId']}, 
         comentarios = '{$values['comments']}', 
@@ -128,15 +129,22 @@ class Module extends DB
             http_response_code(400);
     }
 
-    public function createActivityFromModule($type, $values){
+    public function createActivityFromModule($type, $values)
+    {
         $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
         $nameCol = $type == 1 ? 'nombre_tarea' : 'nombre_trabajo';
-        $query = $this->connect()->query("INSERT INTO {$table} (`nombre_tarea`, `id_modulo`, `comentarios`, `plantilla`, `status`) 
+        $query = $this->conn->query("INSERT INTO {$table} (`nombre_tarea`, `id_modulo`, `comentarios`, `plantilla`, `status`) 
             VALUES ('{$values['actName']}', {$values['moduleId']}, '{$values['comments']}', '{$values['templateName']}', 0)");
         if ($query)
             http_response_code(201);
         else
             http_response_code(400);
+    }
+
+    public function getUserLevel()
+    {
+        $query = $this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id={$this->userId}") or die($this->conn->error);
+        return mysqli_fetch_assoc($query)['nivel_usuario'];
     }
 }
 
@@ -375,7 +383,8 @@ class UserModule
         return mysqli_fetch_row($path)[0];
     }
 
-    public function getModuleHtmlDropdownTags(){
+    public function getModuleHtmlDropdownTags()
+    {
         $modules = $this->conn->query("SELECT id_modulo, nombre_modulo FROM modulos") or die($this->conn->error);
         $html = '';
         foreach ($modules as $module) {

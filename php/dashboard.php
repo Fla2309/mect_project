@@ -31,7 +31,7 @@ class Dashboard
             $html = $html . "<a class=\"list-group-item list-group-item-action align-items-center\" id=\"dashCoaching_{$row['id']}\" data-toggle=\"list\" role=\"tab\" aria-controls=\"home\"><em>{$row['nombre_coaching']}</em> con <em>{$row['nombre_coachee']}</em>";
             $html = $html . "<div class=\"d-flex justify-content-end\">";
             $html = $html . "<div class=\"pr-2\">";
-            $html = $html . "<small class=\"text-muted\" style=\"font-size: 10px\">Subido: {$row['fecha']}'";
+            $html = $html . "<small class=\"text-muted\" style=\"font-size: 10px\">Subido: {$row['fecha']}";
             $html = $html . "</small></div></div></a>";
         }
         return $html;

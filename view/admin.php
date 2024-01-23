@@ -157,7 +157,7 @@
                 <?php
                 include_once('./php/modules.php');
                 $moduleClass = new Module();
-                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
+                echo ($moduleClass)->retrieveModules();
                 ?>
             </div>
             <script src="../js/testAdmin.js" type="text/javascript"></script>

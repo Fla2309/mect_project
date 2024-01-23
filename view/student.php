@@ -39,7 +39,7 @@
                 </li>
                 <li id="modulosNavItem" class="nav-item">
                     <a class="nav-link" title="Módulos" data-bs-target="#modulos" data-bs-toggle="tab"><img
-                            src="../img/book.png" class="left_bar_icon"></a>
+                            src="../img/book.png" class="left_bar_icon" onclick="generateModulesPage()"></a>
                 </li>
                 <li id="coachingNavItem" class="nav-item">
                     <a class="nav-link" title="Coaching" onclick="generateCoachingPage()" data-bs-target="#coaching"
@@ -113,11 +113,7 @@
             </div>
             <script src="../js/module.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="modulos">
-                <?php
-                include_once('./php/modules.php');
-                $moduleClass = new Module();
-                echo ($moduleClass)->retrieveModules($_SESSION['grupo']);
-                ?>
+                
             </div>
 
             <div class="tab-pane fade" role="tabpanel" id="coaching">

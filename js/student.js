@@ -1,3 +1,19 @@
+function generateModulesPage() {
+    $.ajax({
+        method: "GET",
+        url: "../php/moduleController.php?type=0&user=" + document.getElementById("user") + "&userId=" + document.getElementById("userId").value,
+    }).done(function (data) {
+        if (data.length == 0) {
+            $('#modulos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
+        }
+        else {
+            setModulesHtml(JSON.parse(data));
+        }
+    }).fail(function (result) {
+        console.log(result);
+    });
+}
+
 function generatePresentationsPage() {
     $.ajax({
         method: "GET",
@@ -115,8 +131,8 @@ function generateCoachingPage() {
 }
 
 function convertCoachingJsonToHtml(data) {
-    var row = 
-    row += '<tr id="idCoaching-' + data.idCoaching + '">';
+    var row =
+        row += '<tr id="idCoaching-' + data.idCoaching + '">';
     row += '<th>' + data.nameCoaching;
     row += '</th>';
     row += '<td>' + data.coacheeName + '</td>';
@@ -306,5 +322,46 @@ function deleteCoaching(button) {
         }).fail(function (result) {
             alert(result);
         });
+    }
+}
+
+function setModulesHtml(json) {
+    count = 1;
+    $('#modulos').html('');
+    for(let i = 0; i < json.length; i++) {
+        if(i % 3 === 0) {
+            var divRow = document.createElement('div');
+            divRow.className = 'row';
+            divRow.style.alignContent = 'center';
+        }
+    
+        let module = json[i];
+        let divCol = document.createElement('div');
+        let divP1 = document.createElement('div');
+        let h2 = document.createElement('h2');
+        let h4 = document.createElement('h4');
+        let p = document.createElement('p');
+        let button = document.createElement('button');
+        divCol.className = 'col-sm p-5 m-3';
+        divCol.style.backgroundColor = 'white';
+        divCol.id = 'idModule-' + module.moduleId;
+        divP1.className = 'p-1';
+        button.className = 'btn btn-primary';
+        button.type = 'button';
+        button.onclick = "showModuleHtml(this)";
+        button.style.width = '120px';
+        button.style.textAlign = 'left';
+        h2.textContent = module.moduleName;
+        h4.textContent = module.description;
+        p.textContent = module.progress + '% completado';
+        button.setAttribute('onclick','showModuleHtml(this)');
+        button.textContent = 'Ver Módulo';
+        divP1.append(h2, h4, p, button);
+        divCol.appendChild(divP1);
+        divRow.appendChild(divCol);
+    
+        if(i % 3 === 2 || i === json.length - 1) {
+            document.getElementById('modulos').appendChild(divRow);
+        }
     }
 }
