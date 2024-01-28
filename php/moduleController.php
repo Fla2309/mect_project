@@ -5,9 +5,31 @@ $module = new Module();
 
 if ($module->userLevel > 1) {
     if (!isset($_GET['data'])) {
-        header('Content-Type: application/json; charset=utf-8');
-        $data = $module->getModuleActivitiesDetails($_GET['type'], $_GET['actId']);
-        echo json_encode($data);
+        if (isset($_GET['dataType'])) {
+            $userModule = new UserModule();
+            switch($_GET['dataType']){
+                case 'works':
+                    echo json_encode($userModule->prepareTrabajosJson());
+                    break;
+                case 'homeworks':
+                    echo json_encode($userModule->prepareTareasJson());
+                    break;
+                case 'feedback':
+                    echo json_encode($userModule->prepareFeedbackJson());
+                case 'all':
+                    $module = [
+                        'works' => $userModule->prepareTrabajosJson(),
+                        'homeworks' => $userModule->prepareTareasJson(),
+                        'feedback' => $userModule->prepareFeedbackJson()
+                    ];
+                    echo json_encode($module);
+                    break;
+            }
+        } else {
+            header('Content-Type: application/json; charset=utf-8');
+            $data = $module->getModuleActivitiesDetails($_GET['type'], $_GET['actId']);
+            echo json_encode($data);
+        }
     } else {
         switch ($_GET['data']) {
             case 'delete':
@@ -37,5 +59,27 @@ if ($module->userLevel > 1) {
         }
     }
 } else {
-    echo $module->retrieveModules();
+    if (isset($_GET['dataType'])) {
+        $userModule = new UserModule();
+        switch($_GET['dataType']){
+            case 'works':
+                echo json_encode($userModule->prepareTrabajosJson());
+                break;
+            case 'homeworks':
+                echo json_encode($userModule->prepareTareasJson());
+                break;
+            case 'feedback':
+                echo json_encode($userModule->prepareFeedbackJson());
+            case 'all':
+                $moduleTabs = [
+                    'works' => $userModule->prepareTrabajosJson(),
+                    'homeworks' => $userModule->prepareTareasJson(),
+                    'feedback' => $userModule->prepareFeedbackJson()
+                ];
+                echo json_encode($moduleTabs);
+                break;
+        }
+    } else {
+        echo $module->retrieveModules();
+    }
 }

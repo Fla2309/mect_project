@@ -11,7 +11,7 @@ class Module extends DB
     public function __construct()
     {
         $this->userId = $_GET['userId'];
-        $this->user = $_GET['user'];
+        //$this->user = $_GET['user'];
         $this->conn = (new DB())->connect();
         $this->userLevel = $this->getUserLevel();
     }
@@ -153,7 +153,7 @@ class UserModule
     private $userId;
     private $moduleId;
     private $conn;
-    private $admin;
+    private $userLevel;
 
     public function __construct()
     {
@@ -165,11 +165,11 @@ class UserModule
 
     public function getTareasPerUser()
     {
-        if ($this->admin) {
+        if ($this->userLevel > 1) {
             $query = $this->conn->query('SELECT * FROM tareas_modulos WHERE status = 0 AND id_modulo = ' . $this->moduleId) or die($this->conn->error);
         } else {
             $query = $this->conn->query("SELECT tareas_modulos.id_tarea, tareas_modulos.nombre_tarea, tareas_usuarios.fecha_subida, 
-            tareas_modulos.comentarios, tareas_usuarios.adjunto, tareas_usuarios.revisado FROM tareas_modulos 
+            tareas_modulos.comentarios, tareas_usuarios.adjunto, tareas_usuarios.revisado, tareas_modulos.plantilla FROM tareas_modulos 
             INNER JOIN tareas_usuarios ON tareas_modulos.id_tarea = tareas_usuarios.id_tarea 
             WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
             (SELECT id FROM usuarios WHERE id = {$this->userId})") or die($this->conn->error);
@@ -179,11 +179,11 @@ class UserModule
 
     public function getTrabajosPerUser()
     {
-        if ($this->admin) {
+        if ($this->userLevel > 1) {
             $query = $this->conn->query("SELECT * FROM trabajos_modulos WHERE status = 0 AND id_modulo = {$this->moduleId}") or die($this->conn->error);
         } else {
             $query = $this->conn->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
-            trabajos_usuarios.revisado, trabajos_usuarios.adjunto FROM trabajos_modulos 
+            trabajos_usuarios.revisado, trabajos_usuarios.adjunto, trabajos_modulos.plantilla FROM trabajos_modulos 
             INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
             WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
             (SELECT id FROM usuarios WHERE id = {$this->userId})") or die($this->conn->error);
@@ -214,18 +214,23 @@ class UserModule
 
     public function getAdminPermissions()
     {
-        return $this->admin;
+        return $this->userLevel > 1;
     }
 
     function setAdminPermissions($userId)
     {
         $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
-        $this->admin = $query[0] > 1 ? true : false;
+        $this->userLevel = $query[0];
     }
 
     public function prepareHtmlTareas()
     {
         return $this->getAdminPermissions() ? $this->prepareHtmlTareasAdmin() : $this->prepareHtmlTareasStudent();
+    }
+
+    public function prepareTareasJson()
+    {
+        return $this->getAdminPermissions() ? $this->prepareTareasJsonAdmin() : $this->prepareTareasJsonStudent();
     }
 
     function prepareHtmlTareasAdmin()
@@ -244,57 +249,66 @@ class UserModule
         return $html;
     }
 
-    function prepareHtmlTareasStudent()
+    function prepareTareasJsonAdmin()
     {
-        $html = "";
-        $status = "";
-        $statusLayout = "";
-        $uplEnabled = false;
+        $tareasList=[];
 
         foreach ($this->getTareasPerUser() as $row) {
-            $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
-            $html = $html . '<h5 class="mb-1">' . $row['nombre_tarea'] . '</h5>';
-            $html = $html . '<small>Fecha de subida: ' . $row['fecha_subida'] . '</small>';
-            $html = $html . '</div>';
-            $html = $row['comentarios'] != null ? $html . '<p class="mb-1">' . $row['comentarios'] . '</p>' : $html . '<p class="mb-1">No hay comentarios</p>';
-            switch ($row['revisado']) {
-                case 0:
-                    $status = "Pendiente";
-                    $statusLayout = $status;
-                    $uplEnabled = true;
-                    break;
-                case 1:
-                    $status = "En revisión";
-                    $statusLayout = '<span style="color: goldenrod; font-weight: bold;">' . $status . '</span>';
-                    $uplEnabled = false;
-                    break;
-                case 2:
-                    $status = "Rechazado";
-                    $statusLayout = '<span style="color: darkred; font-weight: bold;">' . $status . '</span>';
-                    $uplEnabled = true;
-                    break;
-                case 3:
-                    $status = "Revisado";
-                    $statusLayout = '<span style="color: dodgerblue; font-weight: bold;">' . $status . '</span>';
-                    $uplEnabled = false;
-                    break;
-            }
-            $html = $html . '<div style="display: inline-block"><div class="d-flex justify-content-center">';
-            $html = $html . '<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
-            $html = $html . '<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
-            $html = $html . '<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
-            $html = $uplEnabled ? $html . '<label for="tareas-file-input-' . $row['id_tarea'] . '" onclick="selectFile(this)"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir tarea"></label><input style="display: none;" onchange="uploadFile(this, 2)" id="tareas-file-input-' . $row['id_tarea'] . '" name="foto" type="file">' : $html;
-            $html = ($status !== $statusLayout) ? $html . "<a href=\"" . $this->getUserLocalPath() . "tareas/{$row['adjunto']}\" download=\"{$row['adjunto']}\"><img src=\"img/download.png\" class=\"dashboard_icon m-2\" title=\"Descargar tarea\"></a>" : $html;
-            $html = $html . '</form></div><hr class="divider">';
-            $html = $html . '</a>';
+            //options -> 1=consultas, 2=altas, 3=cambios, 4=bajas
+            $options = $this->userLevel > 2 ? 
+                    [1] : 
+                    [1, 2, 3, 4];
+            $tareas = array(
+                'homeworkId' => $row['id_tarea'],
+                'homeworkName' => $row['nombre_tarea'],
+                'options' => $options
+            );
+
+            array_push($tareasList, $tareas);
         }
 
-        return $html;
+        return $tareasList;
     }
+
+    function prepareTareasJsonStudent()
+{
+    $tareasList=[];
+    foreach ($this->getTareasPerUser() as $row) {
+        $options = [];
+        //options -> 1=plantilla, 2=cargar archivo, 3=descargar archivo,
+        switch($row['revisado']){
+            case 0: $options = ['read', 'upload']; break;
+            case 1: $options = ['read', 'download']; break;
+            case 2: $options = ['read', 'upload', 'download']; break;
+            case 3: $options = ['read', 'download']; break;
+            default: break;
+        }
+        
+        $tareas = array(
+            'homeworkId' => $row['id_tarea'],
+            'homeworkName' => $row['nombre_tarea'],
+            'dateUploaded' => $row['fecha_subida'],
+            'comments' => $row['comentarios'],
+            'file' => $row['adjunto'],
+            'status' => $row['revisado'],
+            'options' => $options,
+            'userLocalPath' => $this->getUserLocalPath(),
+            'template' => $row['plantilla']
+        );
+
+        array_push($tareasList, $tareas);
+    }
+    return $tareasList;
+}
 
     public function prepareHtmlTrabajos()
     {
         return $this->getAdminPermissions() ? $this->prepareHtmlTrabajosAdmin() : $this->prepareHtmlTrabajosStudent();
+    }
+
+    public function prepareTrabajosJson()
+    {
+        return $this->getAdminPermissions() ? $this->prepareTrabajosJsonAdmin() : $this->prepareTrabajosJsonStudent();
     }
 
     function prepareHtmlTrabajosAdmin()
@@ -313,49 +327,55 @@ class UserModule
         return $html;
     }
 
-    function prepareHtmlTrabajosStudent()
+    function prepareTrabajosJsonAdmin()
     {
-        $html = "";
-        $status = "";
-        $statusLayout = "";
-        $uplEnabled = false;
+        $trabajosList=[];
 
         foreach ($this->getTrabajosPerUser() as $row) {
-            $html = $html . '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between">';
-            $html = $html . '<h5 class="mb-1">' . $row['nombre_trabajo'] . '</h5>';
-            $html = $html . '<small>Fecha de subida: ' . $row['fecha_subido'] . '</small>';
-            $html = $html . '</div>';
-            switch ($row['revisado']) {
-                case 0:
-                    $status = "Pendiente";
-                    $statusLayout = $status;
-                    $uplEnabled = true;
-                    break;
-                case 1:
-                    $status = "En revisión";
-                    $statusLayout = '<span style="color: goldenrod; font-weight: bold;">' . $status . '</span>';
-                    $uplEnabled = false;
-                    break;
-                case 2:
-                    $status = "Rechazado";
-                    $statusLayout = '<span style="color: darkred; font-weight: bold;">' . $status . '</span>';
-                    $uplEnabled = true;
-                    break;
-                case 3:
-                    $status = "Revisado";
-                    $statusLayout = '<span style="color: dodgerblue; font-weight: bold;">' . $status . '</span>';
-                    $uplEnabled = false;
-                    break;
-            }
-            $html = $html . '<div style="display: inline-block"><div class="d-flex justify-content-center">';
-            $html = $html . '<small class="text-muted"> Estado: ' . $statusLayout . '</small></div>';
-            $html = $html . '<form><a href="resources/templates/prueba-1.docx" download="plantilla tarea 1.docx"><img src="img/template.png" class="dashboard_icon m-2" title="Descargar plantilla"></a>';
-            $html = $html . '<input hidden="true" name="MAX_FILE_SIZE" value="10485760">';
-            $html = $uplEnabled ? $html . '<label for="trabajos-file-input-' . $row['id_trabajo'] . '" onclick="uploadFile(this, 1)"><img class="dashboard_icon m-2" src="img/upload.png" title ="Subir trabajo"></label><input style="display: none;" id="trabajos-file-input-' . $row['id_trabajo'] . '" name="foto" type="file">' : $html;
-            $html = ($status !== $statusLayout) ? $html . "<a href=\"" . $this->getUserLocalPath() . "trabajos/{$row['adjunto']}\" download=\"{$row['adjunto']}\"><img src=\"img/download.png\" class=\"dashboard_icon m-2\" title=\"Descargar trabajo\"></a>" : $html;
-            $html = $html . '</form></div></a><hr class="divider">';
+            //options -> 1=consultas, 2=altas, 3=cambios, 4=bajas
+            $options = $this->userLevel > 2 ? 
+                    [1] : 
+                    [1, 2, 3, 4];
+            $trabajos = array(
+                'workId' => $row['id_trabajo'],
+                'workName' => $row['nombre_trabajo'],
+                'options' => $options
+            );
+
+            array_push($trabajosList, $trabajos);
         }
-        return $html;
+
+        return $trabajosList;
+    }
+
+    function prepareTrabajosJsonStudent()
+    {
+        $trabajosList=[];
+        foreach ($this->getTrabajosPerUser() as $row) {
+            $options = [];
+            //options -> 1=plantilla, 2=cargar archivo, 3=descargar archivo,
+            switch($row['revisado']){
+                case 0: $options = ['read', 'upload']; break;
+                case 1: $options = ['read', 'download']; break;
+                case 2: $options = ['read', 'upload', 'download']; break;
+                case 3: $options = ['read', 'download']; break;
+                default: break;
+            }
+            
+            $trabajos = array(
+                'workId' => $row['id_trabajo'],
+                'workName' => $row['nombre_trabajo'],
+                'dateUploaded' => $row['fecha_subido'],
+                'file' => $row['adjunto'],
+                'status' => $row['revisado'],
+                'options' => $options,
+                'userLocalPath' => $this->getUserLocalPath(),
+                'template' => $row['plantilla']
+            );
+
+            array_push($trabajosList, $trabajos);
+        }
+        return $trabajosList;
     }
 
     public function prepareHtmlFeedback()
@@ -374,6 +394,23 @@ class UserModule
         }
 
         return $html;
+    }
+
+    public function prepareFeedbackJson()
+    {
+        $feedbackList=[];
+
+        while ($row = mysqli_fetch_array($this->getFeedbackPerUser())) {
+            $feedback = array(
+                'author' => $row['autor'],
+                'date' => $row['fecha'],
+                'feedback' => $row['feedback']
+            );
+
+            array_push($feedbackList, $feedback);
+        }
+
+        return $feedbackList;
     }
 
     function getUserLocalPath()

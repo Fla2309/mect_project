@@ -1,7 +1,7 @@
 function generateModulesPage() {
     $.ajax({
         method: "GET",
-        url: "../php/moduleController.php?type=0&user=" + document.getElementById("user") + "&userId=" + document.getElementById("userId").value,
+        url: "../php/moduleController.php?type=0&user=" + document.getElementById("user").value + "&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
         if (data.length == 0) {
             $('#modulos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');

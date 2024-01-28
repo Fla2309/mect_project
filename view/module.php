@@ -20,10 +20,10 @@ $userModule = new UserModule();
             <td><input type="text" id="moduleId" value="<?php echo $_GET['module'] ?>" class="module_properties"></td>
         </tr>
     </table>
-    <button type="button" class="btn btn-primary" onclick="reloadModules()"><img src="../img/left-arrow.png" width="20">
-        Volver
+    <button type="button" class="btn btn-primary ms-2 mt-2" onclick="reloadModules()"><img src="../img/left-arrow.png" width="20">
+        Volver A Módulos
     </button>
-    <div class="px-2 py-2 mx-2 my-2">
+    <div class="m-2">
         <div class="card text-center">
             <div class="card-header">
                 <ul class="nav nav-pills card-header-tabs mb-1">
@@ -47,25 +47,17 @@ $userModule = new UserModule();
                     <?php
                     if ($userModule->getAdminPermissions())
                         echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addActivity(2)"><img src="../img/plus.png" width="20"> Añadir</button></div>';
-                    $htmlTrabajos = $userModule->prepareHtmlTrabajos();
-                    echo $htmlTrabajos !== "" ? $htmlTrabajos : "<h5>No hay trabajos para mostrar</h5>"
-                        ?>
+                    ?>
                 </div>
                 <div class="tab-pane card-body" id="tareas">
                     <?php
                     if ($userModule->getAdminPermissions())
                         echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addActivity(1)"><img src="../img/plus.png" width="20"> Añadir</button></div>';
-                    $htmltareas = $userModule->prepareHtmlTareas();
-                    echo $htmltareas !== "" ? $htmltareas : "<h5>No hay tareas para mostrar</h5>"
-                        ?>
+                    ?>
                 </div>
                 <?php
                 if (!$userModule->getAdminPermissions()) {
-                    echo '
-                <div class="tab-pane card-body" id="feedback">' .
-                        $htmlFeedback = $userModule->prepareHtmlFeedback();
-                    echo $htmlFeedback !== "" ? $htmlFeedback : "<h5>No hay feedback para mostrar</h5>" .
-                        '</div>';
+                    echo '<div class="tab-pane card-body" id="feedback"></div>';
                 }
                 ?>
                 <!-- <div class="tab-pane card-body" id="informacion">
