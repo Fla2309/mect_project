@@ -225,7 +225,7 @@ class UserModule
 
     public function prepareHtmlTareas()
     {
-        return $this->getAdminPermissions() ? $this->prepareHtmlTareasAdmin() : $this->prepareHtmlTareasStudent();
+        return $this->prepareHtmlTareasAdmin();
     }
 
     public function prepareTareasJson()
@@ -303,7 +303,7 @@ class UserModule
 
     public function prepareHtmlTrabajos()
     {
-        return $this->getAdminPermissions() ? $this->prepareHtmlTrabajosAdmin() : $this->prepareHtmlTrabajosStudent();
+        return $this->prepareHtmlTrabajosAdmin();
     }
 
     public function prepareTrabajosJson()
