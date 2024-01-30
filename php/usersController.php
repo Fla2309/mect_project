@@ -4,6 +4,9 @@ include_once('users.php');
 $users = new Users($_GET['userId']);
 
 switch ($_GET['data']) {
+    case 'get':
+        echo $users->prepareUsuariosJson();
+        break;
     case 'delete':
         $users->deleteUser($_GET['targetUser']);
         break;

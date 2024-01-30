@@ -41,7 +41,7 @@
                             src="../img/group.png" class="left_bar_icon"></a>
                 </li>
                 <li id="usuariosNavItem" class="nav-item">
-                    <a class="nav-link" title="Usuarios" data-bs-target="#usuarios" data-bs-toggle="tab"><img
+                    <a class="nav-link" title="Usuarios" onclick="generateUsersPage()" data-bs-target="#usuarios" data-bs-toggle="tab"><img
                             src="../img/user_b.png" class="left_bar_icon"></a>
                 </li>
                 <li id="modulosNavItem" class="nav-item">
@@ -125,7 +125,7 @@
             </div>
             <div class="tab-pane fade" id="usuarios">
                 <div class="px-2 py-2 mx-2 my-2">
-                    <div class="px-3 py-3" style="background-color: white;">
+                    <div class="px-3 py-3" style="background-color: white;" id="usersDetails">
                         <h1 class="mb-3">Usuarios Registrados</h1>
                         <hr class="divider">
                         <div class="col-4 mb-3 d-flex">
@@ -145,11 +145,7 @@
                             //echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
                             //?>
                         </div> -->
-                        <?php
-                        include_once('./php/users.php');
-                        $userGroup = new Users($_SESSION['userId']);
-                        echo $userGroup->prepareHtmlUsuarios($userGroup->getUsuarios());
-                        ?>
+                        
                     </div>
                 </div>
             </div>

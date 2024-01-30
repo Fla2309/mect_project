@@ -147,7 +147,7 @@ function showStudentSchoolProfile(data) {
         method: "POST",
         url: "../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val(),
     }).done({
-        
+
     });
 }
 
@@ -207,13 +207,13 @@ function generateModulesPage() {
 function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
-    for(let i = 0; i < json.length; i++) {
-        if(i % 3 === 0) {
+    for (let i = 0; i < json.length; i++) {
+        if (i % 3 === 0) {
             var divRow = document.createElement('div');
             divRow.className = 'row';
             divRow.style.alignContent = 'center';
         }
-    
+
         let module = json[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
@@ -230,14 +230,109 @@ function setModulesHtml(json) {
         button.style.textAlign = 'left';
         h2.textContent = module.moduleName;
         h4.textContent = module.description;
-        button.setAttribute('onclick','showModuleHtmlAdmin(this)');
+        button.setAttribute('onclick', 'showModuleHtmlAdmin(this)');
         button.textContent = 'Ver Módulo';
         divP1.append(h2, h4, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
-    
-        if(i % 3 === 2 || i === json.length - 1) {
+
+        if (i % 3 === 2 || i === json.length - 1) {
             document.getElementById('modulos').appendChild(divRow);
         }
+    }
+}
+
+function generateUsersPage() {
+    $.ajax({
+        method: "GET",
+        url: "../php/usersController.php?userId=" + document.getElementById("userId").value + '&data=get',
+    }).done(function (data) {
+        setUsersHtml(data);
+    }).fail(function (result) {
+        console.log(result);
+    });
+}
+
+function setUsersHtml(json) {
+    if (Object.keys(json).length == 0) {
+        const h5 = document.createElement('h5');
+        h5.textContent = 'No hay usuarios para mostrar';
+        document.getElementById('usersDetails').appendChild(h5);
+        return;
+    } else {
+        const ul = document.createElement('ul');
+        ul.classList.add('list-group');
+        ul.id = 'usersList';
+        json.forEach(user => {
+            let li = document.createElement('li');
+            li.className = "list-group-item";
+            li.id = "user_" + user.userId;
+
+            let a1 = document.createElement('a');
+            a1.textContent = user.userName + ' ' + user.userLastName + '\u00A0\u00A0';
+            li.appendChild(a1);
+
+            let em = document.createElement('em');
+            em.className = "text-muted";
+            em.textContent = 'MECT ' + user.groupId + ' ' + user.groupName;
+            a1.appendChild(em);
+
+            user.options.forEach(option => {
+                switch (option) {
+                    case 1:
+                        let a2 = document.createElement('a');
+                        a2.href = "#";
+                        a2.onclick = function () { deleteStudent(this); };
+                        let img1 = document.createElement('img');
+                        img1.src = "img/del_user.png";
+                        img1.title = "Eliminar usuario";
+                        img1.className = "dashboard_icon ms-4 me-1";
+                        a2.appendChild(img1);
+                        li.appendChild(a2);
+
+                        break;
+
+                    case 2:
+                        let a3 = document.createElement('a');
+                        a3.href = "#";
+                        a3.onclick = function () { showUserSettings(this, setParametersInSettingsModal); };
+                        let img2 = document.createElement('img');
+                        img2.src = "img/settings.png";
+                        img2.title = "Configuración";
+                        img2.className = "dashboard_icon m-1";
+                        a3.appendChild(img2);
+                        li.appendChild(a3);
+
+                        break;
+                    case 3:
+                        let a4 = document.createElement('a');
+                        a4.href = "#";
+                        a4.onclick = function () { showPaymentFrame(this, setPaymentsFrameInUser); };
+                        let img3 = document.createElement('img');
+                        img3.src = "img/payment.png";
+                        img3.title = "Pagos";
+                        img3.className = "dashboard_icon m-1";
+                        a4.appendChild(img3);
+                        li.appendChild(a4);
+
+                        break;
+                    case 4:
+                        let a5 = document.createElement('a');
+                        a5.href = "#";
+                        a5.onclick = function () { showStudentSchoolProfile(this); };
+                        let img4 = document.createElement('img');
+                        img4.src = "img/books.png";
+                        img4.title = "Perfil académico";
+                        img4.className = "dashboard_icon m-1";
+                        a5.appendChild(img4);
+                        li.appendChild(a5);
+
+                        break;
+                }
+            });
+            ul.appendChild(li);
+        });
+        document.getElementById('usersDetails').appendChild(ul);
+        console.log(json);
     }
 }

@@ -6,18 +6,18 @@ class Users
 {
     private $userId;
     private $conn;
-    private $admin;
+    private $userLevel;
     public function __construct($userId)
     {
         $this->userId = $userId;
         $this->conn = (new DB())->connect();
-        $this->setAdminPermissions($userId);
+        $this->setUserLevel($userId);
     }
 
-    function setAdminPermissions($userId)
+    function setUserLevel($userId)
     {
-        $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
-        $this->admin = $query[0] > 1 ? true : false;
+        $query = mysqli_fetch_assoc($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
+        $this->userLevel = $query['nivel_usuario'];
     }
 
     //duplicated code (groupModel.php)
@@ -46,6 +46,34 @@ class Users
         return $html;
     }
 
+    public function prepareUsuariosJson()
+    {
+        $users = $this->getUsuarios();
+        $usersList = [];
+        if ($users !== 0) {
+            while ($user = mysqli_fetch_array($users)) {
+                //options -> 1=eliminar, 2=configuración, 3=pagos, 4=perfil
+                if($user['id']==$this->userId)
+                    continue;
+                $options = $this->userLevel > 1 && $this->userLevel < 3 ?
+                    [3, 4] :
+                    [1, 2, 3, 4];
+
+                $user = [
+                    'userId' => $user['id'],
+                    'userName' => $user['nombre'],
+                    'userLastName' => $user['apellidos'],
+                    'groupId' => $user['id_grupo'],
+                    'groupName' => $user['nombre_grupo'],
+                    'options' => $options
+                ];
+                array_push($usersList, $user);
+            }
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        return json_encode($usersList, JSON_UNESCAPED_UNICODE);
+    }
+
     public function getUsuarios()
     {
         $query = $this->conn->query('SELECT usuarios.id, usuarios.nombre, usuarios.apellidos, 
@@ -56,7 +84,7 @@ class Users
 
     public function deleteUser($targetUser)
     {
-        if ($this->admin) {
+        if ($this->userLevel > 2) {
             $query = $this->conn->query("UPDATE usuarios SET status = 1 WHERE id={$targetUser}") or die($this->conn->error);
             if ($query)
                 http_response_code(200);
@@ -67,7 +95,7 @@ class Users
             return "Usuario No Autorizado";
         }
     }
-    
+
     //duplicado con groupModel.php
     public function prepareHtmlPagos($userId)
     {
