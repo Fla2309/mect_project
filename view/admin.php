@@ -24,6 +24,7 @@
     <table hidden="true">
         <tr>
             <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['userName'] ?>" class="user_properties"></td>
             <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
                     value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
@@ -44,7 +45,7 @@
                             src="../img/user_b.png" class="left_bar_icon"></a>
                 </li>
                 <li id="modulosNavItem" class="nav-item">
-                    <a class="nav-link" title="Módulos" data-bs-target="#modulos" data-bs-toggle="tab"><img
+                    <a class="nav-link" title="Módulos" onclick="generateModulesPage()" data-bs-target="#modulos" data-bs-toggle="tab"><img
                             src="../img/book.png" class="left_bar_icon"></a>
                 </li>
                 <li id="examenesNavItem" class="nav-item">
@@ -152,13 +153,9 @@
                     </div>
                 </div>
             </div>
-            <script src="../js/module.js" type="text/javascript"></script>
+            <script src="../js/moduleAdmin.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="modulos">
-                <?php
-                include_once('./php/modules.php');
-                $moduleClass = new Module();
-                echo ($moduleClass)->retrieveModules();
-                ?>
+                
             </div>
             <script src="../js/testAdmin.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="examen">

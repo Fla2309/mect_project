@@ -1,3 +1,22 @@
+function showModuleHtmlAdmin(button) {
+    var module_id = getModuleId(button);
+    var url = 'userId=' + $('#userId.user_properties').val() + '&module=' + module_id;
+    html = $('#modulos').html();
+    $.ajax({
+        method: "GET",
+        url: "../view/module.php?" + url
+    }).done(function (data) {
+        $('#modulos').html(data);
+        fillModuleDetails();
+    }).fail({
+
+    })
+}
+
+function reloadModules() {
+    generateModulesPage();
+}
+
 function addActivity(typeInt) {
     var type = typeInt == 1 ? 'homework' : 'activity';
     $('#actType').attr('value', type);
@@ -124,4 +143,123 @@ function saveChanges() {
             } setInterval(redirect, 1000);
         })
     });
+}
+
+function getModuleId(htmlElement) {
+    currentElement = $(htmlElement);
+    while (currentElement.length > 0) {
+        var currentId = currentElement.attr('id');
+        if (currentId && currentId.includes('idModule-')) {
+            return currentId.replace('idModule-', '');
+        }
+        currentElement = currentElement.parent();
+    }
+}
+
+function fillModuleDetails() {
+    var module_id = document.getElementById('moduleId').value;
+    var url = 'userId=' + $('#userId.user_properties').val() + '&module=' + module_id + '&dataType=all';
+    $.ajax({
+        method: "GET",
+        dataType: 'JSON',
+        url: "../php/moduleController.php?" + url
+    }).done(function (data) {
+        setModuleFrame(data);
+        console.log(data)
+    }).fail({
+
+    })
+}
+
+function setModuleFrame(json) {
+    setTrabajosFrame(json.works);
+    setTareasFrame(json.homeworks);
+}
+
+function setTrabajosFrame(json) {
+    if (Object.keys(json).length === 0) {
+        const h5 = document.createElement('h5');
+        h5.textContent = 'No hay trabajos para mostrar';
+        document.getElementById('trabajos').appendChild(h5);
+        return;
+    }
+    json.forEach(jsonRow => {
+        const aListGroupItem = document.createElement('a');
+        const divTitle = document.createElement('div');
+        const h5 = document.createElement('h5');
+        const aEdit = document.createElement('a');
+        const imgEdit = document.createElement('img');
+        const aDelete = document.createElement('a');
+        const imgDelete = document.createElement('img');
+        aListGroupItem.classList.add('list-group-item');
+        aListGroupItem.classList.add('list-group-item-action');
+        divTitle.id = 'mod_act_' + jsonRow.workId;
+        divTitle.classList.add('d-flex');
+        divTitle.classList.add('w-100');
+        divTitle.classList.add('justify-content-start');
+        h5.classList.add('mb-1');
+        h5.textContent = jsonRow.workName;
+        imgEdit.classList.add('dashboard_icon');
+        imgEdit.classList.add('m-2');
+        imgEdit.src = 'img/edit.png';
+        aEdit.title = 'Editar';
+        aEdit.setAttribute('onclick', 'showEditPanel(this)');
+        aEdit.appendChild(imgEdit);
+        imgDelete.classList.add('dashboard_icon');
+        imgDelete.classList.add('m-2');
+        imgDelete.src = 'img/delete.png';
+        aDelete.title = 'Eliminar';
+        aDelete.setAttribute('onclick', 'deleteActivity(this)');
+        aDelete.appendChild(imgDelete);
+        divTitle.appendChild(h5);
+        divTitle.appendChild(aEdit);
+        divTitle.appendChild(aDelete);
+        aListGroupItem.appendChild(divTitle);
+        aListGroupItem.innerHTML += '<hr class="divider">';
+        document.getElementById('trabajos').appendChild(aListGroupItem);
+    })
+}
+
+function setTareasFrame(json) {
+    if (Object.keys(json).length === 0) {
+        const h5 = document.createElement('h5');
+        h5.textContent = 'No hay tareas para mostrar';
+        document.getElementById('tareas').appendChild(h5);
+        return;
+    }
+    json.forEach(jsonRow => {
+        const aListGroupItem = document.createElement('a');
+        const divTitle = document.createElement('div');
+        const h5 = document.createElement('h5');
+        const aEdit = document.createElement('a');
+        const imgEdit = document.createElement('img');
+        const aDelete = document.createElement('a');
+        const imgDelete = document.createElement('img');
+        aListGroupItem.classList.add('list-group-item');
+        aListGroupItem.classList.add('list-group-item-action');
+        divTitle.id = 'mod_hw_' + jsonRow.homeworkId;
+        divTitle.classList.add('d-flex');
+        divTitle.classList.add('w-100');
+        divTitle.classList.add('justify-content-start');
+        h5.classList.add('mb-1');
+        h5.textContent = jsonRow.homeworkName;
+        imgEdit.classList.add('dashboard_icon');
+        imgEdit.classList.add('m-2');
+        imgEdit.src = 'img/edit.png';
+        aEdit.title = 'Editar';
+        aEdit.setAttribute('onclick', 'showEditPanel(this)');
+        aEdit.appendChild(imgEdit);
+        imgDelete.classList.add('dashboard_icon');
+        imgDelete.classList.add('m-2');
+        imgDelete.src = 'img/delete.png';
+        aDelete.title = 'Eliminar';
+        aDelete.setAttribute('onclick', 'deleteActivity(this)');
+        aDelete.appendChild(imgDelete);
+        divTitle.appendChild(h5);
+        divTitle.appendChild(aEdit);
+        divTitle.appendChild(aDelete);
+        aListGroupItem.appendChild(divTitle);
+        aListGroupItem.innerHTML += '<hr class="divider">';
+        document.getElementById('tareas').appendChild(aListGroupItem);
+    })
 }

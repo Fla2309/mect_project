@@ -14,21 +14,20 @@ if ($module->userLevel > 1) {
                 case 'homeworks':
                     echo json_encode($userModule->prepareTareasJson());
                     break;
-                case 'feedback':
-                    echo json_encode($userModule->prepareFeedbackJson());
                 case 'all':
                     $module = [
                         'works' => $userModule->prepareTrabajosJson(),
                         'homeworks' => $userModule->prepareTareasJson(),
-                        'feedback' => $userModule->prepareFeedbackJson()
                     ];
                     echo json_encode($module);
                     break;
             }
-        } else {
+        } else if (isset($_GET['actId'])) {
             header('Content-Type: application/json; charset=utf-8');
             $data = $module->getModuleActivitiesDetails($_GET['type'], $_GET['actId']);
             echo json_encode($data);
+        } else {
+            echo $module->retrieveModules();
         }
     } else {
         switch ($_GET['data']) {

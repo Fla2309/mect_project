@@ -9,10 +9,6 @@ $userModule = new UserModule();
 </head>
 
 <body>
-    <?php
-    if ($userModule->getAdminPermissions())
-        echo '<script src="../js/moduleAdmin.js"></script>';
-    ?>
     <table hidden="true">
         <tr>
             <td><input type="text" id="user" value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
