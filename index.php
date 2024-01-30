@@ -19,6 +19,7 @@ if(isset($_SESSION['session_id'])){
         $userSession->setCurrentUserId($user);
         $userSession->setCurrentUserFullname($user);
         $userSession->setCurrentUserPreferredName($user);
+        $userSession->setCurrentUserType($user);
         $userSession->generateSessionId();
 
         include_once 'php/home.php';

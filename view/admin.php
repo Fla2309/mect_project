@@ -15,7 +15,15 @@
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
-    <title>Portal administrador</title>
+    <title>Portal
+        <?php
+        switch ($_SESSION['userType']) {
+            case 2: echo 'Observador'; break;
+            case 3: echo 'Administrador'; break;
+            case 4: echo 'Master Coach'; break;
+        }
+        ?>
+    </title>
 </head>
 
 <body>
@@ -24,13 +32,14 @@
     <table hidden="true">
         <tr>
             <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
-            <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['userName'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['userName'] ?>"
+                    class="user_properties"></td>
             <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
                     value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
     </table>
     <div class="row g-0">
-    <div style="width: 55px;" class="col-auto">
+        <div style="width: 55px;" class="col-auto">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
                     <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-target="#inicio"
@@ -41,12 +50,12 @@
                             src="../img/group.png" class="left_bar_icon"></a>
                 </li>
                 <li id="usuariosNavItem" class="nav-item">
-                    <a class="nav-link" title="Usuarios" onclick="generateUsersPage()" data-bs-target="#usuarios" data-bs-toggle="tab"><img
-                            src="../img/user_b.png" class="left_bar_icon"></a>
+                    <a class="nav-link" title="Usuarios" onclick="generateUsersPage()" data-bs-target="#usuarios"
+                        data-bs-toggle="tab"><img src="../img/user_b.png" class="left_bar_icon"></a>
                 </li>
                 <li id="modulosNavItem" class="nav-item">
-                    <a class="nav-link" title="Módulos" onclick="generateModulesPage()" data-bs-target="#modulos" data-bs-toggle="tab"><img
-                            src="../img/book.png" class="left_bar_icon"></a>
+                    <a class="nav-link" title="Módulos" onclick="generateModulesPage()" data-bs-target="#modulos"
+                        data-bs-toggle="tab"><img src="../img/book.png" class="left_bar_icon"></a>
                 </li>
                 <li id="examenesNavItem" class="nav-item">
                     <a class="nav-link" title="Exámenes" onclick="loadTestsPage()" data-bs-target="#examen"
@@ -145,13 +154,13 @@
                             //echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
                             //?>
                         </div> -->
-                        
+
                     </div>
                 </div>
             </div>
             <script src="../js/moduleAdmin.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="modulos">
-                
+
             </div>
             <script src="../js/testAdmin.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="examen">

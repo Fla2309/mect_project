@@ -33,6 +33,11 @@ class Session
         $_SESSION['pref_name'] = $user->getPreferredName();
     }
 
+    public function setCurrentUserType($user)
+    {
+        $_SESSION['userType'] = $user->getUserType();
+    }
+
     public function getCurrentSession()
     {
         return $_SESSION['session_id'];
