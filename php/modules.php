@@ -271,7 +271,7 @@ class UserModule
     }
 
     function prepareTareasJsonStudent()
-{
+    {
     $tareasList=[];
     foreach ($this->getTareasPerUser() as $row) {
         $options = [];
@@ -299,7 +299,7 @@ class UserModule
         array_push($tareasList, $tareas);
     }
     return $tareasList;
-}
+    }
 
     public function prepareHtmlTrabajos()
     {

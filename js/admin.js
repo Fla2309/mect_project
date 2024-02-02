@@ -120,12 +120,12 @@ function showPaymentFrame(data, callback) {
     id = $(parent).attr('id').replace('user_', '');
     if (!$('#payments_frame_' + id).length) {
         idString = "targetUser=" + id;
-        console.log("../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val());
         $.ajax({
             method: "POST",
-            url: "../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val(),
-            success: function (html) {
-                callback(html, $(parent).attr('id').replace('user_', ''));
+            url: "../php/usersController.php?data=get&dataType=payments&" + idString + "&userId=" + $('#userId').val(),
+            success: function (json) {
+                callback(json, $(parent).attr('id').replace('user_', ''));
+                //console.log(json)
             }
         });
     } else {
@@ -133,11 +133,43 @@ function showPaymentFrame(data, callback) {
     }
 }
 
-function setPaymentsFrameInUser(html, id) {
-    var div = document.createElement("div");
+function setPaymentsFrameInUser(json, id) {
+    const div = document.createElement("div");
     div.id = "payments_frame_" + id;
-    div.innerHTML = html
-    document.getElementById('user_' + id).appendChild(div);
+    if (json.length !== 0) {
+        const ul = document.createElement('ul');
+        json.forEach(jsonRow => {
+            const li = document.createElement('li');
+            li.className = "list-group-item";
+            li.id = "payment_" + jsonRow.paymentId;
+
+            const a1 = document.createElement('a');
+            a1.textContent = jsonRow.userFullName;
+            li.appendChild(a1);
+
+            const a2 = document.createElement('a');
+            const img = document.createElement('img');
+            img.src = "img/eye.png";
+            img.title = "Ver detalles";
+            img.className = "dashboard_icon ms-4 me-1";
+            a2.appendChild(img);
+            li.appendChild(a2);
+
+            const p = document.createElement('p');
+            p.innerHTML = '<strong>Importe: </strong>' + jsonRow.amount +
+                '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha: </strong>' + jsonRow.paymentDate +
+                '<br><strong>Teléfono: </strong>' + jsonRow.phone +
+                '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Correo: </strong>' + jsonRow.email;
+            li.appendChild(p);
+            ul.appendChild(li);
+            div.appendChild(ul);
+        });
+    } else {
+        const h5 = document.createElement('h5');
+        h5.textContent = "No hay pagos para mostrar";
+        div.appendChild(h5);
+    }
+        document.getElementById('user_' + id).appendChild(div);
 }
 
 function showStudentSchoolProfile(data) {
@@ -260,6 +292,10 @@ function setUsersHtml(json) {
         document.getElementById('usersDetails').appendChild(h5);
         return;
     } else {
+        let usersList = $("#usersList");
+        if (usersList.length) {
+            usersList.remove();
+        }
         const ul = document.createElement('ul');
         ul.classList.add('list-group');
         ul.id = 'usersList';

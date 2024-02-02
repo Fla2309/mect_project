@@ -5,7 +5,11 @@ $users = new Users($_GET['userId']);
 
 switch ($_GET['data']) {
     case 'get':
-        echo $users->prepareUsuariosJson();
+        if (isset($_GET['dataType']) && $_GET['dataType'] == 'payments'){
+            echo $users->preparePagosJson($_GET['targetUser']);
+        } else {
+            echo $users->prepareUsuariosJson();
+        }
         break;
     case 'delete':
         $users->deleteUser($_GET['targetUser']);
@@ -28,9 +32,6 @@ switch ($_GET['data']) {
             'comments' => $_GET['comments']
         ];
         $module->createActivityFromModule($_GET['type'], $values);
-        break;
-    case 'payments':
-        echo $users->prepareHtmlPagos($_GET['targetUser']);
         break;
     default:
         break;
