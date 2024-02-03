@@ -24,10 +24,13 @@ if (isset($_GET['type'])) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($settings->retrieveSettings($_GET['targetUser']));
             break;
-            case 5:
-                $user = $settings->saveSettings();
-                //echo json_encode($user);
-                break;
+        case 5:
+            $user = $settings->saveSettings();
+            //echo json_encode($user);
+            break;
+        case 'create':
+            echo $settings->createNewUser();
+            break;
         default:
             http_response_code(404);
             break;

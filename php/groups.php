@@ -41,7 +41,7 @@ class Groups extends DB
 
     public function getGroupHtmlDropdownTags(){
         $modules = $this->connect()->query("SELECT id_grupo, nombre_grupo FROM grupos") or die($this->connect()->error);
-        $html = '';
+        $html = '<option href=\"#\">Elige un grupo...</option>';
         foreach ($modules as $module) {
             $html = $html . "<option id=\"group_{$module['id_grupo']}\" href=\"#\">{$module['nombre_grupo']}</option>";
         }
@@ -49,7 +49,7 @@ class Groups extends DB
     }
     public function getUserLevelHtmlDropdownTags(){
         $modules = $this->connect()->query("SELECT id_nivel, nombre_nivel FROM niveles_usuario") or die($this->connect()->error);
-        $html = '';
+        $html = '<option href=\"#\">Elige un nivel de usuario...</option>';
         foreach ($modules as $module) {
             $html = $html . "<option id=\"level_{$module['id_nivel']}\" href=\"#\">{$module['nombre_nivel']}</option>";
         }

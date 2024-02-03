@@ -144,7 +144,7 @@
                                     title="Escribe el nombre">
                             </div>
                             <div class="col-5 ms-4">
-                                <button type="button" class="btn btn-primary">Agregar Usuario</button>
+                                <button type="button" onclick="clearAndShowSettingsModal()" class="btn btn-primary">Agregar Usuario</button>
                             </div>
                         </div>
                         <!-- <div class="row mt-3 col-4" id="groupSelectsUsers">
@@ -204,14 +204,14 @@
     </div>
 
     <!--Modals-->
-    <div class="modal fade" id="paymentsModal" tabindex="-1" aria-labelledby="paymentsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Configuración del Usuario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="userpayments">
+                <div class="modal-body" id="userSettings">
                     <div class="input-group mb-2" hidden>
                         <span class="input-group-text bg-primary text-white">ID</span>
                         <input class="form-control" placeholder="Nombre" id="targetUserId">
@@ -219,15 +219,15 @@
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Nombre y Apellidos</span>
                         <input class="form-control" placeholder="Nombre" id="targetUserName">
-                        <input class="form-control" placeholder="Nombre" id="targetUserLastname">
+                        <input class="form-control" placeholder="Apellidos" id="targetUserLastname">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Nombre/Alias Preferido</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserPrefName">
+                        <input class="form-control" placeholder="Alias" id="targetUserPrefName">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Grupo de PL/AM</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserPlId">
+                        <input class="form-control" placeholder="PL" id="targetUserPlId">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Grupo de MECT</span>
@@ -240,19 +240,19 @@
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Fecha de Ingreso MECT</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserDate">
+                        <input class="form-control" placeholder="(AAAA-MM-DD)" id="targetUserDate">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Correo</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserMail">
+                        <input class="form-control" placeholder="Correo" id="targetUserMail">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Teléfono</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserPhone">
+                        <input class="form-control" placeholder="Teléfono" id="targetUserPhone">
                     </div>
                     <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Usuario</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserLogin">
+                        <span class="input-group-text bg-primary text-white">Usuario web</span>
+                        <input class="form-control" placeholder="usuario.web" id="targetUserLogin">
                     </div>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-primary text-white">Nivel de Usuario</span>
@@ -267,7 +267,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveUserChanges()">Guardar
+                    <button type="button" class="btn btn-primary" onclick="saveNewUser()">Guardar
                         cambios</button>
                 </div>
             </div>
@@ -282,10 +282,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="changesMadeModalBody">
-                    Información actualizada con éxito
-                </div>
-                <div class="modal-footer">
-                    <p id="modal-footer_text">Serás redirigido al inicio en 3 segundos</p>
+                    
                 </div>
             </div>
         </div>

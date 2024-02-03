@@ -168,6 +168,54 @@ class Settings
             'profilePicPath' => '../' . $pictureName,
         ];
     }
-}
 
-?>
+    public function createNewUser()
+    {
+        $userCreation = $this->insertIntoUsuarios();
+        $webUserCreation = $this->insertIntoUsuarioWeb();
+        $directoryCreation = $this->createUserDirectory();
+        $results = [
+            'userCreation' => $userCreation,
+            'webUserCreation' => $webUserCreation,
+            'directoryCreation' => $directoryCreation
+        ];
+
+        if($userCreation && $webUserCreation && $directoryCreation)
+            http_response_code(201);
+        else
+            http_response_code(400);
+
+        header('Content-Type: application/json; charset=utf-8');
+        return json_encode($results);
+    }
+
+    function insertIntoUsuarios()
+    {
+        $newPass = md5('contraseña');
+        return $this->conn->query("INSERT INTO usuarios (nombre, apellidos, id_pl, id_grupo, fecha_ingreso, nombre_preferido, nivel_usuario, login_user, login_pass, correo, telefono, status) 
+        VALUES ('{$_GET['targetUserName']}','{$_GET['targetUserLastname']}','{$_GET['targetUserPL']}',
+        '{$_GET['targetUserGroup']}','{$_GET['targetUserDate']}','{$_GET['targetUserAlias']}',
+        '{$_GET['targetUserLevel']}','{$_GET['targetUserLogin']}','$newPass','{$_GET['targetUserMail']}',
+        '{$_GET['targetUserPhone']}','0')") or die($this->conn->error);
+
+    }
+
+    function insertIntoUsuarioWeb()
+    {
+        $userId = $this->conn->query('SELECT id FROM usuarios WHERE login_user = \'' . $_GET['targetUserLogin'] . '\'')->fetch_row()[0];
+        return $this->conn->query("INSERT INTO usuario_web (id_usuario, usuario, pass, foto_perfil, directorio_local) 
+        VALUES ('{$userId}','{$_GET['targetUserLogin']}','',
+        'img/user_pic.png','resources/users/{$_GET['targetUserName']} {$_GET['targetUserLastname']}/')") or die($this->conn->error);
+    }
+
+    function createUserDirectory()
+    {
+        $dirName = "../resources/users/{$_GET['targetUserName']} {$_GET['targetUserLastname']}";
+        if (!file_exists($dirName)) {
+            mkdir($dirName, 0777, true);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

@@ -105,13 +105,34 @@ function setParametersInSettingsModal(json) {
     $('#targetUserLogin').val(json['targetUserLogin']);
     $('#userLevel').val(json['userLevel']);
     const levelSelectElement = document.getElementById('levelsDropdown');
-    for (let i = 0; i < levelSelectElement.options.length; i++) {
+    for (let i = 1; i < levelSelectElement.options.length; i++) {
         const option = levelSelectElement.options[i];
-        if (option.value === json['targetUserLevel']) {
+        if (option.id.replace('level_','') == json['targetUserLevel']) {
             option.selected = true;
             break;
         }
     }
+    console.log(json);
+    $('#settingsModal .btn-primary').attr('onclick', 'saveUserChanges()');
+    $('#settingsModal').modal('show');
+}
+
+function clearAndShowSettingsModal() {
+    $('#targetUserId').val('');
+    $('#targetUserName').val('');
+    $('#targetUserLastname').val('');
+    $('#targetUserPrefName').val('');
+    $('#targetUserPlId').val('');
+    const groupSelectElement = document.getElementById('groupsDropdown');
+    groupSelectElement.options[0].selected = true;
+    $('#targetUserDate').val('');
+    $('#targetUserMail').val('');
+    $('#targetUserPhone').val('');
+    $('#targetUserLogin').val('');
+    $('#userLevel').val('');
+    const levelSelectElement = document.getElementById('levelsDropdown');
+    levelSelectElement.options[0].selected = true;
+    $('#settingsModal .btn-primary').attr('onclick', 'saveNewUser()');
     $('#settingsModal').modal('show');
 }
 
@@ -169,7 +190,7 @@ function setPaymentsFrameInUser(json, id) {
         h5.textContent = "No hay pagos para mostrar";
         div.appendChild(h5);
     }
-        document.getElementById('user_' + id).appendChild(div);
+    document.getElementById('user_' + id).appendChild(div);
 }
 
 function showStudentSchoolProfile(data) {
@@ -199,21 +220,56 @@ function saveUserChanges() {
         "userPhone=" + document.getElementById('targetUserPhone').value
     ];
     url = "../php/settingsController.php?type=5&" + data.join('&');
-    console.log(url);
     $.ajax({
         method: "POST",
         url: url
     }).done(function () {
         $('#settingsModal').modal('hide');
+        $('#changesMadeModalBody').text('Información de usuario actualizada con éxito');
         $('#changesMadeModal').modal('show');
         $('#changesMadeModal').on('shown.bs.modal', function () {
             var seconds = 3;
             function redirect() {
                 if (seconds <= 0) {
-                    window.location = '/index.php';
+                    $('#changesMadeModal').modal('hide');
                 } else {
                     seconds--;
-                    document.getElementById("modal-footer_text").innerHTML = "Serás redirigido al inicio en " + seconds + " segundos"
+                }
+            } setInterval(redirect, 1000);
+        })
+    });
+}
+
+function saveNewUser() {
+    var url = "";
+    data = [
+        "userId=" + document.getElementById('userId').value,
+        "targetUserName=" + document.getElementById('targetUserName').value,
+        "targetUserLastname=" + document.getElementById('targetUserLastname').value,
+        "targetUserPL=" + document.getElementById('targetUserPlId').value,
+        "targetUserGroup=" + $('#groupsDropdown option:selected').attr('id').replace('group_', ''),
+        "targetUserDate=" + document.getElementById('targetUserDate').value,
+        "targetUserAlias=" + document.getElementById('targetUserPrefName').value,
+        "targetUserLevel=" + $('#levelsDropdown option:selected').attr('id').replace('level_', ''),
+        "targetUserLogin=" + document.getElementById('targetUserLogin').value,
+        "targetUserMail=" + document.getElementById('targetUserMail').value,
+        "targetUserPhone=" + document.getElementById('targetUserPhone').value
+    ];
+    url = "../php/settingsController.php?type=create&" + data.join('&');
+    $.ajax({
+        method: "POST",
+        url: url
+    }).done(function () {
+        $('#settingsModal').modal('hide');
+        $('#changesMadeModalBody').text('Usuario creado exitosamente');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            function redirect() {
+                if (seconds <= 0) {
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
                 }
             } setInterval(redirect, 1000);
         })
