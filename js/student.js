@@ -72,15 +72,19 @@ function goToTab(link) {
     document.getElementById(id).getElementsByTagName("a")[0].click();
 }
 
+function getCurrentDate() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    day = (day < 10) ? '0' + day : day;
+    month = (month < 10) ? '0' + month : month;
+    return year + '-' + month + '-' + day;
+}
+
 function showCoachingModal(newCoaching) {
     if (newCoaching) {
-        var date = new Date();
-        var day = date.getDate();
-        var month = date.getMonth() + 1;
-        var year = date.getFullYear();
-        day = (day < 10) ? '0' + day : day;
-        month = (month < 10) ? '0' + month : month;
-        var dateFormatted = year + '-' + month + '-' + day;
+        var dateFormatted = getCurrentDate();
         $('#coachingId').val('');
         $('#coachingName').val('');
         if ($('#coachingName').attr('disabled') !== undefined)
@@ -328,13 +332,13 @@ function deleteCoaching(button) {
 function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
-    for(let i = 0; i < json.length; i++) {
-        if(i % 3 === 0) {
+    for (let i = 0; i < json.length; i++) {
+        if (i % 3 === 0) {
             var divRow = document.createElement('div');
             divRow.className = 'row';
             divRow.style.alignContent = 'center';
         }
-    
+
         let module = json[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
@@ -354,13 +358,13 @@ function setModulesHtml(json) {
         h2.textContent = module.moduleName;
         h4.textContent = module.description;
         p.textContent = module.progress + '% completado';
-        button.setAttribute('onclick','showModuleHtml(this)');
+        button.setAttribute('onclick', 'showModuleHtml(this)');
         button.textContent = 'Ver Módulo';
         divP1.append(h2, h4, p, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
-    
-        if(i % 3 === 2 || i === json.length - 1) {
+
+        if (i % 3 === 2 || i === json.length - 1) {
             document.getElementById('modulos').appendChild(divRow);
         }
     }

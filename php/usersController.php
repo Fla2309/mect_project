@@ -5,8 +5,15 @@ $users = new Users($_GET['userId']);
 
 switch ($_GET['data']) {
     case 'get':
-        if (isset($_GET['dataType']) && $_GET['dataType'] == 'payments'){
-            echo $users->preparePagosJson($_GET['targetUser']);
+        if (isset($_GET['dataType'])){
+            switch ($_GET['dataType']) {
+                case 'payments':
+                    echo $users->preparePagosJson($_GET['targetUser']);
+                    break;
+                case 'paymentInfo':
+                    echo $users->getUserPaymentInfo();
+                    break;
+            }
         } else {
             echo $users->prepareUsuariosJson();
         }
@@ -25,13 +32,21 @@ switch ($_GET['data']) {
         break;
 
     case 'create':
-        $values = [
-            'actName' => $_GET['actName'],
-            'moduleId' => $_GET['moduleId'],
-            'templateName' => $_GET['templateName'],
-            'comments' => $_GET['comments']
-        ];
-        $module->createActivityFromModule($_GET['type'], $values);
+        if (isset($_GET['dataType'])){
+            switch ($_GET['dataType']){
+                case 'payments':
+                    echo $users->registerPaymentForUser();
+                    break;
+            }
+        } else {
+            $values = [
+                'actName' => $_GET['actName'],
+                'moduleId' => $_GET['moduleId'],
+                'templateName' => $_GET['templateName'],
+                'comments' => $_GET['comments']
+            ];
+            $module->createActivityFromModule($_GET['type'], $values);
+        }
         break;
     default:
         break;

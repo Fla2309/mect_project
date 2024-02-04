@@ -62,10 +62,10 @@ function deleteStudent(data) {
             method: "POST",
             url: "../php/usersController.php?" + idString + "&userId=" + $('#userId').val() + "&data=delete"
         }).done(function () {
-            if (alert("Usuario eliminado exitosamente. Serás redirigido a la pantalla de inicio")) {
-                window.location = './index.php';
+            if (alert("Usuario eliminado exitosamente.")) {
+                generateUsersPage();
             } else {
-                window.location = './index.php';
+                generateUsersPage();
             }
         }).fail(function () {
             alert("Hubo un problema al eliminar el usuario. Inténtalo más tarde o contacta a soporte");
@@ -107,7 +107,7 @@ function setParametersInSettingsModal(json) {
     const levelSelectElement = document.getElementById('levelsDropdown');
     for (let i = 1; i < levelSelectElement.options.length; i++) {
         const option = levelSelectElement.options[i];
-        if (option.id.replace('level_','') == json['targetUserLevel']) {
+        if (option.id.replace('level_', '') == json['targetUserLevel']) {
             option.selected = true;
             break;
         }
@@ -136,27 +136,110 @@ function clearAndShowSettingsModal() {
     $('#settingsModal').modal('show');
 }
 
-function showPaymentFrame(data, callback) {
-    parent = $(data).parent();
-    id = $(parent).attr('id').replace('user_', '');
-    if (!$('#payments_frame_' + id).length) {
-        idString = "targetUser=" + id;
+function getCurrentDate() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    day = (day < 10) ? '0' + day : day;
+    month = (month < 10) ? '0' + month : month;
+    return year + '-' + month + '-' + day;
+}
+
+function showPaymentFrame(data, callback, isReload) {
+    if (!isReload) {
+        parent = $(data).parent();
+        id = $(parent).attr('id').replace('user_', '');
+        if (!$('#payments_frame_' + id).length) {
+            targetUserIdString = "targetUser=" + id;
+            $.ajax({
+                method: "POST",
+                url: "../php/usersController.php?data=get&dataType=payments&" + targetUserIdString + "&userId=" + $('#userId').val(),
+                success: function (json) {
+                    callback(json, $(parent).attr('id').replace('user_', ''));
+                }
+            });
+        } else {
+            $('#payments_frame_' + id).remove();
+        }
+    } else {
+        $('#payments_frame_' + data).remove();
+        targetUserIdString = "targetUser=" + data;
         $.ajax({
             method: "POST",
-            url: "../php/usersController.php?data=get&dataType=payments&" + idString + "&userId=" + $('#userId').val(),
+            url: "../php/usersController.php?data=get&dataType=payments&" + targetUserIdString + "&userId=" + $('#userId').val(),
             success: function (json) {
                 callback(json, $(parent).attr('id').replace('user_', ''));
-                //console.log(json)
             }
         });
-    } else {
-        $('#payments_frame_' + id).remove();
     }
+}
+
+function registerPayment() {
+    paymentDate = $('#targetUserDatePayment').val();
+    targetUserId = $('#targetUserIdPayment').val();
+    targetUserAmount = $('#targetUserAmountPayment').val();
+    targetUserReason = $('#targetUserReasonPayment').val();
+    $.ajax({
+        method: "POST",
+        url: "../php/usersController.php?data=create&dataType=payments&targetUserId=" + targetUserId +
+            "&userId=" + $('#userId').val() + '&paymentDate=' + paymentDate + '&targetUserAmount='
+            + targetUserAmount + '&targetUserReason=' + targetUserReason
+    }).done(function () {
+        $('#paymentModal').modal('hide');
+        $('#changesMadeModalBody').text('Pago registrado exitosamente');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            function redirect() {
+                if (seconds <= 0) {
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
+                }
+            } setInterval(redirect, 1000);
+            showPaymentFrame(targetUserId, setPaymentsFrameInUser, true);
+        })
+    });
+}
+
+function showPaymentModal(button) {
+    userId = button.id.replace('payment_for_', '');
+    getUserPaymentInfo(userId);
+    $('#paymentModal').modal('show');
+}
+
+function getUserPaymentInfo(userId) {
+    $.ajax({
+        method: "GET",
+        url: "../php/usersController.php?data=get&dataType=paymentInfo&targetUserId=" + userId + "&userId=" + $('#userId').val(),
+        success: function (json) {
+            setUserPaymentInfoInModal(json);
+        }
+    });
+}
+
+function setUserPaymentInfoInModal(json) {
+    $('#targetUserIdPayment').val(json.userId);
+    $('#targetUserNamePayment').val(json.userName);
+    $('#targetUserLastnamePayment').val(json.userLastname);
+    $('#targetUserMailPayment').val(json.userMail);
+    $('#targetUserPhonePayment').val(json.userPhone);
+    $('#targetUserDatePayment').val(getCurrentDate());
 }
 
 function setPaymentsFrameInUser(json, id) {
     const div = document.createElement("div");
+    const button = document.createElement("button");
     div.id = "payments_frame_" + id;
+    button.classList.add('btn');
+    button.classList.add('btn-primary');
+    button.classList.add('ms-4');
+    button.classList.add('mb-2');
+    button.id = "payment_for_" + id;
+    button.onclick = function () { showPaymentModal(this); };
+    button.textContent = "Registrar Pago";
+    div.appendChild(button);
     if (json.length !== 0) {
         const ul = document.createElement('ul');
         json.forEach(jsonRow => {
@@ -177,7 +260,8 @@ function setPaymentsFrameInUser(json, id) {
             li.appendChild(a2);
 
             const p = document.createElement('p');
-            p.innerHTML = '<strong>Importe: </strong>' + jsonRow.amount +
+            p.innerHTML = '<strong>Concepto: </strong>' + jsonRow.reason +
+                '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Importe: </strong>' + jsonRow.amount +
                 '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha: </strong>' + jsonRow.paymentDate +
                 '<br><strong>Teléfono: </strong>' + jsonRow.phone +
                 '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Correo: </strong>' + jsonRow.email;
@@ -272,6 +356,7 @@ function saveNewUser() {
                     seconds--;
                 }
             } setInterval(redirect, 1000);
+            generateUsersPage();
         })
     });
 }
@@ -341,6 +426,8 @@ function generateUsersPage() {
     });
 }
 
+
+
 function setUsersHtml(json) {
     if (Object.keys(json).length == 0) {
         const h5 = document.createElement('h5');
@@ -399,7 +486,7 @@ function setUsersHtml(json) {
                     case 3:
                         let a4 = document.createElement('a');
                         a4.href = "#";
-                        a4.onclick = function () { showPaymentFrame(this, setPaymentsFrameInUser); };
+                        a4.onclick = function () { showPaymentFrame(this, setPaymentsFrameInUser, false); };
                         let img3 = document.createElement('img');
                         img3.src = "img/payment.png";
                         img3.title = "Pagos";

@@ -273,6 +273,54 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Datos de Pago</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="userSettings">
+                    <div class="input-group mb-2" hidden>
+                        <span class="input-group-text bg-primary text-white">ID</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserIdPayment">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nombre y Apellidos</span>
+                        <input class="form-control" placeholder="Nombre" id="targetUserNamePayment" disabled>
+                        <input class="form-control" placeholder="Apellidos" id="targetUserLastnamePayment" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Correo</span>
+                        <input class="form-control" placeholder="Correo" id="targetUserMailPayment" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Teléfono</span>
+                        <input class="form-control" placeholder="Teléfono" id="targetUserPhonePayment" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Fecha del pago</span>
+                        <input class="form-control" placeholder="AAAA-MM-DD" id="targetUserDatePayment" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Importe</span>
+                        <span class="input-group-text">$</span>
+                        <input class="form-control" placeholder="Importe" id="targetUserAmountPayment">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Concepto</span>
+                        <input class="form-control" placeholder="Concepto" id="targetUserReasonPayment">
+                    </div>
+                    <p id="errorAct" class="text-danger" hidden></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="registerPayment()">Guardar
+                        cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="changesMadeModal" tabindex="-1" aria-labelledby="changesMadeModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">

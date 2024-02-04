@@ -77,9 +77,10 @@ class Users
 
             $pago = array(
                 'paymentId' => $row['id_pago'],
+                'reason' => $row['concepto'],
                 'amount' => $row['importe'],
                 'paymentDate' => $row['fecha_pago'],
-                'userFullName' => $row['usuario_nombre'].''.$row['usuario_apellidos'],
+                'userFullName' => $row['usuario_nombre'] . ' ' . $row['usuario_apellidos'],
                 'phone' => $row['telefono'],
                 'email' => $row['usuario_correo']
             );
@@ -90,12 +91,41 @@ class Users
         return json_encode($pagosList, JSON_UNESCAPED_UNICODE);
     }
 
-    function getPagosPerUser($targetUserId){
-        $payments = $this->conn->query('SELECT pagos.id_pago, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre as usuario_nombre, usuarios.apellidos as usuario_apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo as usuario_correo 
+    function getPagosPerUser($targetUserId)
+    {
+        $payments = $this->conn->query('SELECT pagos.id_pago, pagos.concepto, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre as usuario_nombre, usuarios.apellidos as usuario_apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo as usuario_correo 
         FROM pagos, usuarios WHERE 
         pagos.id_usuario=usuarios.id AND usuarios.id=' . $targetUserId) or die($this->conn->error);
         return $payments;
     }
-}
 
-?>
+    public function registerPaymentForUser()
+    {
+        if ($this->userLevel > 1) {
+            $query = $this->conn->query("INSERT INTO pagos (id_usuario, concepto, importe, fecha_pago) 
+                VALUES ('{$_GET['targetUserId']}', '{$_GET['targetUserReason']}', '{$_GET['targetUserAmount']}', '{$_GET['paymentDate']}')") or die($this->conn->error);
+            if ($query)
+                http_response_code(201);
+            else
+                http_response_code(400);
+        } else
+            http_response_code(403);
+    }
+
+    public function getUserPaymentInfo()
+    {
+        $paymentInfo = mysqli_fetch_assoc($this->conn->query('SELECT id, nombre, apellidos, telefono, correo 
+            FROM usuarios WHERE id=' . $_GET['targetUserId']))
+            or die($this->conn->error);
+        $userPaymentInfo = array(
+            'userId' => $paymentInfo['id'],
+            'userName' => $paymentInfo['nombre'],
+            'userLastname' => $paymentInfo['apellidos'],
+            'userPhone' => $paymentInfo['telefono'],
+            'userMail' => $paymentInfo['correo'],
+        );
+
+        header('Content-Type: application/json; charset=utf-8');
+        return json_encode($userPaymentInfo);
+    }
+}
