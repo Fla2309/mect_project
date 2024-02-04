@@ -15,7 +15,8 @@ h6 {
 }
 
 h1,
-h2 {
+h2,
+.nav-pills li .nav-link {
   color: #01176f;
 }
 
@@ -93,9 +94,9 @@ div input::placeholder {
   min-width: 500px;
 }
 
-.nav-pills li a.active,
-.nav-pills li a.active:hover,
-.nav-pills li a.active:focus {
+.nav-pills li .active,
+.nav-pills li .active:hover,
+.nav-pills li .active:focus {
   background-color:
     /*93d50a*/
     #28a745 !important;
@@ -354,7 +355,7 @@ div input::placeholder {
 
 .nav-pills .nav-item:hover{
   background-color: #bababa;
-  border-radius: 15%;
+  border-radius: 5px;
 }
 
 .nav-link{

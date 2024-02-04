@@ -18,9 +18,15 @@
     <title>Portal
         <?php
         switch ($_SESSION['userType']) {
-            case 2: echo 'Observador'; break;
-            case 3: echo 'Administrador'; break;
-            case 4: echo 'Master Coach'; break;
+            case 2:
+                echo 'Observador';
+                break;
+            case 3:
+                echo 'Administrador';
+                break;
+            case 4:
+                echo 'Master Coach';
+                break;
         }
         ?>
     </title>
@@ -39,6 +45,7 @@
         </tr>
     </table>
     <div class="row g-0">
+    <!-- <div class="d-flex align-items-start"> -->
         <div style="width: 55px;" class="col-auto">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
@@ -63,6 +70,23 @@
                 </li>
             </ul>
         </div>
+        <!-- <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#grupos"
+                type="button" role="tab" aria-controls="v-pills-home" aria-selected="true"><img src="../img/home.png"
+                    class="left_bar_icon"></button>
+            <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#grupos"
+                type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><img
+                    src="../img/group.png" class="left_bar_icon"></button>
+            <button class="nav-link" onclick="generateUsersPage()" data-bs-toggle="pill" data-bs-target="#usuarios"
+                type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><img
+                    src="../img/user_b.png" class="left_bar_icon"></button>
+            <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#modulos"
+                type="button" role="tab" onclick="generateModulesPage()" aria-selected="false"><img
+                    src="../img/book.png" class="left_bar_icon"></button>
+            <button class="nav-link" onclick="loadTestsPage()" data-bs-toggle="pill" data-bs-target="#examen"
+                type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"><img
+                    src="../img/test.png" class="left_bar_icon"></button>
+        </div> -->
         <div class="tab-content col-auto" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
                 <h2 style="padding: 2rem;">Bienvenid@,
@@ -144,7 +168,8 @@
                                     title="Escribe el nombre">
                             </div>
                             <div class="col-5 ms-4">
-                                <button type="button" onclick="clearAndShowSettingsModal()" class="btn btn-primary">Agregar Usuario</button>
+                                <button type="button" onclick="clearAndShowSettingsModal()"
+                                    class="btn btn-primary">Agregar Usuario</button>
                             </div>
                         </div>
                         <!-- <div class="row mt-3 col-4" id="groupSelectsUsers">
@@ -330,7 +355,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="changesMadeModalBody">
-                    
+
                 </div>
             </div>
         </div>
