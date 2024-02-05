@@ -2,6 +2,7 @@
 
 session_start();
 include_once('../php/user.php');
+include_once('../php/users.php');
 include_once('../php/groupModel.php');
 include_once('../php/modules.php');
 if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
@@ -50,6 +51,15 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             border-radius: 50%;
             height: 15rem;
             width: 15rem;
+        }
+
+        .progress {
+            background-color: #e2e2e2;
+            width: 5vw;
+        }
+
+        .list-group-item img{
+            height: 2.5rem;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -191,16 +201,56 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                 </div>
             </div>
             <div class="tab-pane fade" id="pills-modulos" role="tabpanel" aria-labelledby="pills-modulos-tab">
-                <div>
-                    <?php 
-                    
-                    $modules = $currentUserModules->retrieveModules();
+                <?php
+
+                $modules = $currentUserModules->retrieveModules();
+                $cardBody = '';
+                $cardHeader = '';
+                $card = '';
+                if ($modules != []) {
                     foreach ($modules as $module) {
-                        echo '<script>console.log('.$module.')</script>';
+                        if ($module['progress'] < 25) {
+                            $progressColorClass = 'bg-danger';
+                        } else if ($module['progress'] >= 25 && $module['progress'] < 70) {
+                            $progressColorClass = 'bg-warning';
+                        } else if ($module['progress'] >= 70 && $module['progress'] < 100) {
+                            $progressColorClass = 'bg-info';
+                        } else if ($module['progress'] >= 100) {
+                            $progressColorClass = 'bg-primary';
+                        }
+                        $cardHeader =
+                            '<div class="card-header d-flex justify-content-between">
+                                <h3 class="mt-2 vh-50 col-auto">' . $module['moduleName'] . '</h3>
+                                <div class="d-flex ms-3">
+                                    <span class="align-self-center">Progreso:&nbsp;</span>
+                                    <div class="progress align-self-center">
+                                        <div class="progress-bar ' . $progressColorClass . ' progress-bar-striped" role="progressbar" style="width: ' . $module['progress'] . '%" aria-valuenow="' . $module['progress'] . '" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>';
+                        $cardBody =
+                            '<div class="card-body row accordion g-0" id="accModule' . $module['moduleId'] . '">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="accHeading' . $module['moduleId'] . '">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accCollapse' . $module['moduleId'] . '" aria-expanded="false" aria-controls="collapseOne">
+                                        ' . $module['description'] . '
+                                        </button>
+                                    </h2>
+                                    <div id="accCollapse' . $module['moduleId'] . '" class="accordion-collapse collapsed collapse" aria-labelledby="accHeading' . $module['moduleId'] . '" data-bs-parent="#accModule' . $module['moduleId'] . '">
+                                        <div class="accordion-body" id="accBody"' . $module['moduleId'] . '>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+                        $card = '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
+                        echo $card;
                     }
-                    
-                    ?>
-                </div>
+                } else {
+                    echo '<h2>No hay información para mostrar</h2>';
+                }
+
+                ?>
             </div>
             <div class="tab-pane fade" id="pills-examenes" role="tabpanel" aria-labelledby="pills-examenes-tab">
                 <div>
@@ -208,9 +258,37 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                 </div>
             </div>
             <div class="tab-pane fade" id="pills-pagos" role="tabpanel" aria-labelledby="pills-pagos-tab">
-                <div>
-                    <h2>No hay información para mostrar</h2>
-                </div>
+                <?php
+
+                $payments = (new Users($_SESSION['userId']))->preparePagosArray($currentUser->getUserId());
+                $cardBody = '';
+                $cardHeader = '';
+                $card = '';
+                if ($payments != []) {
+                    foreach ($payments as $payment) {
+                        $cardBody .=
+                            '<li class="list-group-item d-flex justify-content-start" id="payment_0">
+                                <div class="col-auto align-self-center"><img src="../img/payment.png" title="Pagos" class="img-fluid me-3"></div>
+                                <div class="col-auto align-items-center"> 
+                                    <p>
+                                        <strong>Concepto: </strong>'.$payment['reason'].'&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Importe: </strong>'.$payment['amount'].'&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Fecha: </strong>'.$payment['paymentDate'].'<br>
+                                        <strong>Teléfono: </strong>'.$payment['phone'].'&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Correo: </strong>'.$payment['email'].'
+                                    </p>
+                                </div>
+                            </li>';
+                    }
+                    $cardHeader ='<div class="card-header"><h3 class="mt-2 vh-50 col-auto">Pagos Registrados</h3></div>';
+                    $cardBody = '<div class="card-body" id="payment' . $payment['paymentId'] . '"><ul class="list-group">' . $cardBody . '</ul></div>';
+                    $card = '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
+                    echo $card;
+                } else {
+                    echo '<h2>No hay información para mostrar</h2>';
+                }
+
+                ?>
             </div>
             <div class="tab-pane fade" id="pills-modulo-personal" role="tabpanel"
                 aria-labelledby="pills-modulo-personal-tab">

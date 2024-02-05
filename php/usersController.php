@@ -5,10 +5,11 @@ $users = new Users($_GET['userId']);
 
 switch ($_GET['data']) {
     case 'get':
-        if (isset($_GET['dataType'])){
+        if (isset($_GET['dataType'])) {
             switch ($_GET['dataType']) {
                 case 'payments':
-                    echo $users->preparePagosJson($_GET['targetUser']);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode($users->preparePagosArray($_GET['targetUser']), JSON_UNESCAPED_UNICODE);
                     break;
                 case 'paymentInfo':
                     echo $users->getUserPaymentInfo();
@@ -32,8 +33,8 @@ switch ($_GET['data']) {
         break;
 
     case 'create':
-        if (isset($_GET['dataType'])){
-            switch ($_GET['dataType']){
+        if (isset($_GET['dataType'])) {
+            switch ($_GET['dataType']) {
                 case 'payments':
                     echo $users->registerPaymentForUser();
                     break;

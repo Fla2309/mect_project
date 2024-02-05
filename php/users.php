@@ -70,7 +70,7 @@ class Users
         }
     }
 
-    public function preparePagosJson($targetUserId)
+    public function preparePagosArray($targetUserId)
     {
         $pagosList = [];
         foreach ($this->getPagosPerUser($targetUserId) as $row) {
@@ -87,8 +87,7 @@ class Users
 
             array_push($pagosList, $pago);
         }
-        header('Content-Type: application/json; charset=utf-8');
-        return json_encode($pagosList, JSON_UNESCAPED_UNICODE);
+        return $pagosList;
     }
 
     function getPagosPerUser($targetUserId)
