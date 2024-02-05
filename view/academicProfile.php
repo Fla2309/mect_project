@@ -3,6 +3,7 @@
 session_start();
 include_once('../php/user.php');
 include_once('../php/groupModel.php');
+include_once('../php/modules.php');
 if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     include('unavailable.php');
 } else {
@@ -14,6 +15,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     $currentUserProcess->setUserProcess();
     $currentUserWeb = new UserWeb($currentUser->getUserId());
     $currentUserWeb->setUserWeb();
+    $currentUserModules = new Module($currentUser->getUserId());
 }
 ?>
 <html lang="en">
@@ -190,7 +192,14 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             </div>
             <div class="tab-pane fade" id="pills-modulos" role="tabpanel" aria-labelledby="pills-modulos-tab">
                 <div>
-                    <h2>No hay información para mostrar</h2>
+                    <?php 
+                    
+                    $modules = $currentUserModules->retrieveModules();
+                    foreach ($modules as $module) {
+                        echo '<script>console.log('.$module.')</script>';
+                    }
+                    
+                    ?>
                 </div>
             </div>
             <div class="tab-pane fade" id="pills-examenes" role="tabpanel" aria-labelledby="pills-examenes-tab">

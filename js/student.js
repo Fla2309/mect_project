@@ -7,7 +7,7 @@ function generateModulesPage() {
             $('#modulos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
         }
         else {
-            setModulesHtml(JSON.parse(data));
+            setModulesHtml(data);
         }
     }).fail(function (result) {
         console.log(result);

@@ -7,7 +7,7 @@ if ($module->userLevel > 1) {
     if (!isset($_GET['data'])) {
         if (isset($_GET['dataType'])) {
             $userModule = new UserModule();
-            switch($_GET['dataType']){
+            switch ($_GET['dataType']) {
                 case 'works':
                     echo json_encode($userModule->prepareTrabajosJson());
                     break;
@@ -27,7 +27,8 @@ if ($module->userLevel > 1) {
             $data = $module->getModuleActivitiesDetails($_GET['type'], $_GET['actId']);
             echo json_encode($data);
         } else {
-            echo $module->retrieveModules();
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($module->retrieveModules(), JSON_UNESCAPED_UNICODE);
         }
     } else {
         switch ($_GET['data']) {
@@ -60,7 +61,7 @@ if ($module->userLevel > 1) {
 } else {
     if (isset($_GET['dataType'])) {
         $userModule = new UserModule();
-        switch($_GET['dataType']){
+        switch ($_GET['dataType']) {
             case 'works':
                 echo json_encode($userModule->prepareTrabajosJson());
                 break;
@@ -79,6 +80,7 @@ if ($module->userLevel > 1) {
                 break;
         }
     } else {
-        echo $module->retrieveModules();
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($module->retrieveModules(), JSON_UNESCAPED_UNICODE);
     }
 }

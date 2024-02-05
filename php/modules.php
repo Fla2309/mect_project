@@ -8,10 +8,12 @@ class Module extends DB
     private $userId;
     private $user;
     public $userLevel;
-    public function __construct()
+    public function __construct($userId = null)
     {
-        $this->userId = $_GET['userId'];
-        //$this->user = $_GET['user'];
+        if($userId == null)
+            $this->userId = $_GET['userId'];
+        else
+            $this->userId = $userId;
         $this->conn = (new DB())->connect();
         $this->userLevel = $this->getUserLevel();
     }
@@ -44,8 +46,8 @@ class Module extends DB
             );
             array_push($modules, $module);
         }
-
-        return json_encode($modules);
+        
+        return $modules;
     }
 
     private function getTotalTrabajosTareas($moduleId)
@@ -223,30 +225,9 @@ class UserModule
         $this->userLevel = $query[0];
     }
 
-    public function prepareHtmlTareas()
-    {
-        return $this->prepareHtmlTareasAdmin();
-    }
-
     public function prepareTareasJson()
     {
         return $this->getAdminPermissions() ? $this->prepareTareasJsonAdmin() : $this->prepareTareasJsonStudent();
-    }
-
-    function prepareHtmlTareasAdmin()
-    {
-        $html = '';
-
-        foreach ($this->getTareasPerUser() as $row) {
-            $html = $html . "<a class=\"list-group-item list-group-item-action\"><div id=\"mod_hw_{$row['id_tarea']}\" class=\"d-flex w-100 justify-content-start\">";
-            $html = $html . "<h5 class=\"mb-1\">{$row['nombre_tarea']}</h5>";
-            $html = $html . '<a href="#" onclick="showEditPanel(this)" title="Editar"><img class="dashboard_icon m-2" src="img/edit.png"></a>';
-            $html = $html . '<a href="#" onclick="deleteActivity(this)" title="Eliminar"><img class="dashboard_icon m-2" src="img/delete.png"></a>';
-            $html = $html . '</div>';
-            $html = $html . '</a><hr class="divider">';
-        }
-
-        return $html;
     }
 
     function prepareTareasJsonAdmin()
