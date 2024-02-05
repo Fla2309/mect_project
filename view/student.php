@@ -60,7 +60,7 @@
             <div class="tab-pane fade show active" style="width: auto;" id="inicio">
                 <div class="d-flex mt-2 ms-2">
                     <img src="../<?php echo $_SESSION['foto_perfil'] !== 'none' ? $_SESSION['foto_perfil'] : '../img/user_pic.png' ?>"
-                        class="profile_pic" alt="Foto de Perfil">
+                        class="img-fluid profile_pic" alt="Foto de Perfil">
                     <h2 style="padding: 2rem;">Bienvenid@,
                         <?php echo $_SESSION['pref_name'] ?>
                     </h2>

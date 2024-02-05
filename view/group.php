@@ -16,7 +16,7 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
         <div class="card">
             <div class="card-header">
                 <h2>
-                    <?php echo $userGroup->getGroupName(); ?>
+                    <?php echo $userGroup->getGroupIdAndNameString(); ?>
                 </h2>
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
@@ -43,7 +43,7 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
                     </div>
                     <div id="usersDiv">
                         <?php
-                        echo $userGroup->prepareHtmlUsuarios($userGroup->getUsuarios())
+                        echo $userGroup->prepareHtmlUsuarios($userGroup->getUsuariosByGroup())
                             ?>
                     </div>
                     <div id="usersRighPanel" class="col-9" hidden="true">
@@ -58,7 +58,7 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
                         </div>
                     </div>
                     <?php
-                    echo $userGroup->prepareHtmlModulos($userGroup->getModulos());
+                    echo $userGroup->prepareHtmlModulos($userGroup->getModulosByGroup());
                     ?>
                 </div>
                 <div class="tab-pane card-body" id="pagos">
@@ -72,7 +72,7 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
                         </div>
                     </div>
                     <?php
-                    echo $userGroup->prepareHtmlPagos($userGroup->getPagos());
+                    echo $userGroup->prepareHtmlPagos($userGroup->getPagosByGroup());
                     ?>
                 </div>
             </div>

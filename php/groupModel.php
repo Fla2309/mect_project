@@ -6,12 +6,47 @@ class UserGroup
 {
     private $user;
     private $groupId;
+    private $groupName;
+    private $startDate;
+    private $endDate;
+    private $location;
     private $conn;
-    public function __construct($user, $groupId = -1)
+    public function __construct($user = null, $groupId = -1)
     {
-        $this->user = $user;
+        //$this->user = $user;
         $this->groupId = $groupId;
         $this->conn = (new DB())->connect();
+    }
+
+    public function setGroup(){
+        $query = $this->conn->query("SELECT * FROM grupos WHERE id_grupo = '{$this->groupId}'");
+        foreach ($query as $currentUser) {
+            $this->groupId = $currentUser['id_grupo'];
+            $this->groupName = $currentUser['nombre_grupo'];
+            $this->startDate = $currentUser['fecha_inicio'];
+            $this->endDate = $currentUser['fecha_terminacion'];
+            $this->location = $currentUser['sede'];
+        }
+    }
+
+    public function getGroupId(){
+        return $this->groupId;
+    }
+
+    public function getGroupName(){
+        return $this->groupName;
+    }
+
+    public function getGroupStartDate(){
+        return $this->startDate;
+    }
+
+    public function getGroupEndDate(){
+        return $this->endDate != null ? $this->endDate : '';
+    }
+
+    public function getGroupLocation(){
+        return $this->location;
     }
 
     //duplicated code (users.php)
@@ -91,14 +126,14 @@ class UserGroup
         return $html;
     }
 
-    public function getUsuarios()
+    public function getUsuariosByGroup()
     {
         $query = $this->conn->query('SELECT * FROM usuarios 
         WHERE id_grupo = ' . $this->groupId) or die($this->conn->error);
         return $query->num_rows > 0 ? $query : 0;
     }
 
-    public function getModulos()
+    public function getModulosByGroup()
     {
         $query = $this->conn->query('SELECT modulos_grupos.id, modulos_grupos.id_modulo, modulos.nombre_modulo, 
         modulos.descripcion, modulos_grupos.id_grupo, modulos_grupos.fecha_impartido, modulos_grupos.disponible 
@@ -107,7 +142,7 @@ class UserGroup
         return $query->num_rows > 0 ? $query : 0;
     }
 
-    public function getPagos($userId = null)
+    public function getPagosByGroup($userId = null)
     {
         if ($userId == null)
             $query = $this->conn->query('SELECT pagos.id_pago, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre, usuarios.apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo 
@@ -120,7 +155,7 @@ class UserGroup
         return $query->num_rows > 0 ? $query : 0;
     }
 
-    public function getGroupName()
+    public function getGroupIdAndNameString()
     {
         $row = mysqli_fetch_assoc($this->conn->query('SELECT * FROM grupos WHERE id_grupo = ' . $this->groupId));
         return 'MECT ' . $row['id_grupo'] . ' ' . $row['nombre_grupo'];

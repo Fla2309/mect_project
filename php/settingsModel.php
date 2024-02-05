@@ -1,5 +1,6 @@
 <?php
 include_once('connection.php');
+include_once('user.php');
 session_start();
 
 class Settings
@@ -147,13 +148,11 @@ class Settings
 
     public function setProfilePicture($userId, $pictureName, $pictureBody)
     {
+        $userWeb = new UserWeb($userId);
+        $userWeb->setUserWeb();
         if (unlink('../' . $_SESSION['foto_perfil'])) {
             $pictureFileName = $pictureName;
-            $pictureName = str_replace(
-                explode('/', $_SESSION['foto_perfil'])[count(explode('/', $_SESSION['foto_perfil'])) - 1],
-                $pictureName,
-                $_SESSION['foto_perfil']
-            );
+            $pictureName = $userWeb->getUserPath() . $pictureName;
             $file_pointer = fopen('../' . $pictureName, 'w+');
             fwrite($file_pointer, $pictureBody);
             fclose($file_pointer);

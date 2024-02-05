@@ -1,7 +1,20 @@
 <?php
 
+session_start();
 include_once('../php/user.php');
-
+include_once('../php/groupModel.php');
+if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
+    include('unavailable.php');
+} else {
+    $currentUser = new User();
+    $currentUser->setUser($_GET['user']);
+    $currentUserGroup = new UserGroup(null, $currentUser->getUserGroup());
+    $currentUserGroup->setGroup();
+    $currentUserProcess = new UserProcess($currentUser->getUserId());
+    $currentUserProcess->setUserProcess();
+    $currentUserWeb = new UserWeb($currentUser->getUserId());
+    $currentUserWeb->setUserWeb();
+}
 ?>
 <html lang="en">
 
@@ -15,14 +28,26 @@ include_once('../php/user.php');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="utf-8">
     <style>
+        body {
+            background-color: #e2e2e2;
+        }
+
         .card .card-header {
             background-color: #01176f;
             color: #ffffff;
         }
+
         hr.divider {
             width: 90%;
-            margin-left:auto;
-            margin-right:auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile_pic {
+            border: .3rem solid #01176f;
+            border-radius: 50%;
+            height: 15rem;
+            width: 15rem;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -33,11 +58,14 @@ include_once('../php/user.php');
     <title>Perfil Académico</title>
 </head>
 
-<body style="background-color: #e2e2e2;">
+<body>
     <?php include_once('navbar.php') ?>
     <div class="text-center mt-5 mb-3">
-        <img id="profilePic" class="img-fluid" src="" alt="Foto de Perfil">
-        <h1 id="userName">Nombre de Usuario</h1>
+        <img id="profilePic" class="img-fluid profile_pic mb-3" src="../<?php echo $currentUserWeb->getProfilePic() ?>"
+            alt="Foto de Perfil">
+        <h1 id="userName">
+            <?php echo $currentUser->getFullName() ?>
+        </h1>
     </div>
     <div class="m-3 mt-5">
         <div class="d-flex justify-content-center">
@@ -82,33 +110,43 @@ include_once('../php/user.php');
                         <h3 class="mt-2">Información Personal</h3 class="mt-2">
                     </div>
                     <div class="card-body row">
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Nombre</h5>
-                            <p class="card-text mt-2 m-b3" id="userName"></p>
+                            <p class="card-text mt-2 m-b3" id="userName">
+                                <?php echo $currentUser->getFullName() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Nombre Preferido</h5>
-                            <p class="card-text mt-2 m-b3" id="userPrefName"></p>
+                            <p class="card-text mt-2 m-b3" id="userPrefName">
+                                <?php echo $currentUser->getPreferredName() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Grupo de MECT</h5>
-                            <p class="card-text mt-2 m-b3" id="userGroup"></p>
-                        </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Fecha de Ingreso</h5>
-                            <p class="card-text mt-2 m-b3" id="userEnrollDate"></p>
+                            <p class="card-text mt-2 m-b3" id="userEnrollDate">
+                                <?php echo $currentUser->getUserRegistrationDate() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Correo</h5>
-                            <p class="card-text mt-2 m-b3" id="userMail"></p>
+                            <p class="card-text mt-2 m-b3" id="userMail">
+                                <?php echo $currentUser->getUserMail() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Teléfono</h5>
-                            <p class="card-text mt-2 m-b3" id="userPhone"></p>
+                            <p class="card-text mt-2 m-b3" id="userPhone">
+                                <?php echo $currentUser->getUserPhone() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Estado de Usuario</h5>
-                            <p class="card-text mt-2 m-b3" id="userStatus"></p>
+                            <p class="card-text mt-2 m-b3" id="userStatus">
+                                <?php echo $currentUser->getUserStatus() == 0 ?
+                                    'Activo <span class="position-absolute p-2 bg-primary border border-light rounded-circle"><span class="visually-hidden">Activo</span></span>' :
+                                    'Inactivo <span class="position-absolute p-2 bg-danger border border-light rounded-circle"><span class="visually-hidden">Inactivo</span></span>' ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -117,66 +155,35 @@ include_once('../php/user.php');
                         <h3 class="mt-2">Información MECT</h3 class="mt-2">
                     </div>
                     <div class="card-body row">
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
+                            <h5 class="card-title">Grupo de MECT</h5>
+                            <p class="card-text mt-2 m-b3" id="userGroup">
+                                <?php echo $currentUserGroup->getGroupId() ?>
+                            </p>
+                        </div>
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Nombre del grupo</h5>
-                            <p class="card-text mt-2 m-b3" id="userGroupName"></p>
+                            <p class="card-text mt-2 m-b3" id="userGroupName">
+                                <?php echo $currentUserGroup->getGroupName() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Fecha de Comienzo</h5>
-                            <p class="card-text mt-2 m-b3" id="userGroupStartDate"></p>
+                            <p class="card-text mt-2 m-b3" id="userGroupStartDate">
+                                <?php echo $currentUserGroup->getGroupStartDate() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Fecha de Terminación</h5>
-                            <p class="card-text mt-2 m-b3" id="userGroupEndDate"></p>
+                            <p class="card-text mt-2 m-b3" id="userGroupEndDate">
+                                <?php echo $currentUserGroup->getGroupEndDate() ?>
+                            </p>
                         </div>
-                        <div class="col-6 mt-3">
+                        <div class="col-3 mt-3">
                             <h5 class="card-title">Sede</h5>
-                            <p class="card-text mt-2 m-b3" id="userGroupLocation"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <div class="card-header">
-                        <h3 class="mt-2">Información del Proceso Transformacional</h3 class="mt-2">
-                    </div>
-                    <div class="card-body row">
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Básico/Bloque 1</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessB1"></p>
-                        </div>
-                        <hr class="divider mt-3">
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Avanzado/Bloque 2</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessB2"></p>
-                        </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Contrato</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessContract"></p>
-                        </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Estiramiento en Avanzado/Bloque 2</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessTrainingB2"></p>
-                        </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Canción de Cuna de Avanzado/Bloque 2</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessTrainingB2"></p>
-                        </div>
-                        <hr class="divider mt-3">
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Programa de Liderazgo/Acciona y Materializa</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessPL"></p>
-                        </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Fuente</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessSource"></p>
-                        </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Estiramiento en PL/AM</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessTrainingPL"></p>
-                        </div>
-                        <div class="col-6 mt-3">
-                            <h5 class="card-title">Canción de Cuna de Tercer Fin</h5>
-                            <p class="card-text mt-2 m-b3" id="userProcessTrainingPL"></p>
+                            <p class="card-text mt-2 m-b3" id="userGroupLocation">
+                                <?php echo $currentUserGroup->getGroupLocation() ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -199,7 +206,69 @@ include_once('../php/user.php');
             <div class="tab-pane fade" id="pills-modulo-personal" role="tabpanel"
                 aria-labelledby="pills-modulo-personal-tab">
                 <div>
-                    <h2>No hay información para mostrar</h2>
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h3 class="mt-2">Información del Proceso Transformacional</h3 class="mt-2">
+                        </div>
+                        <div class="card-body row">
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Básico/Bloque 1</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessB1">
+                                    <?php echo $currentUserProcess->getB1() ?>
+                                </p>
+                            </div>
+                            <hr class="divider mt-3">
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Avanzado/Bloque 2</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessB2">
+                                    <?php echo $currentUserProcess->getB2() ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Contrato</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessContract">
+                                    <?php echo $currentUserProcess->getContract() ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Estiramiento en Avanzado/Bloque 2</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessTrainingB2">
+                                    <?php echo $currentUserProcess->getTrainingb2() ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Canción de Cuna de Avanzado/Bloque 2</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessTrainingB2">
+                                    <?php echo $currentUserProcess->getSongB2() ?>
+                                </p>
+                            </div>
+                            <hr class="divider mt-3">
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Programa de Liderazgo/Acciona y Materializa</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessPL">
+                                    <?php echo $currentUserProcess->getAm() ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Fuente</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessSource">
+                                    <?php echo $currentUserProcess->getSourceOf() ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Estiramiento en PL/AM</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessTrainingPL">
+                                    <?php echo $currentUserProcess->getTrainingAm() ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Canción de Cuna de Tercer Fin</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessTrainingPL">
+                                    <?php echo $currentUserProcess->getSongAm() ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="pills-presentaciones" role="tabpanel"
