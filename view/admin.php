@@ -53,7 +53,7 @@
                         data-bs-toggle="tab"><img src="../img/home.png" class="left_bar_icon"></a>
                 </li>
                 <li id="gruposNavItem" class="nav-item">
-                    <a class="nav-link " title="Grupos" data-bs-target="#grupos" data-bs-toggle="tab"><img
+                    <a class="nav-link " title="Grupos" onclick="generateUsersPage()" data-bs-target="#grupos" data-bs-toggle="tab"><img
                             src="../img/group.png" class="left_bar_icon"></a>
                 </li>
                 <li id="usuariosNavItem" class="nav-item">
@@ -151,9 +151,9 @@
             <script src="../js/group.js" type="text/javascript"></script>
             <div class="tab-pane fade show" id="grupos">
                 <?php
-                include_once('./php/groups.php');
-                $moduleClass = new Groups();
-                echo ($moduleClass)->retrieveGroups();
+                // include_once('./php/groups.php');
+                // $moduleClass = new Groups();
+                // echo ($moduleClass)->retrieveGroups();
                 ?>
             </div>
             <div class="tab-pane fade" id="usuarios">
