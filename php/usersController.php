@@ -1,6 +1,7 @@
 <?php
 
 include_once('users.php');
+include_once('user.php');
 $users = new Users($_GET['userId']);
 
 switch ($_GET['data']) {
@@ -13,6 +14,11 @@ switch ($_GET['data']) {
                     break;
                 case 'paymentInfo':
                     echo $users->getUserPaymentInfo();
+                    break;
+                case 'userLogin':
+                    $targetUserWeb = new UserWeb($_GET['targetUserId']);
+                    $targetUserWeb->setUserWeb();
+                    echo $targetUserWeb->getUserLogin();
                     break;
             }
         } else {

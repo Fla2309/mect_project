@@ -277,14 +277,14 @@ function setPaymentsFrameInUser(json, id) {
     document.getElementById('user_' + id).appendChild(div);
 }
 
-function showStudentSchoolProfile(data) {
+function showStudentAcademicProfile(data) {
     parent = $(data).parent();
     id = $(parent).attr('id').replace('user_', '');
     $.ajax({
-        method: "POST",
-        url: "../php/usersController.php?data=payments&" + idString + "&userId=" + $('#userId').val(),
-    }).done({
-
+        method: "GET",
+        url: "../php/usersController.php?data=get&dataType=userLogin&targetUserId=" + id + "&userId=" + $('#userId').val(),
+    }).done(function (data){
+        window.location = '/view/academicProfile.php?user=' + data;
     });
 }
 
@@ -498,7 +498,7 @@ function setUsersHtml(json) {
                     case 4:
                         let a5 = document.createElement('a');
                         a5.href = "#";
-                        a5.onclick = function () { showStudentSchoolProfile(this); };
+                        a5.onclick = function () { showStudentAcademicProfile(this); };
                         let img4 = document.createElement('img');
                         img4.src = "img/books.png";
                         img4.title = "Perfil académico";
