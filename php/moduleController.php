@@ -26,12 +26,13 @@ if ($module->userLevel > 1) {
             header('Content-Type: application/json; charset=utf-8');
             $data = $module->getModuleActivitiesDetails($_GET['type'], $_GET['actId']);
             echo json_encode($data);
-        } else {
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode($module->retrieveModules(), JSON_UNESCAPED_UNICODE);
         }
     } else {
         switch ($_GET['data']) {
+            case 'get':
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($module->retrieveModules(), JSON_UNESCAPED_UNICODE);
+                break;
             case 'delete':
                 $module->deleteActivityFromModule($_GET['type'], $_GET['actId']);
                 break;
@@ -60,17 +61,24 @@ if ($module->userLevel > 1) {
     }
 } else {
     if (isset($_GET['dataType'])) {
-        $userModule = new UserModule();
         switch ($_GET['dataType']) {
+            case 'modules':
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($module->retrieveModules(), JSON_UNESCAPED_UNICODE);
+                break;
             case 'works':
+                $userModule = new UserModule();
                 echo json_encode($userModule->prepareTrabajosJson());
                 break;
             case 'homeworks':
+                $userModule = new UserModule();
                 echo json_encode($userModule->prepareTareasJson());
                 break;
             case 'feedback':
+                $userModule = new UserModule();
                 echo json_encode($userModule->prepareFeedbackJson());
             case 'all':
+                $userModule = new UserModule();
                 $moduleTabs = [
                     'works' => $userModule->prepareTrabajosJson(),
                     'homeworks' => $userModule->prepareTareasJson(),

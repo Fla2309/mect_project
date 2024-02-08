@@ -1,4 +1,10 @@
-var html = "";
+function reloadModules() {
+    generateModulesPage();
+}
+
+function reloadModule() {
+    fillModuleDetails();
+}
 
 function prepareUrl(data, module_id) {
     let result = [];
@@ -10,7 +16,6 @@ function prepareUrl(data, module_id) {
 function showModuleHtml(button) {
     var module_id = getModuleId(button);
     var url = prepareUrl(document.getElementsByClassName("user_properties"), module_id);
-    html = $('#modulos').html();
     $.ajax({
         method: "GET",
         url: "../view/module.php?" + url
@@ -47,11 +52,6 @@ function getModuleId(htmlElement) {
         currentElement = currentElement.parent();
     }
 }
-
-function reloadModules() {
-    generateModulesPage();
-}
-
 
 function pushStateHistoryTab(event) {
     const tab = event.target;
@@ -123,9 +123,10 @@ function getFeedback() {
 }
 
 function setTrabajosFrame(json) {
-    if(Object.keys(json).length === 0){
+    document.getElementById('trabajos').innerHTML = '';
+    if (Object.keys(json).length === 0) {
         const h5 = document.createElement('h5');
-        h5.textContent='No hay trabajos para mostrar';
+        h5.textContent = 'No hay trabajos para mostrar';
         document.getElementById('trabajos').appendChild(h5);
         return;
     }
@@ -200,7 +201,7 @@ function setTrabajosFrame(json) {
             inputMaxFile.value = '10485760';
             label = document.createElement('label');
             label.setAttribute('for', 'trabajos-file-input-' + jsonRow.workId);
-            label.onclick = 'selectFile(this)';
+            label.setAttribute('onclick', 'selectFile(this)');
             imgUpload = document.createElement('img');
             imgUpload.classList.add('dashboard_icon');
             imgUpload.classList.add('m-2');
@@ -211,7 +212,7 @@ function setTrabajosFrame(json) {
             inputUpload.style = 'display: none;';
             inputUpload.name = 'foto';
             inputUpload.type = 'file';
-            inputUpload.onchange = 'uploadFile(this, 2)'
+            inputUpload.setAttribute('onchange', 'uploadFile(this, \'work\')');
             label.appendChild(imgUpload);
             form.appendChild(inputMaxFile);
             form.appendChild(label);
@@ -240,9 +241,10 @@ function setTrabajosFrame(json) {
 }
 
 function setTareasFrame(json) {
-    if(Object.keys(json).length === 0){
+    document.getElementById('tareas').innerHTML = '';
+    if (Object.keys(json).length === 0) {
         const h5 = document.createElement('h5');
-        h5.textContent='No hay tareas para mostrar';
+        h5.textContent = 'No hay tareas para mostrar';
         document.getElementById('tareas').appendChild(h5);
         return;
     }
@@ -317,7 +319,7 @@ function setTareasFrame(json) {
             inputMaxFile.value = '10485760';
             label = document.createElement('label');
             label.setAttribute('for', 'tareas-file-input-' + jsonRow.homeworkId);
-            label.onclick = 'selectFile(this)';
+            label.setAttribute('onclick', 'selectFile(this)');
             imgUpload = document.createElement('img');
             imgUpload.classList.add('dashboard_icon');
             imgUpload.classList.add('m-2');
@@ -328,7 +330,7 @@ function setTareasFrame(json) {
             inputUpload.style = 'display: none;';
             inputUpload.name = 'foto';
             inputUpload.type = 'file';
-            inputUpload.onchange = 'uploadFile(this, 2)'
+            inputUpload.setAttribute('onchange', 'uploadFile(this, \'homework\')');
             label.appendChild(imgUpload);
             form.appendChild(inputMaxFile);
             form.appendChild(label);
@@ -357,9 +359,10 @@ function setTareasFrame(json) {
 }
 
 function setFeedbackFrame(json) {
-    if(Object.keys(json).length === 0){
+    document.getElementById('feedback').innerHTML = '';
+    if (Object.keys(json).length === 0) {
         const h5 = document.createElement('h5');
-        h5.textContent='No hay feedback para mostrar';
+        h5.textContent = 'No hay feedback para mostrar';
         document.getElementById('feedback').appendChild(h5);
         return;
     }

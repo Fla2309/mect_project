@@ -11,29 +11,30 @@ class Files extends DB
     private $user;
     private $conn;
 
-    public function __construct($file, $type, $userId, $activityId)
+    public function __construct()
     {
-        $this->file = $file;
-        $this->type = $type;
-        $this->userId = $userId;
-        $this->activityId = $activityId;
+        $this->file = $_FILES['file'];
+        $this->type = $_POST['type'];
+        $this->userId = $_POST['userId'];
+        $this->activityId = $_POST['activityId'];
         $this->conn = (new DB())->connect();
     }
 
     public function uploadAndRegisterFile()
     {
         if ($this->file) {
-            $username = $this->registerFileInDBAndSave();
-            http_response_code(200);
-            echo json_encode([
+            $results = $this->registerFileInDBAndSave();
+            http_response_code(201);
+            return [
                 'message' => 'Archivo recibido con éxito',
                 'name' => $this->file['name'],
                 'type' => $this->type,
-                'username' => $username
-            ]);
+                'username' => $this->user[1] . ' ' . $this->user[2],
+                'results' => $results
+            ];
         } else {
             http_response_code(400);
-            echo json_encode(['error' => 'No se recibió ningún archivo']);
+            return ['error' => 'No se recibió ningún archivo'];
         }
     }
 
@@ -43,25 +44,30 @@ class Files extends DB
             $previousFile = '';
             $this->user = mysqli_fetch_row($this->conn->query('SELECT * FROM usuarios WHERE id=' . $this->userId)) or die($this->conn->error);
             $username = $this->user[1] . ' ' . $this->user[2];
+            $results = [];
             switch ($this->type) {
-                case 1:
+                case 'work':
                     $previousFile = $this->registerFileActivityDB();
                     break;
-                case 2:
+                case 'homework':
                     $previousFile = $this->registerFileHomeworkDB();
                     break;
                 default:
                     break;
             }
-            if ($previousFile !== '')
-                $this->deletePreviousFile($this->type, $username, $previousFile);
-            $this->saveFile($this->type, $username);
-            return $username;
+            $deletedPreviousFile = $this->deletePreviousFile($username, $previousFile);
+            $savedFile = $this->saveFile($username);
+            $results = [
+                'deletedPreviousFile' => $deletedPreviousFile == 0 ? 'success' : 'error #' . $deletedPreviousFile,
+                'savedFile' => $savedFile == 0 ? 'success' : 'error #' . $savedFile
+            ];
         } catch (Exception $e) {
-            $error = ['error' => 'Error al registrar archivo: ' . $e->getMessage()];
             http_response_code(400);
-            echo json_encode($error);
+            $results = [
+                'error' => 'Error al registrar archivo: ' . $e->getMessage()
+            ];
         }
+        return $results;
     }
 
     function registerFileActivityDB()
@@ -94,29 +100,34 @@ class Files extends DB
         }
     }
 
-    function saveFile($type, $username)
+    function saveFile($username)
     {
-        $folder = $type === 1 ? 'trabajos' : 'tareas';
+        $folder = $this->type == 'works' ? 'trabajos' : 'tareas';
         $destPath = "../resources/users/{$username}/{$folder}/{$this->file['name']}";
         if (move_uploaded_file($this->file['tmp_name'], $destPath)) {
-            echo 'Archivo creado exitosamente.';
+            // echo 'Archivo creado exitosamente.';
+            return 0;
         } else {
-            echo 'Error al mover el archivo.';
+            // echo 'Error al mover el archivo.';
+            return 1;
         }
     }
 
-    function deletePreviousFile($type, $username, $previousFile)
+    function deletePreviousFile($username, $previousFile)
     {
-        $folder = $type == 1 ? 'trabajos' : 'tareas';
+        $folder = $this->type == 'works' ? 'trabajos' : 'tareas';
         $srcPath = "../resources/users/{$username}/{$folder}/{$previousFile}";
         if (file_exists($srcPath)) {
             if (unlink($srcPath)) {
-                echo 'Archivo borrado exitosamente.';
+                // echo 'Archivo borrado exitosamente.';
+                return 0;
             } else {
-                echo 'Error al borrar el archivo.';
+                // echo 'Error al borrar el archivo.';
+                return 2;
             }
         } else {
-            echo 'El archivo no existe.';
+            // echo 'El archivo no existe.';
+            return 1;
         }
     }
 }

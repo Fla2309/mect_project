@@ -9,6 +9,7 @@ $userModule = new UserModule();
 </head>
 
 <body>
+    <script src="../js/file.js" type="module"></script>
     <table hidden="true">
         <tr>
             <td><input type="text" id="user" value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>

@@ -187,7 +187,7 @@ class UserModule
             $query = $this->conn->query("SELECT trabajos_modulos.id_trabajo, trabajos_modulos.nombre_trabajo, trabajos_usuarios.fecha_subido, 
             trabajos_usuarios.revisado, trabajos_usuarios.adjunto, trabajos_modulos.plantilla FROM trabajos_modulos 
             INNER JOIN trabajos_usuarios ON trabajos_modulos.id_trabajo = trabajos_usuarios.id_trabajo
-            WHERE status = 0 AND id_modulo = {$this->moduleId} AND id_usuario IN 
+            WHERE trabajos_modulos.status = 0 AND trabajos_modulos.id_modulo = {$this->moduleId} AND trabajos_usuarios.id_usuario IN 
             (SELECT id FROM usuarios WHERE id = {$this->userId})") or die($this->conn->error);
         }
 
