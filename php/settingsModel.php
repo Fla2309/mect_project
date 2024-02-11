@@ -132,15 +132,32 @@ class Settings
         return $this->conn->query("SELECT login_pass FROM usuarios WHERE id=" . $userId)->fetch_row()[0] === md5($password);
     }
 
-    public function getPersonalModuleDocuments($userId)
+    public function getPersonalModuleContent($userId)
     {
+        $userProcess = new UserProcess($this->userId);
+        $userProcess->setUserProcess();
         $row = $this->conn->query("SELECT * FROM modulo_personal WHERE id_usuario=" . $userId)->fetch_row();
+        //ToDo
+        //UserWeb tiene propiedades para esto
         $data = [
             'userId' => $row[1],
-            'cvName' => $row[2],
-            'registrationName' => $row[3],
-            'idFrontName' => $row[4],
-            'idBackName' => $row[5],
+            'documents' => [
+                'cvName' => $row[2],
+                'registrationName' => $row[3],
+                'idFrontName' => $row[4],
+                'idBackName' => $row[5],
+            ],
+            'userProcess' => [
+                'B1' => $userProcess->getB1(),
+                'B2' => $userProcess->getB2(),
+                'contract' => $userProcess->getContract(),
+                'trainingB2' => $userProcess->getTrainingb2(),
+                'songB2' => $userProcess->getSongB2(),
+                'am' => $userProcess->getAm(),
+                'sourceOf' => $userProcess->getSourceOf(),
+                'trainingAm' => $userProcess->getTrainingAm(),
+                'songAm' => $userProcess->getSongAm()
+            ]
         ];
         http_response_code(201);
         return $data;
@@ -179,7 +196,7 @@ class Settings
             'directoryCreation' => $directoryCreation
         ];
 
-        if($userCreation && $webUserCreation && $directoryCreation)
+        if ($userCreation && $webUserCreation && $directoryCreation)
             http_response_code(201);
         else
             http_response_code(400);

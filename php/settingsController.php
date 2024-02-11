@@ -14,7 +14,7 @@ if (isset($_GET['type'])) {
             break;
         case 2:
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode($settings->getPersonalModuleDocuments($_GET['userId']));
+            echo json_encode($settings->getPersonalModuleContent($_GET['userId']));
             break;
         case 3:
             header('Content-Type: application/json; charset=utf-8');

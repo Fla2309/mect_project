@@ -58,7 +58,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             width: 5vw;
         }
 
-        .list-group-item img{
+        .list-group-item img {
             height: 2.5rem;
         }
     </style>
@@ -271,16 +271,16 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                 <div class="col-auto align-self-center"><img src="../img/payment.png" title="Pagos" class="img-fluid me-3"></div>
                                 <div class="col-auto align-items-center"> 
                                     <p>
-                                        <strong>Concepto: </strong>'.$payment['reason'].'&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Importe: </strong>'.$payment['amount'].'&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Fecha: </strong>'.$payment['paymentDate'].'<br>
-                                        <strong>Teléfono: </strong>'.$payment['phone'].'&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Correo: </strong>'.$payment['email'].'
+                                        <strong>Concepto: </strong>' . $payment['reason'] . '&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Importe: </strong>' . $payment['amount'] . '&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Fecha: </strong>' . $payment['paymentDate'] . '<br>
+                                        <strong>Teléfono: </strong>' . $payment['phone'] . '&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Correo: </strong>' . $payment['email'] . '
                                     </p>
                                 </div>
                             </li>';
                     }
-                    $cardHeader ='<div class="card-header"><h3 class="mt-2 vh-50 col-auto">Pagos Registrados</h3></div>';
+                    $cardHeader = '<div class="card-header"><h3 class="mt-2 vh-50 col-auto">Pagos Registrados</h3></div>';
                     $cardBody = '<div class="card-body" id="payment' . $payment['paymentId'] . '"><ul class="list-group">' . $cardBody . '</ul></div>';
                     $card = '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
                     echo $card;
@@ -293,6 +293,46 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             <div class="tab-pane fade" id="pills-modulo-personal" role="tabpanel"
                 aria-labelledby="pills-modulo-personal-tab">
                 <div>
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h3 class="mt-2">Documentos de Usuario</h3 class="mt-2">
+                        </div>
+                        <div class="card-body row">
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Currículum</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessB1">
+                                    <?php echo $currentUserWeb->getCv() != null ?
+                                        "{$currentUserWeb->getCv()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getCv()}\" id=\"download-resume\">
+                                        <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
+                                        'No hay documentos para mostrar' ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Formato de inscripción</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessB2">
+                                    <?php echo $currentUserWeb->getInscription() != null ? "{$currentUserWeb->getInscription()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getInscription()}\" id=\"download-registration\">
+                                        <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
+                                        'No hay documentos para mostrar' ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Identificación (parte frontal)</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessContract">
+                                    <?php echo $currentUserWeb->getIdFront() != null ? "{$currentUserWeb->getIdFront()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getIdFront()}\" id=\"download-id-front\">
+                                        <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
+                                        'No hay documentos para mostrar' ?>
+                                </p>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <h5 class="card-title">Identificación (parte trasera)</h5>
+                                <p class="card-text mt-2 m-b3" id="userProcessTrainingB2">
+                                    <?php echo $currentUserWeb->getIdBack() != null ? "{$currentUserWeb->getIdBack()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getIdBack()}\" id=\"download-id-back\">
+                                        <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
+                                        'No hay documentos para mostrar' ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card mt-2">
                         <div class="card-header">
                             <h3 class="mt-2">Información del Proceso Transformacional</h3 class="mt-2">
@@ -325,7 +365,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                             </div>
                             <div class="col-6 mt-3">
                                 <h5 class="card-title">Canción de Cuna de Avanzado/Bloque 2</h5>
-                                <p class="card-text mt-2 m-b3" id="userProcessTrainingB2">
+                                <p class="card-text mt-2 m-b3" id="userProcessB2Song">
                                     <?php echo $currentUserProcess->getSongB2() ?>
                                 </p>
                             </div>
@@ -350,7 +390,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                             </div>
                             <div class="col-6 mt-3">
                                 <h5 class="card-title">Canción de Cuna de Tercer Fin</h5>
-                                <p class="card-text mt-2 m-b3" id="userProcessTrainingPL">
+                                <p class="card-text mt-2 m-b3" id="userProcessPLSong">
                                     <?php echo $currentUserProcess->getSongAm() ?>
                                 </p>
                             </div>

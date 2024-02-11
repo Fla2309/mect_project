@@ -129,30 +129,39 @@ function getPersonalModuleDocuments() {
         method: "GET",
         url: "../php/settingsController.php?type=2&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
-        if (data['cvName'] != null)
-            $('#userResume').attr('value', data['cvName']);
+        if (data.documents.cvName != null)
+            $('#userResume').attr('value', data.documents.cvName);
         else {
             $('#userResume').attr('value', "No hay documentos para mostrar");
             $('#download-resume').prop('hidden', true);
         }
-        if (data['registrationName'] != null)
-            $('#userRegistration').attr('value', data['registrationName']);
+        if (data.documents.registrationName != null)
+            $('#userRegistration').attr('value', data.documents.registrationName);
         else {
             $('#userRegistration').attr('value', "No hay documentos para mostrar");
             $('#download-registration').prop('hidden', true);
         }
-        if (data['idFrontName'] != null)
-            $('#userIdFront').attr('value', data['idFrontName']);
+        if (data.documents.idFrontName != null)
+            $('#userIdFront').attr('value', data.documents.idFrontName);
         else {
             $('#userIdFront').attr('value', "No hay documentos para mostrar");
             $('#download-id-front').prop('hidden', true);
         }
-        if (data['idBackName'] != null)
-            $('#userIdBack').attr('value', data['idBackName']);
+        if (data.documents.idBackName != null)
+            $('#userIdBack').attr('value', data.documents.idBackName);
         else {
             $('#userIdBack').attr('value', "No hay documentos para mostrar");
             $('#download-id-back').prop('hidden', true);
         }
+        $("#userProcessB1").val(data.userProcess.B1);
+        $("#userProcessB2").val(data.userProcess.B2);
+        $("#userProcessContract").val(data.userProcess.contract);
+        $("#userProcessTrainingB2").val(data.userProcess.trainingB2);
+        $("#userProcessB2Song").val(data.userProcess.songB2);
+        $("#userProcessPL").val(data.userProcess.am);
+        $("#userProcessSource").val(data.userProcess.sourceOf);
+        $("#userProcessTrainingPL").val(data.userProcess.trainingAm);
+        $("#userProcessPLSong").val(data.userProcess.songAm);
     }).fail(function (result) {
         console.log(result);
     });

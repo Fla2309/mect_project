@@ -185,6 +185,10 @@ class UserWeb extends DB{
     private $userLogin;
     private $userPath;
     private $profilePic;
+    private $cv;
+    private $inscription;
+    private $idFront;
+    private $idBack;
     private $conn;
 
     public function __construct($userId){
@@ -195,11 +199,18 @@ class UserWeb extends DB{
     public function setUserWeb()
     {
         $query = $this->conn->query("SELECT * FROM usuario_web WHERE id_usuario = '{$this->userId}'");
+        $documents = $this->conn->query("SELECT * FROM modulo_personal WHERE id_usuario = '{$this->userId}'");
 
         foreach ($query as $currentUser) {
             $this->userLogin = $currentUser['usuario'];
             $this->userPath = $currentUser['directorio_local'];
             $this->profilePic = $currentUser['foto_perfil'];
+        }
+        foreach ($documents as $currentUserDocuments) {
+            $this->cv = $currentUserDocuments['nombre_cv'];
+            $this->inscription = $currentUserDocuments['formato_inscripcion'];
+            $this->idFront = $currentUserDocuments['id_frontal'];
+            $this->idBack = $currentUserDocuments['id_trasera'];
         }
     }
 
@@ -213,5 +224,21 @@ class UserWeb extends DB{
     
     public function getProfilePic() {
         return $this->profilePic;
+    }
+
+    public function getCv() {
+        return $this->cv;
+    }
+
+    public function getInscription() {
+        return $this->inscription;
+    }
+
+    public function getIdFront() {
+        return $this->idFront;
+    }
+
+    public function getIdBack() {
+        return $this->idBack;
     }
 }
