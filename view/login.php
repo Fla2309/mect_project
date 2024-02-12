@@ -20,27 +20,26 @@
 <body id="background">
     <div class="container">
         <div id="main">
-
             <form method="post">
                 <div class="image">
                     <img id="logo" src="../img/logov2.png">
                 </div>
                 <h2 class="login_title">INICIAR SESIÓN</h2>
-                <div class="align-items-center mb-4 d-flex">
+                <div class="align-items-center mb-4 d-flex justify-content-center">
                     <div class="login_icon">
                         <img src="../img/user-icon.png" alt="" class="icon">
                     </div>
-                    <div class="form-floating flex-fill ml-1">
+                    <div class="form-floating ms-2">
                         <input name="username" class="form-control login_input" id="userInput"
                             placeholder="name@example.com">
                         <label for="userInput">Usuario</label>
                     </div>
                 </div>
-                <div class="align-items-center d-flex">
+                <div class="d-flex align-items-center justify-content-center">
                     <div class="login_icon">
                         <img src="../img/lock-icon.png" alt="" class="icon">
                     </div>
-                    <div class="form-floating flex-fill ml-1">
+                    <div class="form-floating ms-2">
                         <input name="password" type="password" class="form-control login_input" id="passInput"
                             placeholder="Password">
                         <label for="passInput">Contraseña</label>

@@ -332,11 +332,12 @@ function deleteCoaching(button) {
 function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
+    
+    var divRow = document.createElement('div');
+    divRow.className = 'row g-0';
+    divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
         if (i % 3 === 0) {
-            var divRow = document.createElement('div');
-            divRow.className = 'row';
-            divRow.style.alignContent = 'center';
         }
 
         let module = json[i];
@@ -346,7 +347,7 @@ function setModulesHtml(json) {
         let h4 = document.createElement('h4');
         let p = document.createElement('p');
         let button = document.createElement('button');
-        divCol.className = 'col-sm p-5 m-3';
+        divCol.className = 'col-sm-3 p-5 m-3';
         divCol.style.backgroundColor = 'white';
         divCol.id = 'idModule-' + module.moduleId;
         divP1.className = 'p-1';
@@ -365,7 +366,8 @@ function setModulesHtml(json) {
         divRow.appendChild(divCol);
 
         if (i % 3 === 2 || i === json.length - 1) {
-            document.getElementById('modulos').appendChild(divRow);
+            
         }
     }
+    document.getElementById('modulos').appendChild(divRow);
 }
