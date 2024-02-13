@@ -1,6 +1,7 @@
 <?php
 
 include_once('connection.php');
+include_once('user.php');
 
 class Files extends DB
 {
@@ -27,7 +28,7 @@ class Files extends DB
             http_response_code(201);
             return [
                 'message' => 'Archivo recibido con éxito',
-                'name' => $this->file['name'],
+                'fileName' => $this->file['name'],
                 'type' => $this->type,
                 'username' => $this->user[1] . ' ' . $this->user[2],
                 'results' => $results
@@ -118,6 +119,119 @@ class Files extends DB
         $folder = $this->type == 'works' ? 'trabajos' : 'tareas';
         $srcPath = "../resources/users/{$username}/{$folder}/{$previousFile}";
         if (file_exists($srcPath)) {
+            if (unlink($srcPath)) {
+                // echo 'Archivo borrado exitosamente.';
+                return 0;
+            } else {
+                // echo 'Error al borrar el archivo.';
+                return 2;
+            }
+        } else {
+            // echo 'El archivo no existe.';
+            return 1;
+        }
+    }
+}
+
+class Documents extends DB
+{
+    private $file;
+    private $userId;
+    private $userWeb;
+    private $user;
+    private $conn;
+
+    public function __construct()
+    {
+        $this->file = $_FILES['file'];
+        $this->userId = $_POST['userId'];
+        $this->conn = (new DB())->connect();
+        $this->userWeb = new UserWeb($this->userId);
+        $this->userWeb->setUserWeb();
+    }
+
+    public function uploadAndRegisterDocument()
+    {
+        if ($this->file) {
+            $results = $this->registerDocumentInDBAndSave();
+            http_response_code(201);
+            return [
+                'message' => 'Archivo recibido con éxito',
+                'documentName' => $this->file['name'],
+                'username' => $this->user[1] . ' ' . $this->user[2],
+                'results' => $results
+            ];
+        } else {
+            http_response_code(400);
+            return ['error' => 'No se recibió ningún archivo'];
+        }
+    }
+
+    function registerDocumentInDBAndSave()
+    {
+        try {
+            $this->user = mysqli_fetch_row($this->conn->query('SELECT * FROM usuarios WHERE id=' . $this->userId)) or die($this->conn->error);
+            $documentDbName = '';
+            $previousFile = '';
+            switch ($_POST['documentName']) {
+                case 'resume':
+                    $documentDbName = 'nombre_cv';
+                    $previousFile = $this->userWeb->getCv();
+                    break;
+                case 'registration':
+                    $documentDbName = 'formato_inscripcion';
+                    $previousFile = $this->userWeb->getInscription();
+                    break;
+                case 'id-front':
+                    $documentDbName = 'id_frontal';
+                    $previousFile = $this->userWeb->getIdFront();
+                    break;
+                case 'id-back':
+                    $documentDbName = 'id_trasera';
+                    $previousFile = $this->userWeb->getIdBack();
+                    break;
+                default:
+                    break;
+            }
+            $results = [];
+            $isRegistered = $this->registerDocumentDB($documentDbName);
+            $deletedPreviousFile = $this->deletePreviousDocument($previousFile);
+            $savedFile = $this->saveDocument();
+            $results = [
+                'deletedPreviousFile' => $isRegistered ? 'success' : 'error #' . $deletedPreviousFile,
+                'savedFile' => $savedFile == 0 ? 'success' : 'error #' . $savedFile
+            ];
+        } catch (Exception $e) {
+            http_response_code(400);
+            $results = [
+                'error' => 'Error al registrar archivo: ' . $e->getMessage()
+            ];
+        }
+        return $results;
+    }
+
+    function registerDocumentDB($documentDbName)
+    {
+        $query = $this->conn->query("UPDATE modulo_personal SET {$documentDbName}='{$this->file['name']}' WHERE id_usuario={$this->userId}");
+        return $query;
+    }
+
+    function saveDocument()
+    {
+        $destPath = "../{$this->userWeb->getUserPath()}documentos/{$this->file['name']}";
+        if (move_uploaded_file($this->file['tmp_name'], $destPath)) {
+            // echo 'Archivo creado exitosamente.';
+            return 0;
+        } else {
+            // echo 'Error al mover el archivo.';
+            return 1;
+        }
+    }
+
+    function deletePreviousDocument($previousFile)
+    {
+        $srcPath = "../{$this->userWeb->getUserPath()}documentos/{$previousFile}";
+        if ($previousFile!= '' && file_exists($srcPath)) {
             if (unlink($srcPath)) {
                 // echo 'Archivo borrado exitosamente.';
                 return 0;
