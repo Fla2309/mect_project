@@ -129,26 +129,38 @@ function getPersonalModuleDocuments() {
         method: "GET",
         url: "../php/settingsController.php?type=2&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
-        if (data.documents.cvName != null)
+        if (data.documents.cvName != null){
             $('#userResume').attr('value', data.documents.cvName);
+            $('#download-resume').attr('download', data.documents.cvName);
+            $('#download-resume').attr('href', '../' + data.userPath + 'documentos/' + data.documents.cvName);
+        }
         else {
             $('#userResume').attr('value', "No hay documentos para mostrar");
             $('#download-resume').prop('hidden', true);
         }
-        if (data.documents.registrationName != null)
+        if (data.documents.registrationName != null){
             $('#userRegistration').attr('value', data.documents.registrationName);
+            $('#download-registration').attr('download', data.documents.registrationName);
+            $('#download-registration').attr('href', '../' + data.userPath + 'documentos/' + data.documents.registrationName);
+        }
         else {
             $('#userRegistration').attr('value', "No hay documentos para mostrar");
             $('#download-registration').prop('hidden', true);
         }
-        if (data.documents.idFrontName != null)
+        if (data.documents.idFrontName != null){
             $('#userIdFront').attr('value', data.documents.idFrontName);
+            $('#download-id-front').attr('download', data.documents.idFrontName);
+            $('#download-id-front').attr('href', '../' + data.userPath + 'documentos/' + data.documents.idFrontName);
+        }
         else {
             $('#userIdFront').attr('value', "No hay documentos para mostrar");
             $('#download-id-front').prop('hidden', true);
         }
-        if (data.documents.idBackName != null)
+        if (data.documents.idBackName != null){
             $('#userIdBack').attr('value', data.documents.idBackName);
+            $('#download-id-back').attr('download', data.documents.idBackName);
+            $('#download-id-back').attr('href', '../' + data.userPath + 'documentos/' + data.documents.idBackName);
+        }
         else {
             $('#userIdBack').attr('value', "No hay documentos para mostrar");
             $('#download-id-back').prop('hidden', true);

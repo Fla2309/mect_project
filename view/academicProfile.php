@@ -302,7 +302,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                 <h5 class="card-title">Currículum</h5>
                                 <p class="card-text mt-2 m-b3" id="userProcessB1">
                                     <?php echo $currentUserWeb->getCv() != null ?
-                                        "{$currentUserWeb->getCv()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getCv()}\" id=\"download-resume\">
+                                        "{$currentUserWeb->getCv()}<a href=\"../{$currentUserWeb->getUserPath()}documentos/{$currentUserWeb->getCv()}\" download=\"{$currentUserWeb->getCv()}\" id=\"download-resume\">
                                         <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
                                         'No hay documentos para mostrar' ?>
                                 </p>
@@ -310,7 +310,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                             <div class="col-6 mt-3">
                                 <h5 class="card-title">Formato de inscripción</h5>
                                 <p class="card-text mt-2 m-b3" id="userProcessB2">
-                                    <?php echo $currentUserWeb->getInscription() != null ? "{$currentUserWeb->getInscription()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getInscription()}\" id=\"download-registration\">
+                                    <?php echo $currentUserWeb->getInscription() != null ? "{$currentUserWeb->getInscription()}<a href=\"../{$currentUserWeb->getUserPath()}documentos/{$currentUserWeb->getInscription()}\" download=\"{$currentUserWeb->getInscription()}\" id=\"download-registration\">
                                         <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
                                         'No hay documentos para mostrar' ?>
                                 </p>
@@ -318,7 +318,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                             <div class="col-6 mt-3">
                                 <h5 class="card-title">Identificación (parte frontal)</h5>
                                 <p class="card-text mt-2 m-b3" id="userProcessContract">
-                                    <?php echo $currentUserWeb->getIdFront() != null ? "{$currentUserWeb->getIdFront()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getIdFront()}\" id=\"download-id-front\">
+                                    <?php echo $currentUserWeb->getIdFront() != null ? "{$currentUserWeb->getIdFront()}<a href=\"../{$currentUserWeb->getUserPath()}documentos/{$currentUserWeb->getIdFront()}\" download=\"{$currentUserWeb->getIdFront()}\" id=\"download-id-front\">
                                         <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
                                         'No hay documentos para mostrar' ?>
                                 </p>
@@ -326,7 +326,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                             <div class="col-6 mt-3">
                                 <h5 class="card-title">Identificación (parte trasera)</h5>
                                 <p class="card-text mt-2 m-b3" id="userProcessTrainingB2">
-                                    <?php echo $currentUserWeb->getIdBack() != null ? "{$currentUserWeb->getIdBack()}<a href=\"{$currentUserWeb->getUserPath()}\" download=\"{$currentUserWeb->getIdBack()}\" id=\"download-id-back\">
+                                    <?php echo $currentUserWeb->getIdBack() != null ? "{$currentUserWeb->getIdBack()}<a href=\"../{$currentUserWeb->getUserPath()}documentos/{$currentUserWeb->getIdBack()}\" download=\"{$currentUserWeb->getIdBack()}\" id=\"download-id-back\">
                                         <img src=\"../img/download.png\" title=\"Descargar documento\" class=\"dashboard_icon ms-2\" alt=\"Descargar\"></a>" :
                                         'No hay documentos para mostrar' ?>
                                 </p>

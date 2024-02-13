@@ -44,7 +44,7 @@
                         <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
                                 class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
                             style="display: none;" id="upload-resume" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-resume"><img src="../img/download.png"
+                        <a href="" download="" id="download-resume"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
@@ -60,7 +60,7 @@
                         <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
                                 class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
                             style="display: none;" id="upload-registration" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-registration"><img src="../img/download.png"
+                        <a href="" download="" id="download-registration"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
@@ -76,7 +76,7 @@
                         <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
                                 class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
                             style="display: none;" id="upload-id-front" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-id-front"><img src="../img/download.png"
+                        <a href="" download="" id="download-id-front"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
@@ -91,7 +91,7 @@
                         <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
                                 class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
                             style="display: none;" id="upload-id-back" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-id-back"><img src="../img/download.png"
+                        <a href="" download="" id="download-id-back"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
