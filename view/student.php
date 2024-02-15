@@ -65,11 +65,11 @@
                         <?php echo $_SESSION['pref_name'] ?>
                     </h2>
                 </div>
-                <div class="row">
+                <div class="row g-0">
                     <div class="col-sm mx-3 my-2" style="background-color: white">
-                        <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11 mt-3 ms-2">Módulos Activos</h4>
-                            <small><a class="nav-link col-md-1" onclick="goToTab(this)" href="#modulos">Ir→</a></small>
+                        <div class="d-flex justify-content-between align-items-center" style="margin: 0">
+                            <h4 class="mt-3 ms-2">Módulos Activos</h4>
+                            <small><a class="nav-link me-2 pe-2" onclick="goToTab(this)" href="#modulos">Ir→</a></small>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
@@ -83,9 +83,9 @@
                         </div>
                     </div>
                     <div class="col-sm mx-3 my-2" style="background-color: white">
-                        <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11 mt-3 ms-2">Coaching Recientes</h4>
-                            <small><a class="nav-link col-md-1" onclick="goToTab(this)" href="#coaching">Ir→</a></small>
+                        <div class="d-flex justify-content-between align-items-center" style="margin: 0">
+                            <h4 class="mt-3 ms-2">Coaching Recientes</h4>
+                            <small><a class="nav-link me-2 pe-2" onclick="goToTab(this)" href="#coaching">Ir→</a></small>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">
@@ -97,8 +97,8 @@
                         </div>
                     </div>
                     <div class="col-sm mx-3 my-2" style="background-color: white">
-                        <div class="d-flex align-items-center" style="margin: 0">
-                            <h4 class="col-md-11 mt-3 ms-2">Feedback</h4>
+                        <div class="d-flex justify-content-between align-items-center" style="margin: 0">
+                            <h4 class="mt-3 ms-2">Feedback</h4>
                         </div>
                         <hr class="divider">
                         <div class="px-3 py-2">

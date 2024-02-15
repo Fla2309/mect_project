@@ -53,7 +53,7 @@
                         data-bs-toggle="tab"><img src="../img/home.png" class="left_bar_icon"></a>
                 </li>
                 <li id="gruposNavItem" class="nav-item">
-                    <a class="nav-link " title="Grupos" onclick="generateUsersPage()" data-bs-target="#grupos" data-bs-toggle="tab"><img
+                    <a class="nav-link " title="Grupos" onclick="generateGroupsPage()" data-bs-target="#grupos" data-bs-toggle="tab"><img
                             src="../img/group.png" class="left_bar_icon"></a>
                 </li>
                 <li id="usuariosNavItem" class="nav-item">

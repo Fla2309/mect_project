@@ -121,7 +121,8 @@ class UserProcess extends DB
     private $songAm;
     private $conn;
 
-    public function __construct($idUser){
+    public function __construct($idUser)
+    {
         $this->idUser = $idUser;
         $this->conn = (new DB())->connect();
     }
@@ -143,44 +144,54 @@ class UserProcess extends DB
         }
     }
 
-    public function getB1() {
+    public function getB1()
+    {
         return $this->b1;
     }
-    
-    public function getB2() {
+
+    public function getB2()
+    {
         return $this->b2;
     }
-    
-    public function getAm() {
+
+    public function getAm()
+    {
         return $this->am;
     }
-    
-    public function getContract() {
+
+    public function getContract()
+    {
         return $this->contract;
     }
-    
-    public function getSourceOf() {
+
+    public function getSourceOf()
+    {
         return $this->sourceOf;
     }
-    
-    public function getTrainingb2() {
+
+    public function getTrainingb2()
+    {
         return $this->trainingb2;
     }
-    
-    public function getTrainingAm() {
+
+    public function getTrainingAm()
+    {
         return $this->trainingAm;
     }
-    
-    public function getSongB2() {
+
+    public function getSongB2()
+    {
         return $this->songB2;
     }
-    
-    public function getSongAm() {
+
+    public function getSongAm()
+    {
         return $this->songAm;
     }
 }
 
-class UserWeb extends DB{
+class UserWeb extends DB
+{
     private $userId;
     private $userLogin;
     private $userPath;
@@ -191,7 +202,8 @@ class UserWeb extends DB{
     private $idBack;
     private $conn;
 
-    public function __construct($userId){
+    public function __construct($userId)
+    {
         $this->userId = $userId;
         $this->conn = (new DB())->connect();
     }
@@ -214,31 +226,38 @@ class UserWeb extends DB{
         }
     }
 
-    public function getUserLogin() {
+    public function getUserLogin()
+    {
         return $this->userLogin;
     }
-    
-    public function getUserPath() {
+
+    public function getUserPath()
+    {
         return $this->userPath;
     }
-    
-    public function getProfilePic() {
+
+    public function getProfilePic()
+    {
         return $this->profilePic;
     }
 
-    public function getCv() {
+    public function getCv()
+    {
         return $this->cv;
     }
 
-    public function getInscription() {
+    public function getInscription()
+    {
         return $this->inscription;
     }
 
-    public function getIdFront() {
+    public function getIdFront()
+    {
         return $this->idFront;
     }
 
-    public function getIdBack() {
+    public function getIdBack()
+    {
         return $this->idBack;
     }
 }
