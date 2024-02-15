@@ -17,6 +17,7 @@
         <script src="http://www.myersdaily.org/joseph/javascript/md5.js"></script>
         <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
         <script src="../js/settings.js"></script>
+        <script src="../js/file.js"></script>
 
         <title>Módulo Personal</title>
     </head>
@@ -41,10 +42,13 @@
                 <div class="input-group d-flex">
                     <span class="input-group-text bg-primary text-white">
                         Currículum
-                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
-                                class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
-                            style="display: none;" id="upload-resume" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-resume"><img src="../img/download.png"
+                        <label for="upload-resume" onclick="selectFile(this)">
+                            <img src="../img/upload.png" title="Cargar documento"
+                                class="dashboard_icon ms-2 color_invert" alt="Cargar">
+                        </label>
+                        <input style="display: none;" id="upload-resume" name="foto" type="file"
+                                onchange="uploadDocument(this)">
+                        <a href="" download="" id="download-resume"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
@@ -57,10 +61,13 @@
                 <div class="input-group me-3">
                     <span class="input-group-text bg-primary text-white">
                         Formato de inscripción
-                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
-                                class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
-                            style="display: none;" id="upload-registration" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-registration"><img src="../img/download.png"
+                        <label for="upload-registration" onclick="selectFile(this)">
+                            <img src="../img/upload.png" title="Cargar documento"
+                                class="dashboard_icon ms-2 color_invert" alt="Cargar">
+                        </label>
+                        <input style="display: none;" id="upload-registration" name="foto" type="file"
+                                onchange="uploadDocument(this)">
+                        <a href="" download="" id="download-registration"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
@@ -73,10 +80,13 @@
                 <div class="input-group me-3">
                     <span class="input-group-text bg-primary text-white">
                         Identificación (parte frontal)
-                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
-                                class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
-                            style="display: none;" id="upload-id-front" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-id-front"><img src="../img/download.png"
+                        <label for="upload-id-front" onclick="selectFile(this)">
+                            <img src="../img/upload.png" title="Cargar documento"
+                                class="dashboard_icon ms-2 color_invert" alt="Cargar">
+                        </label>
+                        <input style="display: none;" id="upload-id-front" name="foto" type="file"
+                                onchange="uploadDocument(this)">
+                        <a href="" download="" id="download-id-front"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>
@@ -88,10 +98,13 @@
             <div class="d-flex mx-2 my-3">
                 <div class="input-group me-3">
                     <span class="input-group-text bg-primary text-white">Identificación (parte trasera)
-                        <label for="file-input"><img src="../img/upload.png" title="Cargar documento"
-                                class="dashboard_icon ms-2 color_invert" alt="Cargar"></label><input
-                            style="display: none;" id="upload-id-back" name="foto" type="file">
-                        <a href="resources/users/" download="" id="download-id-back"><img src="../img/download.png"
+                        <label for="upload-id-back" onclick="selectFile(this)">
+                            <img src="../img/upload.png" title="Cargar documento"
+                                class="dashboard_icon ms-2 color_invert" alt="Cargar">
+                        </label>
+                        <input style="display: none;" id="upload-id-back" name="foto" type="file"
+                                onchange="uploadDocument(this)">
+                        <a href="" download="" id="download-id-back"><img src="../img/download.png"
                                 title="Descargar documento" class="dashboard_icon ms-2 color_invert"
                                 alt="Descargar"></a>
                     </span>

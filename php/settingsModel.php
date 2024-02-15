@@ -136,11 +136,14 @@ class Settings
     {
         $userProcess = new UserProcess($this->userId);
         $userProcess->setUserProcess();
+        $userWeb = new UserWeb($this->userId);
+        $userWeb->setUserWeb();
         $row = $this->conn->query("SELECT * FROM modulo_personal WHERE id_usuario=" . $userId)->fetch_row();
         //ToDo
         //UserWeb tiene propiedades para esto
         $data = [
             'userId' => $row[1],
+            'userPath' => $userWeb->getUserPath(),
             'documents' => [
                 'cvName' => $row[2],
                 'registrationName' => $row[3],

@@ -32,3 +32,34 @@ function uploadFile(input, type) {
         alert("Por favor, selecciona un archivo antes de intentar subirlo.");
     }
 }
+
+function uploadDocument(input) {
+    if (input.files.length > 0) {
+        var formData = new FormData();
+        var userId = document.getElementById('userId').getAttribute('value');
+        var documentName = input.getAttribute('id').replace('upload-', '');
+        formData.append('userId', userId);
+        formData.append('type', 'document');
+        formData.append('documentName', documentName);
+        formData.append('file', input.files[0]);
+
+        fetch('../php/fileHandler.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error del servidor:', data.error);
+                } else {
+                    alert('Documento subido exitosamente');
+                    getPersonalModuleDocuments();
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+            });
+    } else {
+        alert("Por favor, selecciona un archivo antes de intentar subirlo.");
+    }
+}

@@ -1,5 +1,6 @@
 resources/users/*/trabajos/*
 resources/users/*/tareas/*
+resources/users/*/documentos/*
 .vscode/launch.json
 resources/users/Flavio Ariel Almanza Fierro/imagen_2023-06-04_123133378.png
 resources/users/Flavio Ariel Almanza Fierro/image.jpg
