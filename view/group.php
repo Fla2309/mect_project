@@ -4,15 +4,16 @@ session_start();
 $userGroup = new UserGroup($_GET['user'], $_GET['group']);
 ?>
 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
 </head>
 
 <body>
-    <button type="button" class="btn btn-primary" onclick="reloadGroups()"><img src="../img/left-arrow.png" width="20">
-        Volver</button>
-    <div class="px-2 py-2 mx-2 my-2">
+    <button type="button" class="btn btn-primary ms-3 mt-3 p-2" onclick="reloadGroups()"><img src="../img/left-arrow.png" width="20">
+        Volver a Grupos</button>
+    <div class="p-2 m-2">
         <div class="card">
             <div class="card-header">
                 <h2>

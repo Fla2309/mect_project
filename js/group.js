@@ -1,7 +1,7 @@
 var groupHtml = "";
 
 function showGroupHtml(button) {
-    var group_id = button.id.replace("but_gr_", "");
+    var group_id = button.id.replace("but-gr-", "");
     var url =
         prepareUrlGroups(document.getElementsByClassName("user_properties"), group_id);
     groupHtml = $('#grupos').html();
@@ -9,7 +9,7 @@ function showGroupHtml(button) {
 }
 
 function reloadGroups() {
-    $('#grupos').html(groupHtml);
+    generateGroupsPage();
 }
 
 function prepareGroupUrl(data) {

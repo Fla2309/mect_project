@@ -283,7 +283,7 @@ function showStudentAcademicProfile(data) {
     $.ajax({
         method: "GET",
         url: "../php/usersController.php?data=get&dataType=userLogin&targetUserId=" + id + "&userId=" + $('#userId').val(),
-    }).done(function (data){
+    }).done(function (data) {
         window.location = '/view/academicProfile.php?user=' + data;
     });
 }
@@ -383,7 +383,7 @@ function generateGroupsPage() {
         url: "../php/groupController.php?data=get&dataType=groups&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
         if (data.length == 0) {
-            $('#modulos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
+            $('#grupos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
         }
         else {
             setGroupsHtml(data);
@@ -396,20 +396,17 @@ function generateGroupsPage() {
 function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
+    var divRow = document.createElement('div');
+    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
-        if (i % 3 === 0) {
-            var divRow = document.createElement('div');
-            divRow.className = 'row';
-            divRow.style.alignContent = 'center';
-        }
-
         let module = json[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
         let h2 = document.createElement('h2');
         let h4 = document.createElement('h4');
         let button = document.createElement('button');
-        divCol.className = 'col-sm p-5 m-3';
+        divCol.className = 'col p-5 mb-3 me-3';
         divCol.style.backgroundColor = 'white';
         divCol.id = 'idModule-' + module.moduleId;
         divP1.className = 'p-1';
@@ -424,49 +421,41 @@ function setModulesHtml(json) {
         divP1.append(h2, h4, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
-
-        if (i % 3 === 2 || i === json.length - 1) {
-            document.getElementById('modulos').appendChild(divRow);
-        }
     }
+    document.getElementById('modulos').appendChild(divRow);
 }
 
 function setGroupsHtml(json) {
     count = 1;
-    $('#modulos').html('');
+    $('#grupos').html('');
+    var divRow = document.createElement('div');
+    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
-        if (i % 3 === 0) {
-            var divRow = document.createElement('div');
-            divRow.className = 'row';
-            divRow.style.alignContent = 'center';
-        }
-
-        let module = json[i];
+        let group = json[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
         let h2 = document.createElement('h2');
         let h4 = document.createElement('h4');
         let button = document.createElement('button');
-        divCol.className = 'col-sm p-5 m-3';
+        divCol.className = 'col p-5 mb-3 me-3';
         divCol.style.backgroundColor = 'white';
-        divCol.id = 'idModule-' + module.moduleId;
+        divCol.id = 'idGroup-' + group.groupId;
         divP1.className = 'p-1';
         button.className = 'btn btn-primary';
         button.type = 'button';
+        button.id = 'but-gr-' + group.groupId;
         button.style.width = '120px';
         button.style.textAlign = 'left';
-        h2.textContent = module.moduleName;
-        h4.textContent = module.description;
-        button.setAttribute('onclick', 'showModuleHtmlAdmin(this)');
-        button.textContent = 'Ver Módulo';
+        h2.textContent = 'MECT ' + group.groupId + ' ' + group.groupName;
+        h4.textContent = group.location;
+        button.setAttribute('onclick', 'showGroupHtml(this)');
+        button.textContent = 'Ver Grupo';
         divP1.append(h2, h4, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
-
-        if (i % 3 === 2 || i === json.length - 1) {
-            document.getElementById('modulos').appendChild(divRow);
-        }
     }
+    document.getElementById('grupos').appendChild(divRow);
 }
 
 function generateUsersPage() {

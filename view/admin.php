@@ -1,9 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
     <link rel="stylesheet" href="../css/main.scss">
@@ -34,8 +34,8 @@
 
 <body>
     <?php include_once('view/navbar.php') ?>
-    <script src="../js/admin.js" type="text/javascript"></script>
-    <table hidden="true">
+    <script src="../js/admin.js"></script>
+    <table hidden>
         <tr>
             <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
             <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['userName'] ?>"
@@ -45,16 +45,16 @@
         </tr>
     </table>
     <div class="row g-0">
-    <!-- <div class="d-flex align-items-start"> -->
+        <!-- <div class="d-flex align-items-start"> -->
         <div style="width: 55px;" class="col-auto">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
-                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-target="#inicio"
-                        data-bs-toggle="tab"><img src="../img/home.png" class="left_bar_icon"></a>
+                    <a class="nav-link active" title="Inicio" data-bs-target="#inicio" data-bs-toggle="tab"><img
+                            src="../img/home.png" class="left_bar_icon"></a>
                 </li>
                 <li id="gruposNavItem" class="nav-item">
-                    <a class="nav-link " title="Grupos" onclick="generateGroupsPage()" data-bs-target="#grupos" data-bs-toggle="tab"><img
-                            src="../img/group.png" class="left_bar_icon"></a>
+                    <a class="nav-link " title="Grupos" onclick="generateGroupsPage()" data-bs-target="#grupos"
+                        data-bs-toggle="tab"><img src="../img/group.png" class="left_bar_icon"></a>
                 </li>
                 <li id="usuariosNavItem" class="nav-item">
                     <a class="nav-link" title="Usuarios" onclick="generateUsersPage()" data-bs-target="#usuarios"
@@ -87,7 +87,7 @@
                 type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"><img
                     src="../img/test.png" class="left_bar_icon"></button>
         </div> -->
-        <div class="tab-content col-auto" style="background-color: #e2e2e2; width: calc(100% - 88px); height: auto;">
+        <div class="tab-content col-auto" style="background-color: #e2e2e2;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
                 <h2 style="padding: 2rem;">Bienvenid@,
                     <?php echo $_SESSION['pref_name'] ?>
@@ -148,7 +148,7 @@
                     </div>
                 </div>
             </div>
-            <script src="../js/group.js" type="text/javascript"></script>
+            <script src="../js/group.js"></script>
             <div class="tab-pane fade show" id="grupos">
                 <?php
                 // include_once('./php/groups.php');
@@ -189,20 +189,8 @@
             </div>
             <script src="../js/testAdmin.js" type="text/javascript"></script>
             <div class="tab-pane fade" id="examen">
-                <div class="d-flex">
-                    <div class="px-2 py-2 mx-2 my-2 col-6">
-                        <div class="px-3 py-3" style="background-color: white;">
-                            <h1 class="mb-3">Exámenes</h1>
-                            <hr class="divider">
-                            <div class="col-4 mb-3 d-flex">
-                                <button type="button" class="btn btn-primary">Crear Examen</button>
-                            </div>
-                            <div class="accordion" id="testsAccordion">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-2 py-2 mx-2 my-2 col-6">
+                <div class="row g-0">
+                    <div class="px-2 py-2 mx-2 my-2 col">
                         <div class="px-3 py-3" style="background-color: white;">
                             <h1 class="mb-3">Búsqueda de exámenes</h1>
                             <hr class="divider">
@@ -220,6 +208,18 @@
                                 ?>
                             </div>
                             <div class="list-group" id="testsList" role="tablist">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-2 py-2 mx-2 my-2 col">
+                        <div class="px-3 py-3" style="background-color: white;">
+                            <h1 class="mb-3">Exámenes</h1>
+                            <hr class="divider">
+                            <div class="col-4 mb-3 d-flex">
+                                <button type="button" class="btn btn-primary">Crear Examen</button>
+                            </div>
+                            <div class="accordion" id="testsAccordion">
+
                             </div>
                         </div>
                     </div>
@@ -305,7 +305,7 @@
                     <h5 class="modal-title">Datos de Pago</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="userSettings">
+                <div class="modal-body" id="userPayment">
                     <div class="input-group mb-2" hidden>
                         <span class="input-group-text bg-primary text-white">ID</span>
                         <input class="form-control" placeholder="Nombre" id="targetUserIdPayment">

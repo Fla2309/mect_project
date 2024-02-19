@@ -334,7 +334,7 @@ function setModulesHtml(json) {
     $('#modulos').html('');
     
     var divRow = document.createElement('div');
-    divRow.className = 'row g-0';
+    divRow.className = 'row g-0 m-3 justify-content-center';
     divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
         let module = json[i];
@@ -344,7 +344,7 @@ function setModulesHtml(json) {
         let h4 = document.createElement('h4');
         let p = document.createElement('p');
         let button = document.createElement('button');
-        divCol.className = 'col p-5 m-3';
+        divCol.className = 'col p-5 mb-3 me-3';
         divCol.style.backgroundColor = 'white';
         divCol.id = 'idModule-' + module.moduleId;
         divP1.className = 'p-1';
