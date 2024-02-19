@@ -429,8 +429,13 @@ function setGroupsHtml(json) {
     count = 1;
     $('#grupos').html('');
     var divRow = document.createElement('div');
+    var butCreate = document.createElement('button');
     divRow.className = 'row g-0 m-3 justify-content-center';
     divRow.style.alignContent = 'center';
+    butCreate.className = 'btn btn-primary ms-3 mt-3 p-2';
+    butCreate.type = 'button';
+    butCreate.setAttribute('onclick', 'showCreateGroupModal()');
+    butCreate.innerHTML = '<img src="../img/plus.png" width="20">Crear Grupo';
     for (let i = 0; i < json.length; i++) {
         let group = json[i];
         let divCol = document.createElement('div');
@@ -454,7 +459,9 @@ function setGroupsHtml(json) {
         divP1.append(h2, h4, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
+    
     }
+    document.getElementById('grupos').appendChild(butCreate);
     document.getElementById('grupos').appendChild(divRow);
 }
 

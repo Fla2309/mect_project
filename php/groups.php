@@ -14,14 +14,16 @@ class Groups extends DB
             $group = array(
                 'groupId' => $row['id_grupo'],
                 'groupName' => $row['nombre_grupo'],
-                'location' => $row['sede']
+                'location' => $row['sede'],
+                'options' => $this->getUserPermissions()
             );
             array_push($groups, $group);
         }
         return $groups;
     }
 
-    public function getGroupHtmlDropdownTags(){
+    public function getGroupHtmlDropdownTags()
+    {
         $modules = $this->connect()->query("SELECT id_grupo, nombre_grupo FROM grupos") or die($this->connect()->error);
         $html = '<option href=\"#\">Elige un grupo...</option>';
         foreach ($modules as $module) {
@@ -30,7 +32,8 @@ class Groups extends DB
         return $html;
     }
 
-    public function getUserLevelHtmlDropdownTags(){
+    public function getUserLevelHtmlDropdownTags()
+    {
         $modules = $this->connect()->query("SELECT id_nivel, nombre_nivel FROM niveles_usuario") or die($this->connect()->error);
         $html = '<option href=\"#\">Elige un nivel de usuario...</option>';
         foreach ($modules as $module) {
@@ -39,10 +42,26 @@ class Groups extends DB
         return $html;
     }
 
-    public function getGroupsFromDatabase(){
+    public function getGroupsFromDatabase()
+    {
         $query = $this->connect()->query('SELECT * FROM grupos WHERE id_grupo <> 0') or die($this->connect()->error);
         return $query;
     }
-}
 
-?>
+    public function getUserPermissions()
+    {
+        $query = $this->connect()->query("SELECT nivel_usuario FROM usuarios WHERE id={$_GET['userId']}") or die($this->connect()->error);
+        switch (mysqli_fetch_assoc($query)['nivel_usuario']) {
+            //1=consulta, 2=alta, 3=cambio, 4=baja
+            case 1:
+                return [1];
+            case 2:
+                return [1, 3];
+            case 3:
+            case 4:
+                return [1, 2, 3, 4];
+            default:
+                break;
+        }
+    }
+}

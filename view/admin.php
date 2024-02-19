@@ -150,11 +150,6 @@
             </div>
             <script src="../js/group.js"></script>
             <div class="tab-pane fade show" id="grupos">
-                <?php
-                // include_once('./php/groups.php');
-                // $moduleClass = new Groups();
-                // echo ($moduleClass)->retrieveGroups();
-                ?>
             </div>
             <div class="tab-pane fade" id="usuarios">
                 <div class="px-2 py-2 mx-2 my-2">
