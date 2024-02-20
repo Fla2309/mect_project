@@ -436,8 +436,8 @@ function setGroupsHtml(json) {
     butCreate.type = 'button';
     butCreate.setAttribute('onclick', 'showCreateGroupModal()');
     butCreate.innerHTML = '<img src="../img/plus.png" width="20">Crear Grupo';
-    for (let i = 0; i < json.length; i++) {
-        let group = json[i];
+    for (let i = 0; i < json.groups.length; i++) {
+        let group = json.groups[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
         let h2 = document.createElement('h2');

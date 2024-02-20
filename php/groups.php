@@ -9,17 +9,21 @@ class Groups extends DB
     {
         $query = $this->getGroupsFromDatabase();
         $groups = [];
+        $array = [];
 
         while ($row = mysqli_fetch_array($query)) {
             $group = array(
                 'groupId' => $row['id_grupo'],
                 'groupName' => $row['nombre_grupo'],
-                'location' => $row['sede'],
-                'options' => $this->getUserPermissions()
+                'location' => $row['sede']
             );
             array_push($groups, $group);
         }
-        return $groups;
+        $array = [
+            'groups' => $groups,
+            'options' => $this->getUserPermissions()
+        ];
+        return $array;
     }
 
     public function getGroupHtmlDropdownTags()
