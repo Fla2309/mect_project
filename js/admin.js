@@ -432,9 +432,12 @@ function setGroupsHtml(json) {
     var butCreate = document.createElement('button');
     divRow.className = 'row g-0 m-3 justify-content-center';
     divRow.style.alignContent = 'center';
-    butCreate.className = 'btn btn-primary ms-3 mt-3 p-2';
+    butCreate.className = 'btn btn-primary accordion-button ms-3 mt-3 p-2';
     butCreate.type = 'button';
-    butCreate.setAttribute('onclick', 'showCreateGroupModal()');
+    butCreate.setAttribute('data-bs-toggle','collapse');
+    butCreate.setAttribute('data-bs-target','#createGroup');
+    butCreate.setAttribute('aria-expanded','false');
+    butCreate.setAttribute('aria-controls','createGroup');
     butCreate.innerHTML = '<img src="../img/plus.png" width="20">Crear Grupo';
     for (let i = 0; i < json.groups.length; i++) {
         let group = json.groups[i];
@@ -462,7 +465,92 @@ function setGroupsHtml(json) {
     
     }
     document.getElementById('grupos').appendChild(butCreate);
+    document.getElementById('grupos').appendChild(generateCreateGroupFrame());
     document.getElementById('grupos').appendChild(divRow);
+}
+
+function generateCreateGroupFrame(jsonData) {
+    // Crear los elementos principales
+    let createGroup = document.createElement('div');
+    createGroup.id = 'createGroup';
+    createGroup.className = 'accordion-collapse collapse';
+    createGroup.setAttribute('aria-labelledby', 'headingOne');
+
+    let accordionBody = document.createElement('div');
+    accordionBody.className = 'accordion-body';
+
+    let form = document.createElement('form');
+    form.action = 'post';
+    form.id = 'groupDetailsForm';
+
+    // Crear los elementos de entrada
+    let inputGroups = ['MECT #', 'Nombre', 'Fecha de Inicio', 'Fecha de Terminación', 'Sede'];
+    let inputIds = ['groupId', 'groupName', 'startDate', 'endDate', 'location'];
+
+    for (let i = 0; i < inputGroups.length; i++) {
+        let inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group';
+
+        let span = document.createElement('span');
+        span.className = 'input-group-text bg-primary text-white';
+        span.textContent = inputGroups[i];
+
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.id = inputIds[i];
+        input.className = 'form-control';
+        input.setAttribute('aria-label', inputGroups[i]);
+        input.title = inputGroups[i];
+
+        if (i === 0) {
+            input.disabled = true;
+        }
+
+        inputGroup.appendChild(span);
+        inputGroup.appendChild(input);
+        form.appendChild(inputGroup);
+    }
+
+    // Crear la lista de integrantes
+    let div = document.createElement('div');
+    let span = document.createElement('span');
+    span.className = 'bg-primary text-white';
+    span.textContent = 'Integrantes';
+
+    let listGroup = document.createElement('div');
+    listGroup.className = 'list-group';
+
+    jsonData.forEach((item) => {
+        let formCheck = document.createElement('div');
+        formCheck.className = 'form-check';
+
+        let input = document.createElement('input');
+        input.className = 'form-check-input';
+        input.type = 'checkbox';
+        input.value = '';
+        input.id = item.id;
+        if (item.checked) {
+            input.checked = true;
+        }
+
+        let label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.setAttribute('for', 'flexCheckChecked');
+
+        formCheck.appendChild(input);
+        formCheck.appendChild(label);
+        listGroup.appendChild(formCheck);
+    });
+
+    div.appendChild(span);
+    div.appendChild(listGroup);
+    form.appendChild(div);
+
+    // Agregar todo al elemento principal
+    accordionBody.appendChild(form);
+    createGroup.appendChild(accordionBody);
+
+    return createGroup;
 }
 
 function generateUsersPage() {

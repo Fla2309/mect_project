@@ -68,4 +68,9 @@ class Groups extends DB
                 break;
         }
     }
+
+    public function createGroup()
+    {
+
+    }
 }

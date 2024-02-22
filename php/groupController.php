@@ -20,6 +20,11 @@ if (isset($_GET['data'])) {
                     break;
             }
             break;
+        case 'insert':
+            $groups = new Groups();
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($groups->createGroup());
+            break;
         default:
             http_response_code(404);
             break;
