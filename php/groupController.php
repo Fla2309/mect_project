@@ -13,7 +13,7 @@ if (isset($_GET['data'])) {
                 case 'groups':
                     $groups = new Groups();
                     header('Content-Type: application/json; charset=utf-8');
-                    echo json_encode($groups->prepareGroupsJson());
+                    echo json_encode($groups->prepareGroupsJson(), JSON_UNESCAPED_UNICODE);
                     break;
                 default:
                     http_response_code(404);
@@ -23,7 +23,7 @@ if (isset($_GET['data'])) {
         case 'insert':
             $groups = new Groups();
             header('Content-Type: application/json; charset=utf-8');
-            echo json_encode($groups->createGroup());
+            echo json_encode($groups->createGroup(), JSON_UNESCAPED_UNICODE);
             break;
         default:
             http_response_code(404);

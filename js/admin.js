@@ -427,17 +427,19 @@ function setModulesHtml(json) {
 
 function setGroupsHtml(json) {
     count = 1;
-    $('#grupos').html('');
+    groupsTab = document.getElementById('grupos');
+    groupsTab.innerHTML = '';
     var divRow = document.createElement('div');
     var butCreate = document.createElement('button');
     divRow.className = 'row g-0 m-3 justify-content-center';
     divRow.style.alignContent = 'center';
-    butCreate.className = 'btn btn-primary accordion-button ms-3 mt-3 p-2';
+    butCreate.className = 'btn btn-primary ms-3 mt-3 p-2';
     butCreate.type = 'button';
-    butCreate.setAttribute('data-bs-toggle','collapse');
-    butCreate.setAttribute('data-bs-target','#createGroup');
-    butCreate.setAttribute('aria-expanded','false');
-    butCreate.setAttribute('aria-controls','createGroup');
+    butCreate.id = 'butCreateGroup';
+    butCreate.setAttribute('data-bs-toggle', 'collapse');
+    butCreate.setAttribute('data-bs-target', '#createGroup');
+    butCreate.setAttribute('aria-expanded', 'false');
+    butCreate.setAttribute('aria-controls', 'createGroup');
     butCreate.innerHTML = '<img src="../img/plus.png" width="20">Crear Grupo';
     for (let i = 0; i < json.groups.length; i++) {
         let group = json.groups[i];
@@ -462,40 +464,84 @@ function setGroupsHtml(json) {
         divP1.append(h2, h4, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
-    
+
     }
-    document.getElementById('grupos').appendChild(butCreate);
-    document.getElementById('grupos').appendChild(generateCreateGroupFrame());
-    document.getElementById('grupos').appendChild(divRow);
+    groupsTab.appendChild(butCreate);
+    groupsTab.appendChild(generateCreateGroupFrame(json));
+    groupsTab.appendChild(divRow);
 }
 
-function generateCreateGroupFrame(jsonData) {
+function sortGroupsByLocation(json) {
+    json.groups.sort((a, b) => a.location.localeCompare(b.location));
+    json.groups.sort((a, b) => b.groupId.localeCompare(a.groupId));
+    if (json.hasOwnProperty('options')) {
+        delete json['options'];
+    }
+    return json;
+}
+
+function getUniqueLocations(json) {
+    const uniqueLocations = new Set();
+    json.groups.forEach(item => {
+        uniqueLocations.add(item.location);
+    });
+    return Array.from(uniqueLocations);
+}
+
+function generateCreateGroupFrame(json) {
     // Crear los elementos principales
-    let createGroup = document.createElement('div');
+    const createGroup = document.createElement('div');
     createGroup.id = 'createGroup';
     createGroup.className = 'accordion-collapse collapse';
     createGroup.setAttribute('aria-labelledby', 'headingOne');
 
-    let accordionBody = document.createElement('div');
+    const accordionBody = document.createElement('div');
     accordionBody.className = 'accordion-body';
 
-    let form = document.createElement('form');
+    const form = document.createElement('form');
     form.action = 'post';
     form.id = 'groupDetailsForm';
 
+    const div = document.createElement('div');
+    div.className = 'col mx-3 mt-3';
+
     // Crear los elementos de entrada
-    let inputGroups = ['MECT #', 'Nombre', 'Fecha de Inicio', 'Fecha de Terminación', 'Sede'];
-    let inputIds = ['groupId', 'groupName', 'startDate', 'endDate', 'location'];
+    const inputGroups = ['MECT #', 'Nombre', 'Fecha de Inicio', 'Fecha de Terminación'];
+    const inputIds = ['groupId', 'groupName', 'startDate', 'endDate'];
+    const inputGroupSelect = document.createElement('div');
+    inputGroupSelect.className = 'input-group mt-2 mb-2';
+    const select = document.createElement('select');
+    const spanSelect = document.createElement('span');
+    spanSelect.className = 'input-group-text bg-primary text-white';
+    spanSelect.textContent = 'Sede';
+    select.id = 'locationSelect';
+    select.className = 'form-select';
+    select.setAttribute('aria-label', 'Elige una sede');
+    const optionSelected = document.createElement('option');
+    optionSelected.textContent = 'Elige una sede';
+    optionSelected.selected = true;
+    select.appendChild(optionSelected);
+    let sortedGroupsByLocation = sortGroupsByLocation(json);
+    getUniqueLocations(sortedGroupsByLocation).forEach(item => {
+        const option = document.createElement('option');
+        option.textContent = item;
+        option.value = item;
+        select.appendChild(option);
+    });
+    inputGroupSelect.appendChild(spanSelect);
+    inputGroupSelect.appendChild(select);
+    form.appendChild(inputGroupSelect);
 
     for (let i = 0; i < inputGroups.length; i++) {
-        let inputGroup = document.createElement('div');
-        inputGroup.className = 'input-group';
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group mt-2 mb-2';
+        inputGroup.setAttribute('hidden', '');
 
-        let span = document.createElement('span');
+        const span = document.createElement('span');
         span.className = 'input-group-text bg-primary text-white';
         span.textContent = inputGroups[i];
 
-        let input = document.createElement('input');
+        const input = document.createElement('input');
         input.type = 'text';
         input.id = inputIds[i];
         input.className = 'form-control';
@@ -509,48 +555,70 @@ function generateCreateGroupFrame(jsonData) {
         inputGroup.appendChild(span);
         inputGroup.appendChild(input);
         form.appendChild(inputGroup);
+        div.appendChild(form);
     }
 
-    // Crear la lista de integrantes
-    let div = document.createElement('div');
-    let span = document.createElement('span');
-    span.className = 'bg-primary text-white';
-    span.textContent = 'Integrantes';
+    let butSaveChanges = document.createElement('button');
+    butSaveChanges.className = 'btn btn-secondary mt-2 mb-2';
+    butSaveChanges.textContent = 'Guardar Grupo';
+    butSaveChanges.type = 'button';
+    butSaveChanges.id = 'butSaveGroup';
+    butSaveChanges.setAttribute('onclick', 'saveNewGroup()');
+    butSaveChanges.hidden = true;
+    form.appendChild(butSaveChanges);
 
-    let listGroup = document.createElement('div');
-    listGroup.className = 'list-group';
-
-    jsonData.forEach((item) => {
-        let formCheck = document.createElement('div');
-        formCheck.className = 'form-check';
-
-        let input = document.createElement('input');
-        input.className = 'form-check-input';
-        input.type = 'checkbox';
-        input.value = '';
-        input.id = item.id;
-        if (item.checked) {
-            input.checked = true;
-        }
-
-        let label = document.createElement('label');
-        label.className = 'form-check-label';
-        label.setAttribute('for', 'flexCheckChecked');
-
-        formCheck.appendChild(input);
-        formCheck.appendChild(label);
-        listGroup.appendChild(formCheck);
-    });
-
-    div.appendChild(span);
-    div.appendChild(listGroup);
-    form.appendChild(div);
-
-    // Agregar todo al elemento principal
-    accordionBody.appendChild(form);
+    accordionBody.appendChild(div);
     createGroup.appendChild(accordionBody);
 
+    select.addEventListener('change', function () {
+        var groupIdInput = document.getElementById('groupId');
+        var groupNameInput = document.getElementById('groupName');
+        var startDateInput = document.getElementById('startDate');
+        var endDateInput = document.getElementById('endDate');
+        filteredValues =
+            Object.values(sortedGroupsByLocation)[0].filter(function (item) {
+                return item.location == select.value;
+            });
+        groupIdInput.value = parseInt(filteredValues[0].groupId) + 1;
+        groupIdInput.parentElement.hidden = false;
+        groupNameInput.parentElement.hidden = false;
+        startDateInput.parentElement.hidden = false;
+        endDateInput.parentElement.hidden = false;
+        butSaveChanges.hidden = false;
+        console.log('se removió hidden');
+    });
+
     return createGroup;
+}
+
+function saveNewGroup() {
+    var params = {
+        groupId: document.getElementById('groupId').value,
+        groupName: document.getElementById('groupName').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        location: document.getElementById('locationSelect').value
+    };
+    if (params.groupId == '' || params.groupName == ''
+        || params.startDate == '' || params.endDate == ''
+        || params.location == '') {
+        alert('favor de llenar todos los campos')
+    } else {
+        $.ajax({
+            method: "POST",
+            url: "../php/groupController.php?data=insert&userId=" + document.getElementById("userId").value,
+            data: params
+        }).done(function (data) {
+            if (data == 1) {
+                alert('El grupo ya existe');
+            } else {
+                generateGroupsPage();
+                alert('Grupo creado exitosamente');
+            }
+        }).fail(function (result) {
+            console.log(result);
+        });
+    }
 }
 
 function generateUsersPage() {
@@ -563,8 +631,6 @@ function generateUsersPage() {
         console.log(result);
     });
 }
-
-
 
 function setUsersHtml(json) {
     if (Object.keys(json).length == 0) {

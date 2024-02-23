@@ -71,6 +71,18 @@ class Groups extends DB
 
     public function createGroup()
     {
-
+        try {
+            $querySelect = $this->connect()->query("SELECT * FROM grupos WHERE nombre_grupo = 
+                    '{$_POST['groupName']}' AND sede = '{$_POST['location']}'") 
+                    or die($this->connect()->error);
+            if ($querySelect->num_rows > 0)
+                throw new Exception('Nombre de grupo ya existe');
+            $queryInsert = $this->connect()->query("INSERT INTO grupos 
+                    VALUES ('{$_POST['groupId']}','{$_POST['groupName']}','{$_POST['startDate']}',
+                    '{$_POST['endDate']}','{$_POST['location']}')") or die($this->connect()->error);
+            return $_POST;
+        } catch (Exception $e) {
+            return 1;
+        }
     }
 }
