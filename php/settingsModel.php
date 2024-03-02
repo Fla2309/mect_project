@@ -100,7 +100,7 @@ class Settings
             $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = ' . $this->userId) or die($this->conn->error);
             http_response_code(201);
             return $this->retrieveUser()->fetch_object();
-        } catch (Exception) {
+        } catch (Exception $e) {
             echo $string;
             http_response_code(400);
         }
