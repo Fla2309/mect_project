@@ -55,6 +55,10 @@ if ($module->userLevel > 1) {
                 ];
                 $module->createActivityFromModule($_GET['type'], $values);
                 break;
+            case 'status':
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($module->changeModuleStatus(), JSON_UNESCAPED_UNICODE);
+                break;
             default:
                 break;
         }

@@ -1,3 +1,10 @@
+<?php
+
+include_once('./php/dashboard.php');
+include_once('./php/groups.php');
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,15 +44,15 @@
     <script src="../js/admin.js"></script>
     <table hidden>
         <tr>
-            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
-            <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['userName'] ?>"
-                    class="user_properties"></td>
+            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>"
+                    value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['fullname'] ?>"
+                    value="<?php echo $_SESSION['fullname'] ?>" class="user_properties"></td>
             <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
                     value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
         </tr>
     </table>
     <div class="row g-0">
-        <!-- <div class="d-flex align-items-start"> -->
         <div style="width: 55px;" class="col-auto">
             <ul class="nav nav-pills mb-1 flex-column">
                 <li id="inicioNavItem" class="nav-item active">
@@ -70,23 +77,6 @@
                 </li>
             </ul>
         </div>
-        <!-- <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#grupos"
-                type="button" role="tab" aria-controls="v-pills-home" aria-selected="true"><img src="../img/home.png"
-                    class="left_bar_icon"></button>
-            <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#grupos"
-                type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><img
-                    src="../img/group.png" class="left_bar_icon"></button>
-            <button class="nav-link" onclick="generateUsersPage()" data-bs-toggle="pill" data-bs-target="#usuarios"
-                type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><img
-                    src="../img/user_b.png" class="left_bar_icon"></button>
-            <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#modulos"
-                type="button" role="tab" onclick="generateModulesPage()" aria-selected="false"><img
-                    src="../img/book.png" class="left_bar_icon"></button>
-            <button class="nav-link" onclick="loadTestsPage()" data-bs-toggle="pill" data-bs-target="#examen"
-                type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"><img
-                    src="../img/test.png" class="left_bar_icon"></button>
-        </div> -->
         <div class="tab-content col-auto" style="background-color: #e2e2e2;">
             <div class="tab-pane fade show active" style="margin: 1rem;" id="inicio">
                 <h2 style="padding: 2rem;">Bienvenid@,
@@ -104,7 +94,6 @@
                                 <h5>Buscar grupo</h5>
                                 <div class="row mt-3" id="groupSelects">
                                     <?php
-                                    include_once('./php/dashboard.php');
                                     $dashboard = new Dashboard();
                                     echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
                                     ?>
@@ -167,14 +156,6 @@
                                     class="btn btn-primary">Agregar Usuario</button>
                             </div>
                         </div>
-                        <!-- <div class="row mt-3 col-4" id="groupSelectsUsers">
-                            //<?php
-                            //include_once('./php/dashboard.php');
-                            //$dashboard = new Dashboard();
-                            //echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
-                            //?>
-                        </div> -->
-
                     </div>
                 </div>
             </div>
@@ -189,7 +170,7 @@
                         <div class="px-3 py-3" style="background-color: white;">
                             <h1 class="mb-3">Búsqueda de exámenes</h1>
                             <hr class="divider">
-                            <div class="col-4 mb-3 d-flex">
+                            <!-- <div class="col-4 mb-3 d-flex">
                                 <div class="col-10" id="testsControlPanel">
                                     <input class="form-control" type="text" id="txtTest"
                                         onkeyup="searchInList('txtTest','testsList')" placeholder="Buscar por nombre..."
@@ -198,10 +179,10 @@
                             </div>
                             <div class="row mt-3 col-7" id="groupSelectsTests">
                                 <?php
-                                $dashboard = new Dashboard();
-                                echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
+                                // $dashboard = new Dashboard();
+                                // echo $dashboard->generateGroupsFrame($_SESSION['nivel_usuario']);
                                 ?>
-                            </div>
+                            </div> -->
                             <div class="list-group" id="testsList" role="tablist">
                             </div>
                         </div>
@@ -232,56 +213,58 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="userSettings">
-                    <div class="input-group mb-2" hidden>
-                        <span class="input-group-text bg-primary text-white">ID</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserId">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Nombre y Apellidos</span>
-                        <input class="form-control" placeholder="Nombre" id="targetUserName">
-                        <input class="form-control" placeholder="Apellidos" id="targetUserLastname">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Nombre/Alias Preferido</span>
-                        <input class="form-control" placeholder="Alias" id="targetUserPrefName">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Grupo de PL/AM</span>
-                        <input class="form-control" placeholder="PL" id="targetUserPlId">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Grupo de MECT</span>
-                        <select class="form-select" aria-label="Select module" id="groupsDropdown">
-                            <?php
-                            $moduleClass = new Groups();
-                            echo $moduleClass->getGroupHtmlDropdownTags();
-                            ?>
-                        </select>
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Fecha de Ingreso MECT</span>
-                        <input class="form-control" placeholder="(AAAA-MM-DD)" id="targetUserDate">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Correo</span>
-                        <input class="form-control" placeholder="Correo" id="targetUserMail">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Teléfono</span>
-                        <input class="form-control" placeholder="Teléfono" id="targetUserPhone">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Usuario web</span>
-                        <input class="form-control" placeholder="usuario.web" id="targetUserLogin">
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-primary text-white">Nivel de Usuario</span>
-                        <select class="form-select" aria-label="Select module" id="levelsDropdown">
-                            <?php
-                            echo $moduleClass->getUserLevelHtmlDropdownTags();
-                            ?>
-                        </select>
-                    </div>
+                    <form action="post">
+                        <div class="input-group mb-2" hidden>
+                            <span class="input-group-text bg-primary text-white">ID</span>
+                            <input class="form-control" placeholder="Nombre" id="targetUserId">
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Nombre y Apellidos</span>
+                            <input class="form-control" placeholder="Nombre" id="targetUserName" required>
+                            <input class="form-control" placeholder="Apellidos" id="targetUserLastname" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Nombre/Alias Preferido</span>
+                            <input class="form-control" placeholder="Alias" id="targetUserPrefName" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Grupo de PL/AM</span>
+                            <input class="form-control" placeholder="PL" id="targetUserPlId" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Grupo de MECT</span>
+                            <select class="form-select" aria-label="Select module" id="groupsDropdown">
+                                <?php
+                                $moduleClass = new Groups();
+                                echo $moduleClass->getGroupHtmlDropdownTags();
+                                ?>
+                            </select>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Fecha de Ingreso MECT</span>
+                            <input class="form-control" placeholder="(AAAA-MM-DD)" id="targetUserDate" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Correo</span>
+                            <input class="form-control" placeholder="Correo" id="targetUserMail" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Teléfono</span>
+                            <input class="form-control" placeholder="Teléfono" id="targetUserPhone" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Usuario web</span>
+                            <input class="form-control" placeholder="usuario.web" id="targetUserLogin" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-primary text-white">Nivel de Usuario</span>
+                            <select class="form-select" aria-label="Select module" id="levelsDropdown">
+                                <?php
+                                echo $moduleClass->getUserLevelHtmlDropdownTags();
+                                ?>
+                            </select>
+                        </div>
+                    </form>
 
                     <p id="errorAct" class="text-danger" hidden></p>
                 </div>
@@ -336,6 +319,48 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="registerPayment()">Guardar
+                        cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Información del Grupo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="userPayment">
+                    <div class="input-group mb-2" hidden>
+                        <span class="input-group-text bg-primary text-white">ID</span>
+                        <input class="form-control" placeholder="ID" id="groupIdModal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Número de Grupo</span>
+                        <input class="form-control" placeholder="Nombre" id="groupNumberModal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Nombre del Grupo</span>
+                        <input class="form-control" placeholder="# de grupo" id="groupNameModal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Fecha de Inicio</span>
+                        <input class="form-control" placeholder="AAAA-MM-DD" id="groupStartDateModal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Fecha de Terminación</span>
+                        <input class="form-control" placeholder="AAAA-MM-DD" id="groupEndDateModal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Sede</span>
+                        <input class="form-control" placeholder="Sede" id="groupLocationModal">
+                    </div>
+                    <p id="errorAct" class="text-danger" hidden></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="updateGroup()">Guardar
                         cambios</button>
                 </div>
             </div>

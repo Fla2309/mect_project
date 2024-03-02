@@ -82,13 +82,11 @@ class UserGroup
             while ($module = mysqli_fetch_array($modules)) {
                 $html = $html . '<li class="list-group-item" id="module_' . $module['id_modulo'] . '"><a>';
                 $html = $html . $module['nombre_modulo'] . '</a>';
-                $html = $html . '<a><img src="img/eye.png" title="Ver detalles" class="dashboard_icon ms-4 me-1"></a>';
-                $html = $html . '<a><img src="img/payment.png" title="Pagos grupales" class="dashboard_icon  m-1"></a>';
                 $html = $html . '<p><em>' . ($module['descripcion'] !== null ? $module['descripcion'] : 'No hay descripción disponible') . '</em></p>';
                 $html = $html . '<div class="form-check">';
                 $html = $module['disponible'] > 0 ?
-                    $html . '<input class="form-check-input" type="checkbox" value="" id="' . $module['id_modulo'] . '_enabled" checked><label class="form-check-label" for="flexCheckChecked">Disponible</label></div>' :
-                    $html . '<input class="form-check-input" type="checkbox" value="" id="' . $module['id_modulo'] . '_enabled"><label class="form-check-label" for="flexCheckDefault">Disponible</label></div>';
+                    $html . '<input class="form-check-input module-checkbox" type="checkbox" value="" id="' . $module['id_modulo'] . '_enabled" checked><label class="form-check-label" for="flexCheckChecked">Disponible</label></div>' :
+                    $html . '<input class="form-check-input module-checkbox" type="checkbox" value="" id="' . $module['id_modulo'] . '_enabled"><label class="form-check-label" for="flexCheckDefault">Disponible</label></div>';
                 $html = $html . '</li>';
             }
         } else {
@@ -110,7 +108,6 @@ class UserGroup
             while ($payment = mysqli_fetch_array($payments)) {
                 $html = $html . '<li class="list-group-item" id="payment_' . $payment['id_pago'] . '"><a>';
                 $html = $html . $payment['nombre'] . ' ' . $payment['apellidos'] . '</a>';
-                $html = $html . '<a><img src="img/eye.png" title="Ver detalles" class="dashboard_icon ms-4 me-1"></a>';
                 $html = $html . '<p><strong>Importe: </strong>' . $payment['importe'];
                 $html = $html . '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha: </strong>' . $payment['fecha_pago'];
                 $html = $html . '<br><strong>Teléfono: </strong>' . $payment['telefono'];

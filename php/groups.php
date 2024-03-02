@@ -26,6 +26,19 @@ class Groups extends DB
         return $array;
     }
 
+    public function prepareSingleGroupJson()
+    {
+        $group = mysqli_fetch_assoc($this->connect()->query("SELECT * FROM grupos WHERE id_grupo = {$_GET['groupNumber']} AND sede = '{$_GET['location']}'")) or die($this->connect()->error);
+        return [
+            'groupId' => $group['id'],
+            'groupNumber' => $group['id_grupo'],
+            'groupName' => $group['nombre_grupo'],
+            'startDate' => $group['fecha_inicio'],
+            'endDate' => $group['fecha_terminacion'],
+            'location' => $group['sede']
+        ];
+    }
+
     public function getGroupHtmlDropdownTags()
     {
         $modules = $this->connect()->query("SELECT id_grupo, nombre_grupo FROM grupos") or die($this->connect()->error);
@@ -73,8 +86,8 @@ class Groups extends DB
     {
         try {
             $querySelect = $this->connect()->query("SELECT * FROM grupos WHERE nombre_grupo = 
-                    '{$_POST['groupName']}' AND sede = '{$_POST['location']}'") 
-                    or die($this->connect()->error);
+                    '{$_POST['groupName']}' AND sede = '{$_POST['location']}'")
+                or die($this->connect()->error);
             if ($querySelect->num_rows > 0)
                 throw new Exception('Nombre de grupo ya existe');
             $queryInsert = $this->connect()->query("INSERT INTO grupos 
@@ -82,6 +95,33 @@ class Groups extends DB
                     '{$_POST['endDate']}','{$_POST['location']}')") or die($this->connect()->error);
             return $_POST;
         } catch (Exception $e) {
+            return 1;
+        }
+    }
+
+    public function updateGroup(){
+        $groupId = $_GET['groupId'];
+        $groupNumber = $_POST['groupNumber'];
+        $groupName = $_POST['groupName'];
+        $startDate = $_POST['startDate'];
+        $endDate = $_POST['endDate'];
+        $location = $_POST['location'];
+
+        $query = $this->connect()->query("UPDATE grupos SET id_grupo={$groupNumber}, nombre_grupo='{$groupName}', 
+        fecha_inicio='{$startDate}', fecha_terminacion='{$endDate}', sede='{$location}' WHERE id={$groupId}") or die($this->connect()->error);
+
+        if ($query) {
+            http_response_code(201);
+            return [
+                'groupId'=> $groupId,
+                'groupNumber'=> $groupNumber,
+                'groupName'=> $groupName,
+                'startDate'=> $startDate,
+                'endDate'=> $endDate,
+                'location'=> $location
+            ];
+        } else {
+            http_response_code(400);
             return 1;
         }
     }

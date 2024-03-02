@@ -124,14 +124,14 @@ function clearAndShowSettingsModal() {
     $('#targetUserPrefName').val('');
     $('#targetUserPlId').val('');
     const groupSelectElement = document.getElementById('groupsDropdown');
-    groupSelectElement.options[0].selected = true;
+    // groupSelectElement.options[0].selected = true;
     $('#targetUserDate').val('');
     $('#targetUserMail').val('');
     $('#targetUserPhone').val('');
     $('#targetUserLogin').val('');
     $('#userLevel').val('');
     const levelSelectElement = document.getElementById('levelsDropdown');
-    levelSelectElement.options[0].selected = true;
+    // levelSelectElement.options[0].selected = true;
     $('#settingsModal .btn-primary').attr('onclick', 'saveNewUser()');
     $('#settingsModal').modal('show');
 }
@@ -325,6 +325,10 @@ function saveUserChanges() {
 }
 
 function saveNewUser() {
+    if (document.getElementById('userId').value.length == 0 || document.getElementById('targetUserName').value.length == 0 || document.getElementById('targetUserLastname').value.length == 0 || document.getElementById('targetUserPlId').value.length == 0 || document.getElementById('targetUserDate').value.length == 0 || document.getElementById('targetUserPrefName').value.length == 0 || document.getElementById('targetUserLogin').value.length == 0 || document.getElementById('targetUserMail').value.length == 0 || document.getElementById('targetUserPhone').valu == "") {
+        alert('Todos los campos deben llenarse');
+        return;
+    }
     var url = "";
     data = [
         "userId=" + document.getElementById('userId').value,
@@ -440,28 +444,35 @@ function setGroupsHtml(json) {
     butCreate.setAttribute('data-bs-target', '#createGroup');
     butCreate.setAttribute('aria-expanded', 'false');
     butCreate.setAttribute('aria-controls', 'createGroup');
-    butCreate.innerHTML = '<img src="../img/plus.png" width="20">Crear Grupo';
+    butCreate.innerHTML = '<img src="../img/plus.png" width="20"> Crear Grupo';
     for (let i = 0; i < json.groups.length; i++) {
         let group = json.groups[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
         let h2 = document.createElement('h2');
         let h4 = document.createElement('h4');
-        let button = document.createElement('button');
+        let buttonView = document.createElement('button');
+        let buttonEdit = document.createElement('button');
         divCol.className = 'col p-5 mb-3 me-3';
         divCol.style.backgroundColor = 'white';
         divCol.id = 'idGroup-' + group.groupId;
         divP1.className = 'p-1';
-        button.className = 'btn btn-primary';
-        button.type = 'button';
-        button.id = 'but-gr-' + group.groupId;
-        button.style.width = '120px';
-        button.style.textAlign = 'left';
         h2.textContent = 'MECT ' + group.groupId + ' ' + group.groupName;
+        h2.className = 'group-header';
         h4.textContent = group.location;
-        button.setAttribute('onclick', 'showGroupHtml(this)');
-        button.textContent = 'Ver Grupo';
-        divP1.append(h2, h4, button);
+        h4.className = 'group-location';
+        buttonView.className = 'btn btn-primary module-button';
+        buttonView.type = 'button';
+        buttonView.id = 'but-gr-' + group.groupId;
+        buttonView.style.textAlign = 'left';
+        buttonView.setAttribute('onclick', 'showGroupHtml(this)');
+        buttonView.innerHTML = '<img src="../img/eye.png" style="filter: invert(100%);" width="15"> Ver Grupo';
+        buttonEdit.className = 'btn btn-secondary module-button me-2';
+        buttonEdit.type = 'button';
+        buttonEdit.id = 'but-edit-' + group.groupId;
+        buttonEdit.setAttribute('onclick', 'showEditGroupModal(this)');
+        buttonEdit.innerHTML = '<img src="../img/edit.png" style="filter: invert(100%);" width="15">';
+        divP1.append(h2, h4, buttonEdit, buttonView);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
 
@@ -469,6 +480,63 @@ function setGroupsHtml(json) {
     groupsTab.appendChild(butCreate);
     groupsTab.appendChild(generateCreateGroupFrame(json));
     groupsTab.appendChild(divRow);
+}
+
+function showEditGroupModal(button) {
+    let groupNumber = button.id.replace('but-edit-', '')
+    let location = button.previousElementSibling.textContent;
+    $.ajax({
+        method: "GET",
+        url: "../php/groupController.php?data=get&dataType=group&groupNumber=" + groupNumber + "&location=" + location + "&userId=" + $("#userId").val(),
+    }).done(function (data) {
+        $('#groupIdModal').val(data.groupId);
+        $('#groupNumberModal').val(data.groupNumber);
+        $('#groupNameModal').val(data.groupName);
+        $('#groupStartDateModal').val(data.startDate);
+        $('#groupEndDateModal').val(data.endDate);
+        $('#groupLocationModal').val(data.location);
+        $('#editGroupModal').modal('show');
+    }).fail(function (result) {
+        console.log(result);
+    });
+}
+
+function updateGroup() {
+    let groupId = $('#groupIdModal').val();
+    let groupNumber = $('#groupNumberModal').val();
+    let groupName = $('#groupNameModal').val();
+    let startDate = $('#groupStartDateModal').val();
+    let endDate = $('#groupEndDateModal').val();
+    let location = $('#groupLocationModal').val();
+
+    $.ajax({
+        method: "POST",
+        url: "../php/groupController.php?data=update&groupId=" + groupId + "&userId=" + $("#userId").val(),
+        data: {
+            groupNumber: groupNumber,
+            groupName: groupName,
+            startDate: startDate,
+            endDate: endDate,
+            location: location
+        }
+    }).done(function () {
+        $('#editGroupModal').modal('hide');
+        $('#changesMadeModalBody').text('Grupo actualizado exitosamente');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            function redirect() {
+                if (seconds <= 0) {
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
+                }
+            } setInterval(redirect, 1000);
+            generateGroupsPage();
+        })
+    }).fail(function (result) {
+        alert('Hubo un problema al actualizar el grupo');
+    });
 }
 
 function sortGroupsByLocation(json) {
@@ -665,7 +733,7 @@ function setUsersHtml(json) {
                     case 1:
                         let a2 = document.createElement('a');
                         a2.href = "#";
-                        a2.onclick = function () { deleteStudent(this); };
+                        a2.setAttribute('onclick', 'deleteStudent(this)');
                         let img1 = document.createElement('img');
                         img1.src = "img/del_user.png";
                         img1.title = "Eliminar usuario";
@@ -678,7 +746,7 @@ function setUsersHtml(json) {
                     case 2:
                         let a3 = document.createElement('a');
                         a3.href = "#";
-                        a3.onclick = function () { showUserSettings(this, setParametersInSettingsModal); };
+                        a3.setAttribute('onclick', 'showUserSettings(this, setParametersInSettingsModal)');
                         let img2 = document.createElement('img');
                         img2.src = "img/settings.png";
                         img2.title = "Configuración";
@@ -690,7 +758,7 @@ function setUsersHtml(json) {
                     case 3:
                         let a4 = document.createElement('a');
                         a4.href = "#";
-                        a4.onclick = function () { showPaymentFrame(this, setPaymentsFrameInUser, false); };
+                        a4.setAttribute('onclick', 'showPaymentFrame(this, setPaymentsFrameInUser, false)');
                         let img3 = document.createElement('img');
                         img3.src = "img/payment.png";
                         img3.title = "Pagos";
@@ -702,7 +770,7 @@ function setUsersHtml(json) {
                     case 4:
                         let a5 = document.createElement('a');
                         a5.href = "#";
-                        a5.onclick = function () { showStudentAcademicProfile(this); };
+                        a5.setAttribute('onclick', 'showStudentAcademicProfile(this);');
                         let img4 = document.createElement('img');
                         img4.src = "img/books.png";
                         img4.title = "Perfil académico";
