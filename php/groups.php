@@ -9,46 +9,38 @@ class Groups extends DB
     {
         $query = $this->getGroupsFromDatabase();
         $groups = [];
+        $array = [];
 
         while ($row = mysqli_fetch_array($query)) {
             $group = array(
-                'grouId' => $row['id_grupo'],
-                'grouName' => $row['nombre_grupo'],
+                'groupId' => $row['id_grupo'],
+                'groupName' => $row['nombre_grupo'],
                 'location' => $row['sede']
             );
             array_push($groups, $group);
         }
-        // $count = 1;
-
-        // while ($row = mysqli_fetch_array($query)) {
-        //     if ($count == 1) {
-        //         $html = $html . "<div class=\"row\" style=\"align-content: center;\">";
-        //     }
-
-        //     $html = $html . "<div id=\"gr_" . $row['id_grupo'] . "\" class=\"col-sm px-5 py-5 mx-3 my-3\" style=\"background-color: white;\">";
-        //     $html = $html . "<div class=\"p-1\">";
-        //     $html = $html . "<h1>MECT " . $row['id_grupo'] . " " . $row['nombre_grupo'] . "</h1>";
-        //     $html = $html . "<h4>" . $row['sede'] . "</h4>";
-        //     $html = $html . "<button id=\"but_gr_" . $row['id_grupo'] . "\" type=\"button\" onclick=\"showGroupHtml(this);\" class=\"btn btn-primary\" style=\"width: 120px; text-align: left;\">";
-        //     $html = $html . "Entrar<img src=\"../img/right-arrow.png\" style=\"float: right;\" width=\"20\"></button>";
-        //     $html = $html . "</div>";
-        //     $html = $html . "</div>";
-
-        //     if ($count == 3) {
-        //         $html = $html . "</div>";
-        //         $count = 0;
-        //     }
-
-        //     $count++;
-        // }
-        // if ($count != 0) {
-        //     $html = $html . "</div>";
-        // }
-
-        return $groups;
+        $array = [
+            'groups' => $groups,
+            'options' => $this->getUserPermissions()
+        ];
+        return $array;
     }
 
-    public function getGroupHtmlDropdownTags(){
+    public function prepareSingleGroupJson()
+    {
+        $group = mysqli_fetch_assoc($this->connect()->query("SELECT * FROM grupos WHERE id_grupo = {$_GET['groupNumber']} AND sede = '{$_GET['location']}'")) or die($this->connect()->error);
+        return [
+            'groupId' => $group['id'],
+            'groupNumber' => $group['id_grupo'],
+            'groupName' => $group['nombre_grupo'],
+            'startDate' => $group['fecha_inicio'],
+            'endDate' => $group['fecha_terminacion'],
+            'location' => $group['sede']
+        ];
+    }
+
+    public function getGroupHtmlDropdownTags()
+    {
         $modules = $this->connect()->query("SELECT id_grupo, nombre_grupo FROM grupos") or die($this->connect()->error);
         $html = '<option href=\"#\">Elige un grupo...</option>';
         foreach ($modules as $module) {
@@ -57,7 +49,8 @@ class Groups extends DB
         return $html;
     }
 
-    public function getUserLevelHtmlDropdownTags(){
+    public function getUserLevelHtmlDropdownTags()
+    {
         $modules = $this->connect()->query("SELECT id_nivel, nombre_nivel FROM niveles_usuario") or die($this->connect()->error);
         $html = '<option href=\"#\">Elige un nivel de usuario...</option>';
         foreach ($modules as $module) {
@@ -66,10 +59,70 @@ class Groups extends DB
         return $html;
     }
 
-    public function getGroupsFromDatabase(){
+    public function getGroupsFromDatabase()
+    {
         $query = $this->connect()->query('SELECT * FROM grupos WHERE id_grupo <> 0') or die($this->connect()->error);
         return $query;
     }
-}
 
-?>
+    public function getUserPermissions()
+    {
+        $query = $this->connect()->query("SELECT nivel_usuario FROM usuarios WHERE id={$_GET['userId']}") or die($this->connect()->error);
+        switch (mysqli_fetch_assoc($query)['nivel_usuario']) {
+            //1=consulta, 2=alta, 3=cambio, 4=baja
+            case 1:
+                return [1];
+            case 2:
+                return [1, 3];
+            case 3:
+            case 4:
+                return [1, 2, 3, 4];
+            default:
+                break;
+        }
+    }
+
+    public function createGroup()
+    {
+        try {
+            $querySelect = $this->connect()->query("SELECT * FROM grupos WHERE nombre_grupo = 
+                    '{$_POST['groupName']}' AND sede = '{$_POST['location']}'")
+                or die($this->connect()->error);
+            if ($querySelect->num_rows > 0)
+                throw new Exception('Nombre de grupo ya existe');
+            $queryInsert = $this->connect()->query("INSERT INTO grupos 
+                    VALUES ('{$_POST['groupId']}','{$_POST['groupName']}','{$_POST['startDate']}',
+                    '{$_POST['endDate']}','{$_POST['location']}')") or die($this->connect()->error);
+            return $_POST;
+        } catch (Exception $e) {
+            return 1;
+        }
+    }
+
+    public function updateGroup(){
+        $groupId = $_GET['groupId'];
+        $groupNumber = $_POST['groupNumber'];
+        $groupName = $_POST['groupName'];
+        $startDate = $_POST['startDate'];
+        $endDate = $_POST['endDate'];
+        $location = $_POST['location'];
+
+        $query = $this->connect()->query("UPDATE grupos SET id_grupo={$groupNumber}, nombre_grupo='{$groupName}', 
+        fecha_inicio='{$startDate}', fecha_terminacion='{$endDate}', sede='{$location}' WHERE id={$groupId}") or die($this->connect()->error);
+
+        if ($query) {
+            http_response_code(201);
+            return [
+                'groupId'=> $groupId,
+                'groupNumber'=> $groupNumber,
+                'groupName'=> $groupName,
+                'startDate'=> $startDate,
+                'endDate'=> $endDate,
+                'location'=> $location
+            ];
+        } else {
+            http_response_code(400);
+            return 1;
+        }
+    }
+}

@@ -10,7 +10,7 @@ class Module extends DB
     public $userLevel;
     public function __construct($userId = null)
     {
-        if($userId == null)
+        if ($userId == null)
             $this->userId = $_GET['userId'];
         else
             $this->userId = $userId;
@@ -20,9 +20,9 @@ class Module extends DB
 
     public function retrieveModules()
     {
-        $query = $this->userLevel > 1 ? 
-        $this->conn->query('SELECT * FROM modulos') : 
-        $this->conn->query("SELECT * FROM modulos WHERE id_modulo IN 
+        $query = $this->userLevel > 1 ?
+            $this->conn->query('SELECT * FROM modulos') :
+            $this->conn->query("SELECT * FROM modulos WHERE id_modulo IN 
                 (SELECT id_modulo FROM modulos_grupos WHERE id_grupo IN 
                     (SELECT id_grupo FROM usuarios WHERE id={$this->userId}) 
                 AND disponible > 0)");
@@ -42,11 +42,11 @@ class Module extends DB
                 'moduleId' => $row['id_modulo'],
                 'moduleName' => $row['nombre_modulo'],
                 'description' => $row['descripcion'],
-                'progress' => number_format ($progress, 1)
+                'progress' => number_format($progress, 1)
             );
             array_push($modules, $module);
         }
-        
+
         return $modules;
     }
 
@@ -148,6 +148,22 @@ class Module extends DB
         $query = $this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id={$this->userId}") or die($this->conn->error);
         return mysqli_fetch_assoc($query)['nivel_usuario'];
     }
+
+    public function changeModuleStatus()
+    {
+        try {
+            $targetModuleId = $_GET['moduleId'];
+            $date = date('Y-m-d');
+            $query = filter_var($_GET['status'], FILTER_VALIDATE_BOOLEAN) ?
+                $this->conn->query("UPDATE modulos_grupos SET disponible = 1, fecha_impartido = '$date' WHERE id_grupo={$_GET['groupId']} AND id_modulo=$targetModuleId") :
+                $this->conn->query("UPDATE modulos_grupos SET disponible = 0 WHERE id_grupo={$_GET['groupId']} AND id_modulo=$targetModuleId");
+            http_response_code(201);
+            return 0;
+        } catch (Exception $e) {
+            http_response_code(400);
+            return 1;
+        }
+    }
 }
 
 class UserModule
@@ -232,13 +248,13 @@ class UserModule
 
     function prepareTareasJsonAdmin()
     {
-        $tareasList=[];
+        $tareasList = [];
 
         foreach ($this->getTareasPerUser() as $row) {
             //options -> 1=consultas, 2=altas, 3=cambios, 4=bajas
-            $options = $this->userLevel > 2 ? 
-                    [1] : 
-                    [1, 2, 3, 4];
+            $options = $this->userLevel > 2 ?
+                [1] :
+                [1, 2, 3, 4];
             $tareas = array(
                 'homeworkId' => $row['id_tarea'],
                 'homeworkName' => $row['nombre_tarea'],
@@ -253,33 +269,42 @@ class UserModule
 
     function prepareTareasJsonStudent()
     {
-    $tareasList=[];
-    foreach ($this->getTareasPerUser() as $row) {
-        $options = [];
-        //options -> 1=plantilla, 2=cargar archivo, 3=descargar archivo,
-        switch($row['revisado']){
-            case 0: $options = ['read', 'upload']; break;
-            case 1: $options = ['read', 'download']; break;
-            case 2: $options = ['read', 'upload', 'download']; break;
-            case 3: $options = ['read', 'download']; break;
-            default: break;
-        }
-        
-        $tareas = array(
-            'homeworkId' => $row['id_tarea'],
-            'homeworkName' => $row['nombre_tarea'],
-            'dateUploaded' => $row['fecha_subida'],
-            'comments' => $row['comentarios'],
-            'file' => $row['adjunto'],
-            'status' => $row['revisado'],
-            'options' => $options,
-            'userLocalPath' => $this->getUserLocalPath(),
-            'template' => $row['plantilla']
-        );
+        $tareasList = [];
+        foreach ($this->getTareasPerUser() as $row) {
+            $options = [];
+            //options -> 1=plantilla, 2=cargar archivo, 3=descargar archivo,
+            switch ($row['revisado']) {
+                case 0:
+                    $options = ['read', 'upload'];
+                    break;
+                case 1:
+                    $options = ['read', 'download'];
+                    break;
+                case 2:
+                    $options = ['read', 'upload', 'download'];
+                    break;
+                case 3:
+                    $options = ['read', 'download'];
+                    break;
+                default:
+                    break;
+            }
 
-        array_push($tareasList, $tareas);
-    }
-    return $tareasList;
+            $tareas = array(
+                'homeworkId' => $row['id_tarea'],
+                'homeworkName' => $row['nombre_tarea'],
+                'dateUploaded' => $row['fecha_subida'],
+                'comments' => $row['comentarios'],
+                'file' => $row['adjunto'],
+                'status' => $row['revisado'],
+                'options' => $options,
+                'userLocalPath' => $this->getUserLocalPath(),
+                'template' => $row['plantilla']
+            );
+
+            array_push($tareasList, $tareas);
+        }
+        return $tareasList;
     }
 
     public function prepareHtmlTrabajos()
@@ -310,13 +335,13 @@ class UserModule
 
     function prepareTrabajosJsonAdmin()
     {
-        $trabajosList=[];
+        $trabajosList = [];
 
         foreach ($this->getTrabajosPerUser() as $row) {
             //options -> 1=consultas, 2=altas, 3=cambios, 4=bajas
-            $options = $this->userLevel > 2 ? 
-                    [1] : 
-                    [1, 2, 3, 4];
+            $options = $this->userLevel > 2 ?
+                [1] :
+                [1, 2, 3, 4];
             $trabajos = array(
                 'workId' => $row['id_trabajo'],
                 'workName' => $row['nombre_trabajo'],
@@ -331,18 +356,27 @@ class UserModule
 
     function prepareTrabajosJsonStudent()
     {
-        $trabajosList=[];
+        $trabajosList = [];
         foreach ($this->getTrabajosPerUser() as $row) {
             $options = [];
             //options -> 1=plantilla, 2=cargar archivo, 3=descargar archivo,
-            switch($row['revisado']){
-                case 0: $options = ['read', 'upload']; break;
-                case 1: $options = ['read', 'download']; break;
-                case 2: $options = ['read', 'upload', 'download']; break;
-                case 3: $options = ['read', 'download']; break;
-                default: break;
+            switch ($row['revisado']) {
+                case 0:
+                    $options = ['read', 'upload'];
+                    break;
+                case 1:
+                    $options = ['read', 'download'];
+                    break;
+                case 2:
+                    $options = ['read', 'upload', 'download'];
+                    break;
+                case 3:
+                    $options = ['read', 'download'];
+                    break;
+                default:
+                    break;
             }
-            
+
             $trabajos = array(
                 'workId' => $row['id_trabajo'],
                 'workName' => $row['nombre_trabajo'],
@@ -379,7 +413,7 @@ class UserModule
 
     public function prepareFeedbackJson()
     {
-        $feedbackList=[];
+        $feedbackList = [];
 
         while ($row = mysqli_fetch_array($this->getFeedbackPerUser())) {
             $feedback = array(

@@ -124,14 +124,14 @@ function clearAndShowSettingsModal() {
     $('#targetUserPrefName').val('');
     $('#targetUserPlId').val('');
     const groupSelectElement = document.getElementById('groupsDropdown');
-    groupSelectElement.options[0].selected = true;
+    // groupSelectElement.options[0].selected = true;
     $('#targetUserDate').val('');
     $('#targetUserMail').val('');
     $('#targetUserPhone').val('');
     $('#targetUserLogin').val('');
     $('#userLevel').val('');
     const levelSelectElement = document.getElementById('levelsDropdown');
-    levelSelectElement.options[0].selected = true;
+    // levelSelectElement.options[0].selected = true;
     $('#settingsModal .btn-primary').attr('onclick', 'saveNewUser()');
     $('#settingsModal').modal('show');
 }
@@ -283,7 +283,7 @@ function showStudentAcademicProfile(data) {
     $.ajax({
         method: "GET",
         url: "../php/usersController.php?data=get&dataType=userLogin&targetUserId=" + id + "&userId=" + $('#userId').val(),
-    }).done(function (data){
+    }).done(function (data) {
         window.location = '/view/academicProfile.php?user=' + data;
     });
 }
@@ -325,6 +325,10 @@ function saveUserChanges() {
 }
 
 function saveNewUser() {
+    if (document.getElementById('userId').value.length == 0 || document.getElementById('targetUserName').value.length == 0 || document.getElementById('targetUserLastname').value.length == 0 || document.getElementById('targetUserPlId').value.length == 0 || document.getElementById('targetUserDate').value.length == 0 || document.getElementById('targetUserPrefName').value.length == 0 || document.getElementById('targetUserLogin').value.length == 0 || document.getElementById('targetUserMail').value.length == 0 || document.getElementById('targetUserPhone').valu == "") {
+        alert('Todos los campos deben llenarse');
+        return;
+    }
     var url = "";
     data = [
         "userId=" + document.getElementById('userId').value,
@@ -383,7 +387,7 @@ function generateGroupsPage() {
         url: "../php/groupController.php?data=get&dataType=groups&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
         if (data.length == 0) {
-            $('#modulos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
+            $('#grupos').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
         }
         else {
             setGroupsHtml(data);
@@ -396,20 +400,17 @@ function generateGroupsPage() {
 function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
+    var divRow = document.createElement('div');
+    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
-        if (i % 3 === 0) {
-            var divRow = document.createElement('div');
-            divRow.className = 'row';
-            divRow.style.alignContent = 'center';
-        }
-
         let module = json[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
         let h2 = document.createElement('h2');
         let h4 = document.createElement('h4');
         let button = document.createElement('button');
-        divCol.className = 'col-sm p-5 m-3';
+        divCol.className = 'col p-5 mb-3 me-3';
         divCol.style.backgroundColor = 'white';
         divCol.id = 'idModule-' + module.moduleId;
         divP1.className = 'p-1';
@@ -424,48 +425,267 @@ function setModulesHtml(json) {
         divP1.append(h2, h4, button);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
-
-        if (i % 3 === 2 || i === json.length - 1) {
-            document.getElementById('modulos').appendChild(divRow);
-        }
     }
+    document.getElementById('modulos').appendChild(divRow);
 }
 
 function setGroupsHtml(json) {
     count = 1;
-    $('#modulos').html('');
-    for (let i = 0; i < json.length; i++) {
-        if (i % 3 === 0) {
-            var divRow = document.createElement('div');
-            divRow.className = 'row';
-            divRow.style.alignContent = 'center';
-        }
-
-        let module = json[i];
+    groupsTab = document.getElementById('grupos');
+    groupsTab.innerHTML = '';
+    var divRow = document.createElement('div');
+    var butCreate = document.createElement('button');
+    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.style.alignContent = 'center';
+    butCreate.className = 'btn btn-primary ms-3 mt-3 p-2';
+    butCreate.type = 'button';
+    butCreate.id = 'butCreateGroup';
+    butCreate.setAttribute('data-bs-toggle', 'collapse');
+    butCreate.setAttribute('data-bs-target', '#createGroup');
+    butCreate.setAttribute('aria-expanded', 'false');
+    butCreate.setAttribute('aria-controls', 'createGroup');
+    butCreate.innerHTML = '<img src="../img/plus.png" width="20"> Crear Grupo';
+    for (let i = 0; i < json.groups.length; i++) {
+        let group = json.groups[i];
         let divCol = document.createElement('div');
         let divP1 = document.createElement('div');
         let h2 = document.createElement('h2');
         let h4 = document.createElement('h4');
-        let button = document.createElement('button');
-        divCol.className = 'col-sm p-5 m-3';
+        let buttonView = document.createElement('button');
+        let buttonEdit = document.createElement('button');
+        divCol.className = 'col p-5 mb-3 me-3';
         divCol.style.backgroundColor = 'white';
-        divCol.id = 'idModule-' + module.moduleId;
+        divCol.id = 'idGroup-' + group.groupId;
         divP1.className = 'p-1';
-        button.className = 'btn btn-primary';
-        button.type = 'button';
-        button.style.width = '120px';
-        button.style.textAlign = 'left';
-        h2.textContent = module.moduleName;
-        h4.textContent = module.description;
-        button.setAttribute('onclick', 'showModuleHtmlAdmin(this)');
-        button.textContent = 'Ver Módulo';
-        divP1.append(h2, h4, button);
+        h2.textContent = 'MECT ' + group.groupId + ' ' + group.groupName;
+        h2.className = 'group-header';
+        h4.textContent = group.location;
+        h4.className = 'group-location';
+        buttonView.className = 'btn btn-primary module-button';
+        buttonView.type = 'button';
+        buttonView.id = 'but-gr-' + group.groupId;
+        buttonView.style.textAlign = 'left';
+        buttonView.setAttribute('onclick', 'showGroupHtml(this)');
+        buttonView.innerHTML = '<img src="../img/eye.png" style="filter: invert(100%);" width="15"> Ver Grupo';
+        buttonEdit.className = 'btn btn-secondary module-button me-2';
+        buttonEdit.type = 'button';
+        buttonEdit.id = 'but-edit-' + group.groupId;
+        buttonEdit.setAttribute('onclick', 'showEditGroupModal(this)');
+        buttonEdit.innerHTML = '<img src="../img/edit.png" style="filter: invert(100%);" width="15">';
+        divP1.append(h2, h4, buttonEdit, buttonView);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);
 
-        if (i % 3 === 2 || i === json.length - 1) {
-            document.getElementById('modulos').appendChild(divRow);
+    }
+    groupsTab.appendChild(butCreate);
+    groupsTab.appendChild(generateCreateGroupFrame(json));
+    groupsTab.appendChild(divRow);
+}
+
+function showEditGroupModal(button) {
+    let groupNumber = button.id.replace('but-edit-', '')
+    let location = button.previousElementSibling.textContent;
+    $.ajax({
+        method: "GET",
+        url: "../php/groupController.php?data=get&dataType=group&groupNumber=" + groupNumber + "&location=" + location + "&userId=" + $("#userId").val(),
+    }).done(function (data) {
+        $('#groupIdModal').val(data.groupId);
+        $('#groupNumberModal').val(data.groupNumber);
+        $('#groupNameModal').val(data.groupName);
+        $('#groupStartDateModal').val(data.startDate);
+        $('#groupEndDateModal').val(data.endDate);
+        $('#groupLocationModal').val(data.location);
+        $('#editGroupModal').modal('show');
+    }).fail(function (result) {
+        console.log(result);
+    });
+}
+
+function updateGroup() {
+    let groupId = $('#groupIdModal').val();
+    let groupNumber = $('#groupNumberModal').val();
+    let groupName = $('#groupNameModal').val();
+    let startDate = $('#groupStartDateModal').val();
+    let endDate = $('#groupEndDateModal').val();
+    let location = $('#groupLocationModal').val();
+
+    $.ajax({
+        method: "POST",
+        url: "../php/groupController.php?data=update&groupId=" + groupId + "&userId=" + $("#userId").val(),
+        data: {
+            groupNumber: groupNumber,
+            groupName: groupName,
+            startDate: startDate,
+            endDate: endDate,
+            location: location
         }
+    }).done(function () {
+        $('#editGroupModal').modal('hide');
+        $('#changesMadeModalBody').text('Grupo actualizado exitosamente');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            function redirect() {
+                if (seconds <= 0) {
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
+                }
+            } setInterval(redirect, 1000);
+            generateGroupsPage();
+        })
+    }).fail(function (result) {
+        alert('Hubo un problema al actualizar el grupo');
+    });
+}
+
+function sortGroupsByLocation(json) {
+    json.groups.sort((a, b) => a.location.localeCompare(b.location));
+    json.groups.sort((a, b) => b.groupId.localeCompare(a.groupId));
+    if (json.hasOwnProperty('options')) {
+        delete json['options'];
+    }
+    return json;
+}
+
+function getUniqueLocations(json) {
+    const uniqueLocations = new Set();
+    json.groups.forEach(item => {
+        uniqueLocations.add(item.location);
+    });
+    return Array.from(uniqueLocations);
+}
+
+function generateCreateGroupFrame(json) {
+    // Crear los elementos principales
+    const createGroup = document.createElement('div');
+    createGroup.id = 'createGroup';
+    createGroup.className = 'accordion-collapse collapse';
+    createGroup.setAttribute('aria-labelledby', 'headingOne');
+
+    const accordionBody = document.createElement('div');
+    accordionBody.className = 'accordion-body';
+
+    const form = document.createElement('form');
+    form.action = 'post';
+    form.id = 'groupDetailsForm';
+
+    const div = document.createElement('div');
+    div.className = 'col mx-3 mt-3';
+
+    // Crear los elementos de entrada
+    const inputGroups = ['MECT #', 'Nombre', 'Fecha de Inicio', 'Fecha de Terminación'];
+    const inputIds = ['groupId', 'groupName', 'startDate', 'endDate'];
+    const inputGroupSelect = document.createElement('div');
+    inputGroupSelect.className = 'input-group mt-2 mb-2';
+    const select = document.createElement('select');
+    const spanSelect = document.createElement('span');
+    spanSelect.className = 'input-group-text bg-primary text-white';
+    spanSelect.textContent = 'Sede';
+    select.id = 'locationSelect';
+    select.className = 'form-select';
+    select.setAttribute('aria-label', 'Elige una sede');
+    const optionSelected = document.createElement('option');
+    optionSelected.textContent = 'Elige una sede';
+    optionSelected.selected = true;
+    select.appendChild(optionSelected);
+    let sortedGroupsByLocation = sortGroupsByLocation(json);
+    getUniqueLocations(sortedGroupsByLocation).forEach(item => {
+        const option = document.createElement('option');
+        option.textContent = item;
+        option.value = item;
+        select.appendChild(option);
+    });
+    inputGroupSelect.appendChild(spanSelect);
+    inputGroupSelect.appendChild(select);
+    form.appendChild(inputGroupSelect);
+
+    for (let i = 0; i < inputGroups.length; i++) {
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group mt-2 mb-2';
+        inputGroup.setAttribute('hidden', '');
+
+        const span = document.createElement('span');
+        span.className = 'input-group-text bg-primary text-white';
+        span.textContent = inputGroups[i];
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = inputIds[i];
+        input.className = 'form-control';
+        input.setAttribute('aria-label', inputGroups[i]);
+        input.title = inputGroups[i];
+
+        if (i === 0) {
+            input.disabled = true;
+        }
+
+        inputGroup.appendChild(span);
+        inputGroup.appendChild(input);
+        form.appendChild(inputGroup);
+        div.appendChild(form);
+    }
+
+    let butSaveChanges = document.createElement('button');
+    butSaveChanges.className = 'btn btn-secondary mt-2 mb-2';
+    butSaveChanges.textContent = 'Guardar Grupo';
+    butSaveChanges.type = 'button';
+    butSaveChanges.id = 'butSaveGroup';
+    butSaveChanges.setAttribute('onclick', 'saveNewGroup()');
+    butSaveChanges.hidden = true;
+    form.appendChild(butSaveChanges);
+
+    accordionBody.appendChild(div);
+    createGroup.appendChild(accordionBody);
+
+    select.addEventListener('change', function () {
+        var groupIdInput = document.getElementById('groupId');
+        var groupNameInput = document.getElementById('groupName');
+        var startDateInput = document.getElementById('startDate');
+        var endDateInput = document.getElementById('endDate');
+        filteredValues =
+            Object.values(sortedGroupsByLocation)[0].filter(function (item) {
+                return item.location == select.value;
+            });
+        groupIdInput.value = parseInt(filteredValues[0].groupId) + 1;
+        groupIdInput.parentElement.hidden = false;
+        groupNameInput.parentElement.hidden = false;
+        startDateInput.parentElement.hidden = false;
+        endDateInput.parentElement.hidden = false;
+        butSaveChanges.hidden = false;
+        console.log('se removió hidden');
+    });
+
+    return createGroup;
+}
+
+function saveNewGroup() {
+    var params = {
+        groupId: document.getElementById('groupId').value,
+        groupName: document.getElementById('groupName').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        location: document.getElementById('locationSelect').value
+    };
+    if (params.groupId == '' || params.groupName == ''
+        || params.startDate == '' || params.endDate == ''
+        || params.location == '') {
+        alert('favor de llenar todos los campos')
+    } else {
+        $.ajax({
+            method: "POST",
+            url: "../php/groupController.php?data=insert&userId=" + document.getElementById("userId").value,
+            data: params
+        }).done(function (data) {
+            if (data == 1) {
+                alert('El grupo ya existe');
+            } else {
+                generateGroupsPage();
+                alert('Grupo creado exitosamente');
+            }
+        }).fail(function (result) {
+            console.log(result);
+        });
     }
 }
 
@@ -479,8 +699,6 @@ function generateUsersPage() {
         console.log(result);
     });
 }
-
-
 
 function setUsersHtml(json) {
     if (Object.keys(json).length == 0) {
@@ -515,7 +733,7 @@ function setUsersHtml(json) {
                     case 1:
                         let a2 = document.createElement('a');
                         a2.href = "#";
-                        a2.onclick = function () { deleteStudent(this); };
+                        a2.setAttribute('onclick', 'deleteStudent(this)');
                         let img1 = document.createElement('img');
                         img1.src = "img/del_user.png";
                         img1.title = "Eliminar usuario";
@@ -528,7 +746,7 @@ function setUsersHtml(json) {
                     case 2:
                         let a3 = document.createElement('a');
                         a3.href = "#";
-                        a3.onclick = function () { showUserSettings(this, setParametersInSettingsModal); };
+                        a3.setAttribute('onclick', 'showUserSettings(this, setParametersInSettingsModal)');
                         let img2 = document.createElement('img');
                         img2.src = "img/settings.png";
                         img2.title = "Configuración";
@@ -540,7 +758,7 @@ function setUsersHtml(json) {
                     case 3:
                         let a4 = document.createElement('a');
                         a4.href = "#";
-                        a4.onclick = function () { showPaymentFrame(this, setPaymentsFrameInUser, false); };
+                        a4.setAttribute('onclick', 'showPaymentFrame(this, setPaymentsFrameInUser, false)');
                         let img3 = document.createElement('img');
                         img3.src = "img/payment.png";
                         img3.title = "Pagos";
@@ -552,7 +770,7 @@ function setUsersHtml(json) {
                     case 4:
                         let a5 = document.createElement('a');
                         a5.href = "#";
-                        a5.onclick = function () { showStudentAcademicProfile(this); };
+                        a5.setAttribute('onclick', 'showStudentAcademicProfile(this);');
                         let img4 = document.createElement('img');
                         img4.src = "img/books.png";
                         img4.title = "Perfil académico";
