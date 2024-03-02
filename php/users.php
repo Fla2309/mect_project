@@ -92,9 +92,18 @@ class Users
 
     function getPagosPerUser($targetUserId)
     {
-        $payments = $this->conn->query('SELECT pagos.id_pago, pagos.concepto, pagos.importe, pagos.fecha_pago, pagos.id_usuario, usuarios.nombre as usuario_nombre, usuarios.apellidos as usuario_apellidos, usuarios.id_grupo, usuarios.telefono, usuarios.correo as usuario_correo 
-        FROM pagos, usuarios WHERE 
-        pagos.id_usuario=usuarios.id AND usuarios.id=' . $targetUserId) or die($this->conn->error);
+        $payments = $this->conn->query('SELECT pagos.id_pago as id_pago, 
+            pagos.concepto as concepto, 
+            pagos.importe as importe, 
+            pagos.fecha_pago as fecha_pago, 
+            pagos.id_usuario as id_usuario, 
+            usuarios.nombre as usuario_nombre, 
+            usuarios.apellidos as usuario_apellidos, 
+            usuarios.id_grupo as id_grupo, 
+            usuarios.telefono as telefono, 
+            usuarios.correo as usuario_correo 
+            FROM pagos, usuarios WHERE 
+            pagos.id_usuario=usuarios.id AND usuarios.id=' . $targetUserId) or die($this->conn->error);
         return $payments;
     }
 
