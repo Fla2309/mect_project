@@ -31,7 +31,7 @@ class Settings
 
     function setAdminPermissions($userId)
     {
-        $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
+        $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId};")) or die($this->conn->error);
         $this->admin = $query[0] > 1 ? true : false;
     }
 
@@ -60,9 +60,9 @@ class Settings
             ];
             return $data;
         } else {
-            $query = $this->conn->query("SELECT id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
+            $query = $this->conn->query("SELECT usuarios.id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
                 FROM usuarios, grupos 
-                WHERE id={$this->userId} AND usuarios.id_grupo = grupos.id_grupo;");
+                WHERE usuarios.id={$this->userId} AND usuarios.id_grupo = grupos.id_grupo;");
             return mysqli_fetch_assoc($query);
         }
     }
@@ -73,20 +73,20 @@ class Settings
         $query = $this->retrieveUser();
         $user = $query->fetch_object();
         //$console = '';
-        if (isset($_GET[$this->settings[9][0]]) && $_GET['type'] != 5) {
-            if ($this->validateLogin($_GET[$this->settings[9][0]])) {
+        if (isset($_POST[$this->settings[9][0]]) && $_POST['type'] != 5) {
+            if ($this->validateLogin($_POST[$this->settings[9][0]])) {
                 http_response_code(406);
                 echo 'El usuario ingresado ya existe';
                 return;
             }
         }
         for ($param = 2; $param <= count($this->settings); $param++) {
-            if (isset($_GET[$this->settings[$param][0]])) {
-                if ($user->nivel_usuario >= $this->settings[$param][2] || $_GET['type'] == 5) {
-                    $string = $string . $this->settings[$param][1] . ' = \'' . $_GET[$this->settings[$param][0]] . '\'';
+            if (isset($_POST[$this->settings[$param][0]])) {
+                if ($user->nivel_usuario >= $this->settings[$param][2] || $_POST['type'] == 5) {
+                    $string = $string . $this->settings[$param][1] . ' = \'' . $_POST[$this->settings[$param][0]] . '\'';
                     //$param++;
-                    //$console = $console.' -- ' . "{$this->settings[$param][0]} = {$_GET[$this->settings[$param][0]]} / $param";
-                    if ($param >= count($_GET))
+                    //$console = $console.' -- ' . "{$this->settings[$param][0]} = {$_POST[$this->settings[$param][0]]} / $param";
+                    if ($param >= count($_POST))
                         break;
                     $string = $string . ', ';
                 } else {
@@ -97,7 +97,7 @@ class Settings
             }
         }
         try {
-            $query = $this->conn->query('UPDATE usuarios SET ' . $string . ' WHERE id = ' . $this->userId) or die($this->conn->error);
+            $query = $this->conn->query("UPDATE usuarios SET {$string} WHERE id = {$this->userId}") or die($this->conn->error);
             http_response_code(201);
             return $this->retrieveUser()->fetch_object();
         } catch (Exception $e) {
@@ -113,7 +113,7 @@ class Settings
 
     function retrieveUser()
     {
-        return $this->conn->query("SELECT * FROM usuarios WHERE id = " . $this->userId);
+        return $this->conn->query("SELECT * FROM usuarios WHERE id = {$this->userId}");
     }
 
     public function savePassword($userId, $oldPassword, $newPassword)
@@ -210,26 +210,30 @@ class Settings
 
     function insertIntoUsuarios()
     {
+        try {
         $newPass = md5('contraseña');
-        return $this->conn->query("INSERT INTO usuarios (nombre, apellidos, id_pl, id_grupo, fecha_ingreso, nombre_preferido, nivel_usuario, login_user, login_pass, correo, telefono, status) 
-        VALUES ('{$_GET['targetUserName']}','{$_GET['targetUserLastname']}','{$_GET['targetUserPL']}',
-        '{$_GET['targetUserGroup']}','{$_GET['targetUserDate']}','{$_GET['targetUserAlias']}',
-        '{$_GET['targetUserLevel']}','{$_GET['targetUserLogin']}','$newPass','{$_GET['targetUserMail']}',
-        '{$_GET['targetUserPhone']}','0')") or die($this->conn->error);
-
+            return $this->conn->query("INSERT INTO usuarios (nombre, apellidos, id_pl, id_grupo, fecha_ingreso, nombre_preferido, nivel_usuario, login_user, login_pass, correo, telefono, status) 
+            VALUES ('{$_POST['targetUserName']}','{$_POST['targetUserLastname']}','{$_POST['targetUserPL']}',
+            '{$_POST['targetUserGroup']}','{$_POST['targetUserDate']}','{$_POST['targetUserAlias']}',
+            '{$_POST['targetUserLevel']}','{$_POST['targetUserLogin']}','$newPass','{$_POST['targetUserMail']}',
+            '{$_POST['targetUserPhone']}','0')") or die($this->conn->error);
+        }
+        catch (Exception $e) {
+            return false;
+        }
     }
 
     function insertIntoUsuarioWeb()
     {
-        $userId = $this->conn->query('SELECT id FROM usuarios WHERE login_user = \'' . $_GET['targetUserLogin'] . '\'')->fetch_row()[0];
+        $userId = $this->conn->query('SELECT id FROM usuarios WHERE login_user = \'' . $_POST['targetUserLogin'] . '\'')->fetch_row()[0];
         return $this->conn->query("INSERT INTO usuario_web (id_usuario, usuario, pass, foto_perfil, directorio_local) 
-        VALUES ('{$userId}','{$_GET['targetUserLogin']}','',
-        'img/user_pic.png','resources/users/{$_GET['targetUserName']} {$_GET['targetUserLastname']}/')") or die($this->conn->error);
+        VALUES ('{$userId}','{$_POST['targetUserLogin']}','',
+        'img/user_pic.png','resources/users/{$_POST['targetUserName']} {$_POST['targetUserLastname']}/')") or die($this->conn->error);
     }
 
     function createUserDirectory()
     {
-        $dirName = "../resources/users/{$_GET['targetUserName']} {$_GET['targetUserLastname']}";
+        $dirName = "../resources/users/{$_POST['targetUserName']} {$_POST['targetUserLastname']}";
         if (!file_exists($dirName)) {
             mkdir($dirName, 0777, true);
             return true;

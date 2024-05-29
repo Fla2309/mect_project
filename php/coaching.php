@@ -13,7 +13,7 @@ class Coaching extends DB
     {
         $queryString = '';
         if ($coachingId === -1) {
-            $queryString = 'SELECT * FROM coaching_usuarios WHERE id_usuario IN (SELECT id_usuario FROM usuarios WHERE login_user = \'' . $user . '\') ORDER BY id DESC';
+            $queryString = 'SELECT * FROM coaching_usuarios WHERE id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $user . '\') ORDER BY id DESC';
         } else {
             $queryString = "SELECT * FROM coaching_usuarios WHERE id = {$coachingId} AND id_usuario IN (SELECT id_usuario FROM usuarios WHERE login_user = '{$user}')";
         }

@@ -80,6 +80,7 @@ window.addEventListener('popstate', navigateBackEventHandler);
 function setModuleFrame(json) {
     setTrabajosFrame(json.works);
     setTareasFrame(json.homeworks);
+    setInformacionFrame(json.information);
     setFeedbackFrame(json.feedback);
 }
 
@@ -181,7 +182,7 @@ function setTrabajosFrame(json) {
         imgTemplate.src = 'img/template.png';
         imgTemplate.title = 'Descargar plantilla';
         if (jsonRow.template != 'Sin plantilla') {
-            aDownload.href = jsonRow.template;
+            aDownload.href = 'resources/templates/' + jsonRow.template;
             aDownload.download = jsonRow.template;
         }
         else
@@ -355,6 +356,42 @@ function setTareasFrame(json) {
         aListGroupItem.appendChild(divInline);
         aListGroupItem.innerHTML += '<hr class="divider">';
         document.getElementById('tareas').appendChild(aListGroupItem);
+    })
+}
+
+function setInformacionFrame(json) {
+    document.getElementById('informacion').innerHTML = '';
+    if (Object.keys(json).length === 0) {
+        const h5 = document.createElement('h5');
+        h5.textContent = 'No hay archivos para mostrar';
+        document.getElementById('informacion').appendChild(h5);
+        return;
+    }
+    json.forEach(jsonRow => {
+        const aListGroupItem = document.createElement('a');
+        const divTitle = document.createElement('div');
+        const h5 = document.createElement('h5');
+        const aDownload = document.createElement('a');
+        const imgTemplate = document.createElement('img');
+        aListGroupItem.classList.add('list-group-item');
+        aListGroupItem.classList.add('list-group-item-action');
+        divTitle.classList.add('d-flex');
+        divTitle.classList.add('w-100');
+        divTitle.classList.add('justify-content-start');
+        h5.classList.add('mb-1');
+        h5.textContent = jsonRow.name;
+        imgTemplate.classList.add('dashboard_icon');
+        imgTemplate.classList.add('m-2');
+        imgTemplate.src = 'img/download.png';
+        imgTemplate.title = 'Descargar archivo';
+        aDownload.href = jsonRow.attachment;
+        aDownload.download = jsonRow.attachment;
+        aDownload.appendChild(imgTemplate);
+        divTitle.appendChild(h5);
+        divTitle.appendChild(aDownload);
+        aListGroupItem.appendChild(divTitle);
+        aListGroupItem.innerHTML += '<hr class="divider">';
+        document.getElementById('informacion').appendChild(aListGroupItem);
     })
 }
 

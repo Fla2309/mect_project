@@ -30,6 +30,9 @@ $userModule = new UserModule();
                     <li class="nav-item">
                         <a class="nav-link" href="#tareas" data-bs-toggle="tab">Tareas</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#informacion" data-bs-toggle="tab">Información</a>
+                    </li>
                     <?php
                     if (!$userModule->getAdminPermissions()) {
                         echo '<li class="nav-item">
@@ -52,17 +55,14 @@ $userModule = new UserModule();
                         echo '<div class="d-flex justify-content-start mb-3"><button type="button" class="btn btn-primary" onclick="addActivity(1)"><img src="../img/plus.png" width="20"> Añadir</button></div>';
                     ?>
                 </div>
+                <div class="tab-pane card-body" id="informacion">
+                    
+                </div>
                 <?php
                 if (!$userModule->getAdminPermissions()) {
                     echo '<div class="tab-pane card-body" id="feedback"></div>';
                 }
                 ?>
-                <!-- <div class="tab-pane card-body" id="informacion">
-                    <?php
-                    // $htmltareas = $userModule->prepareHtmlInfo();
-                    // echo $htmlinfo !== "" ? $htmlinfo : "<h5>No hay información para mostrar</h5>"
-                    ?>
-                </div> -->
             </div>
         </div>
     </div>

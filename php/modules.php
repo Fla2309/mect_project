@@ -1,6 +1,6 @@
 <?php
 
-include_once('connection.php');
+include_once ('connection.php');
 
 class Module extends DB
 {
@@ -220,6 +220,13 @@ class UserModule
         return $query;
     }
 
+    public function getModuleInformation()
+    {
+        $query = $this->conn->query("SELECT id, nombre, id_modulo, archivo, comentarios FROM modulos_info 
+                WHERE id_modulo=$this->moduleId") or die($this->conn->error);
+        return $query;
+    }
+
     public function getUsername()
     {
         return $this->userId;
@@ -428,6 +435,24 @@ class UserModule
         return $feedbackList;
     }
 
+    public function prepareInformationJson()
+    {
+        $infoList = [];
+        $rows = $this->getModuleInformation()->fetch_all(MYSQLI_ASSOC);
+
+        foreach ($rows as $row) {
+            $info = array(
+                'name' => $row['nombre'],
+                'attachment' => $row['archivo'],
+                'comments' => $row['comentarios']
+            );
+
+            array_push($infoList, $info);
+        }
+
+        return $infoList;
+    }
+
     function getUserLocalPath()
     {
         $path = $this->conn->query("SELECT directorio_local 
@@ -443,5 +468,117 @@ class UserModule
             $html = $html . "<option id=\"mod_{$module['id_modulo']}\" href=\"#\">{$module['nombre_modulo']}</option>";
         }
         return $html;
+    }
+}
+
+class ModuleDetails
+{
+    private $conn;
+    public $pointerActivities = 0;
+    public $pointerHomeworks = 0;
+    private $moduleId;
+    public $moduleActivites = [];
+    public $moduleHomeworks = [];
+
+    public function __construct($moduleId)
+    {
+        $this->conn = (new DB())->connect();
+        $this->moduleId = $moduleId;
+        $this->getModuleActivitiesAndHomeworks();
+    }
+
+    function getModuleActivitiesAndHomeworks()
+    {
+        $query = $this->conn->query("SELECT id_trabajo FROM trabajos_modulos WHERE id_modulo={$this->moduleId}") or die($this->conn->error);
+        if ($query) {
+            while ($actRow = mysqli_fetch_array($query)) {
+                $act = new ModuleActivity($actRow['id_trabajo'], 1);
+                array_push($this->moduleActivites, $act);
+            }
+        }
+
+        $query = $this->conn->query("SELECT id_tarea FROM tareas_modulos WHERE id_modulo={$this->moduleId}") or die($this->conn->error);
+        if ($query) {
+            while ($homeworkRow = mysqli_fetch_array($query)) {
+                $homework = new ModuleActivity($homeworkRow['id_tarea'], 2);
+                array_push($this->moduleHomeworks, $homework);
+            }
+        }
+        $this->conn->close();
+    }
+
+    public function getActivities()
+    {
+        return $this->moduleActivites;
+    }
+
+    public function getHomeworks()
+    {
+        return $this->moduleHomeworks;
+    }
+}
+
+class ModuleActivity
+{
+    public $moduleId;
+    public $type;
+    private $activityId;
+    public $activityName;
+    public $activityComments;
+    public $templateName;
+    public $status;
+    private $conn;
+
+    public function __construct($activityId, $type)
+    {
+        $this->conn = (new DB())->connect();
+        $this->activityId = $activityId;
+        switch ($type) {
+            case 1:
+                $this->type = 'trabajo';
+                break;
+            case 2:
+                $this->type = 'tarea';
+                break;
+            default:
+                break;
+        }
+        $dbActivity = $this->getActDetailsFromDB()->fetch_array(MYSQLI_ASSOC);
+        $this->moduleId = $dbActivity['id_modulo'];
+        $this->activityName = $dbActivity["nombre_{$this->type}"];
+        $this->activityComments = $dbActivity['comentarios'];
+        $this->templateName = $dbActivity['plantilla'];
+        $this->status = $dbActivity['status'];
+    }
+
+    public function getUserActivityDetails($userId)
+    {
+        $query = $this->conn->query("SELECT * FROM {$this->type}s_usuarios 
+                WHERE id_{$this->type}={$this->activityId} 
+                AND id_usuario = {$userId}")->fetch_array(MYSQLI_ASSOC) or die($this->conn->error);
+        $dateString = $this->type == 'tarea' ? 'fecha_subida' : 'fecha_subido';
+        if ($query) {
+            return [
+                'activityName' => $this->activityName,
+                'activityComments' => $this->activityComments,
+                'templateName' => $this->templateName,
+                'actStatus' => $query['revisado'],
+                'attachment' => $query['adjunto'],
+                'uploadDate' => $query[$dateString],
+                'moduleId' => $this->moduleId
+            ];
+        }
+        $this->conn->close();
+        return 0;
+    }
+
+    function getActDetailsFromDB()
+    {
+        $query = $this->conn->query("SELECT * FROM {$this->type}s_modulos WHERE id_{$this->type}={$this->activityId}") or die($this->conn->error);
+        return $query;
+    }
+
+    public function getActivityId(){
+        return $this->activityId;
     }
 }

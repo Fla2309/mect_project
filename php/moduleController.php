@@ -1,6 +1,6 @@
 <?php
 
-include_once('modules.php');
+include_once ('modules.php');
 $module = new Module();
 
 if ($module->userLevel > 1) {
@@ -81,12 +81,16 @@ if ($module->userLevel > 1) {
             case 'feedback':
                 $userModule = new UserModule();
                 echo json_encode($userModule->prepareFeedbackJson());
+            case 'info':
+                $userModule = new UserModule();
+                echo json_encode($userModule->prepareInformationJson());
             case 'all':
                 $userModule = new UserModule();
                 $moduleTabs = [
                     'works' => $userModule->prepareTrabajosJson(),
                     'homeworks' => $userModule->prepareTareasJson(),
-                    'feedback' => $userModule->prepareFeedbackJson()
+                    'feedback' => $userModule->prepareFeedbackJson(),
+                    'information' => $userModule->prepareInformationJson()
                 ];
                 echo json_encode($moduleTabs);
                 break;

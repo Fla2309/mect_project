@@ -330,23 +330,23 @@ function saveNewUser() {
         return;
     }
     var url = "";
-    data = [
-        "userId=" + document.getElementById('userId').value,
-        "targetUserName=" + document.getElementById('targetUserName').value,
-        "targetUserLastname=" + document.getElementById('targetUserLastname').value,
-        "targetUserPL=" + document.getElementById('targetUserPlId').value,
-        "targetUserGroup=" + $('#groupsDropdown option:selected').attr('id').replace('group_', ''),
-        "targetUserDate=" + document.getElementById('targetUserDate').value,
-        "targetUserAlias=" + document.getElementById('targetUserPrefName').value,
-        "targetUserLevel=" + $('#levelsDropdown option:selected').attr('id').replace('level_', ''),
-        "targetUserLogin=" + document.getElementById('targetUserLogin').value,
-        "targetUserMail=" + document.getElementById('targetUserMail').value,
-        "targetUserPhone=" + document.getElementById('targetUserPhone').value
-    ];
-    url = "../php/settingsController.php?type=create&" + data.join('&');
+    data = {
+        targetUserName: document.getElementById('targetUserName').value,
+        targetUserLastname: document.getElementById('targetUserLastname').value,
+        targetUserPL: document.getElementById('targetUserPlId').value,
+        targetUserGroup: $('#groupsDropdown option:selected').attr('id').replace('group_', ''),
+        targetUserDate: document.getElementById('targetUserDate').value,
+        targetUserAlias: document.getElementById('targetUserPrefName').value,
+        targetUserLevel: $('#levelsDropdown option:selected').attr('id').replace('level_', ''),
+        targetUserLogin: document.getElementById('targetUserLogin').value,
+        targetUserMail: document.getElementById('targetUserMail').value,
+        targetUserPhone: document.getElementById('targetUserPhone').value
+    };
+    url = "../php/settingsController.php?type=create&userId=" + document.getElementById('userId').value;
     $.ajax({
         method: "POST",
-        url: url
+        url: url,
+        data: data
     }).done(function () {
         $('#settingsModal').modal('hide');
         $('#changesMadeModalBody').text('Usuario creado exitosamente');
@@ -467,11 +467,13 @@ function setGroupsHtml(json) {
         buttonView.style.textAlign = 'left';
         buttonView.setAttribute('onclick', 'showGroupHtml(this)');
         buttonView.innerHTML = '<img src="../img/eye.png" style="filter: invert(100%);" width="15"> Ver Grupo';
+        buttonView.title = 'Ver Grupo';
         buttonEdit.className = 'btn btn-secondary module-button me-2';
         buttonEdit.type = 'button';
         buttonEdit.id = 'but-edit-' + group.groupId;
         buttonEdit.setAttribute('onclick', 'showEditGroupModal(this)');
         buttonEdit.innerHTML = '<img src="../img/edit.png" style="filter: invert(100%);" width="15">';
+        buttonEdit.title = 'Editar Información de Grupo';
         divP1.append(h2, h4, buttonEdit, buttonView);
         divCol.appendChild(divP1);
         divRow.appendChild(divCol);

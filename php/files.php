@@ -103,7 +103,7 @@ class Files extends DB
 
     function saveFile($username)
     {
-        $folder = $this->type == 'works' ? 'trabajos' : 'tareas';
+        $folder = $this->type == 'work' ? 'trabajos' : 'tareas';
         $destPath = "../resources/users/{$username}/{$folder}/{$this->file['name']}";
         if (move_uploaded_file($this->file['tmp_name'], $destPath)) {
             // echo 'Archivo creado exitosamente.';
@@ -116,7 +116,7 @@ class Files extends DB
 
     function deletePreviousFile($username, $previousFile)
     {
-        $folder = $this->type == 'works' ? 'trabajos' : 'tareas';
+        $folder = $this->type == 'work' ? 'trabajos' : 'tareas';
         $srcPath = "../resources/users/{$username}/{$folder}/{$previousFile}";
         if (file_exists($srcPath)) {
             if (unlink($srcPath)) {

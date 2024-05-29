@@ -36,6 +36,3 @@ if (isset($_GET['type'])) {
             break;
     }
 }
-
-
-?>

@@ -1,12 +1,11 @@
 <?php
-
 session_start();
-include_once('../php/user.php');
-include_once('../php/users.php');
-include_once('../php/groupModel.php');
-include_once('../php/modules.php');
+include_once ('../php/user.php');
+include_once ('../php/users.php');
+include_once ('../php/groupModel.php');
+include_once ('../php/modules.php');
 if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
-    include('unavailable.php');
+    include ('unavailable.php');
 } else {
     $currentUser = new User();
     $currentUser->setUser($_GET['user']);
@@ -71,7 +70,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
 </head>
 
 <body>
-    <?php include_once('navbar.php') ?>
+    <?php include_once ('navbar.php') ?>
     <div class="text-center mt-5 mb-3">
         <img id="profilePic" class="img-fluid profile_pic mb-3" src="../<?php echo $currentUserWeb->getProfilePic() ?>"
             alt="Foto de Perfil">
@@ -115,7 +114,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             </ul>
         </div>
         <div class="tab-content w-100 d-flex justify-content-center" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-informacion" role="tabpanel"
+            <div class="tab-pane fade show active" style="width: inherit;" id="pills-informacion" role="tabpanel"
                 aria-labelledby="pills-informacion-tab">
                 <div class="card">
                     <div class="card-header">
@@ -200,10 +199,11 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="pills-modulos" role="tabpanel" aria-labelledby="pills-modulos-tab">
+            <div class="tab-pane fade" style="width: inherit;" id="pills-modulos" role="tabpanel" aria-labelledby="pills-modulos-tab">
                 <?php
 
                 $modules = $currentUserModules->retrieveModules();
+                $currentUserModuleActivities = null;
                 $cardBody = '';
                 $cardHeader = '';
                 $card = '';
@@ -218,6 +218,10 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                         } else if ($module['progress'] >= 100) {
                             $progressColorClass = 'bg-primary';
                         }
+                        $currentUserModuleActivities = new ModuleDetails($module['moduleId']);
+                        $userActivities = [];
+                        $moduleActivitiesListString = '<h3>Trabajos</h3>';
+                        $moduleHomeworksListString = '<h3 class="mt-3">Tareas</h3>';
                         $cardHeader =
                             '<div class="card-header d-flex justify-content-between">
                                 <h3 class="mt-2 vh-50 col-auto">' . $module['moduleName'] . '</h3>
@@ -228,23 +232,95 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                     </div>
                                 </div>
                             </div>';
+                        $currentActivities = $currentUserModuleActivities->getActivities();
+                        if ($currentActivities) {
+                            foreach ($currentActivities as $moduleActivity) {
+                                /** @var ModuleActivity $moduleActivity */
+                                $userModuleActivityDetails = $moduleActivity->getUserActivityDetails($currentUser->getUserId());
+                                $statusElement = '';
+                                switch ($userModuleActivityDetails['actStatus']) {
+                                    case 0:
+                                        $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
+                                        break;
+                                    case 1:
+                                        $statusElement = "<div class=\"dropdown\">
+                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\">
+                                                    <li><a class=\"dropdown-item\" href=\"#\">Acreditar</a></li>
+                                                    <li><a class=\"dropdown-item\" href=\"#\">Rechazar</a></li>
+                                                </ul>
+                                            </div>";
+                                        break;
+                                    case 2:
+                                        $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
+                                        break;
+                                    case 3:
+                                        $statusElement = "<button class=\"btn btn-primary disabled\"><strong>Revisado</strong></button>";
+                                        break;
+                                }
+                                $moduleActivitiesListString .= "<div class=\"d-flex\"><a class=\"list-group-item list-group-item-action mt-1\">
+                                    <div id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}\" class=\"d-flex w-100 justify-content-start\">
+                                        <h5 class=\"mb-1\">{$moduleActivity->activityName}</h5>
+                                    </div>
+                                    <div class=\"d-flex justify-content-end\">
+                                        $statusElement
+                                        <a href=\"../{$currentUserWeb->getUserPath()}{$moduleActivity->type}s/{$userModuleActivityDetails['attachment']}\" download=\"{$userModuleActivityDetails['attachment']}\"><img class=\"dashboard_icon m-2\" title=\"Descargar {$moduleActivity->type}\" src=\"../img/download.png\"></a>
+                                    </div>
+                                </a></div>";
+                            }
+                        }
+                        $currentHomeworks = $currentUserModuleActivities->getHomeworks();
+                        if ($currentHomeworks) {
+                            foreach ($currentHomeworks as $moduleActivity) {
+                                /** @var ModuleActivity $moduleActivity */
+                                $userModuleActivityDetails = $moduleActivity->getUserActivityDetails($currentUser->getUserId());
+                                $statusElement = '';
+                                switch ($userModuleActivityDetails['actStatus']) {
+                                    case 0:
+                                        $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
+                                        break;
+                                    case 1:
+                                        $statusElement = "<div class=\"dropdown\">
+                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\">
+                                                    <li><a class=\"dropdown-item\" href=\"#\">Acreditar</a></li>
+                                                    <li><a class=\"dropdown-item\" href=\"#\">Rechazar</a></li>
+                                                </ul>
+                                            </div>";
+                                        break;
+                                    case 2:
+                                        $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
+                                        break;
+                                    case 3:
+                                        $statusElement = "<button class=\"btn btn-primary disabled\"><strong>Revisado</strong></button>";
+                                        break;
+                                }
+                                $moduleHomeworksListString .= "<div class=\"d-flex\"><a class=\"list-group-item list-group-item-action mt-1\">
+                                    <div id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}\" class=\"flex-grow-1 mb-1\">
+                                        <h5>{$moduleActivity->activityName}</h5>
+                                    </div>
+                                    <div class=\"d-flex justify-content-end\">
+                                        $statusElement
+                                        <a href=\"../{$currentUserWeb->getUserPath()}{$moduleActivity->type}s/{$userModuleActivityDetails['attachment']}\" download=\"{$userModuleActivityDetails['attachment']}\"><img class=\"dashboard_icon m-2\" title=\"Descargar {$moduleActivity->type}\" src=\"../img/download.png\"></a>
+                                    </div>
+                                </a></div>";
+                            }
+                        }
                         $cardBody =
                             '<div class="card-body row accordion g-0" id="accModule' . $module['moduleId'] . '">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="accHeading' . $module['moduleId'] . '">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accCollapse' . $module['moduleId'] . '" aria-expanded="false" aria-controls="collapseOne">
-                                        ' . $module['description'] . '
-                                        </button>
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accCollapse' . $module['moduleId'] . '" aria-expanded="false" aria-controls="collapseOne">Ver contenido del módulo</button>
                                     </h2>
                                     <div id="accCollapse' . $module['moduleId'] . '" class="accordion-collapse collapsed collapse" aria-labelledby="accHeading' . $module['moduleId'] . '" data-bs-parent="#accModule' . $module['moduleId'] . '">
                                         <div class="accordion-body" id="accBody"' . $module['moduleId'] . '>
-                                            
+                                            ' . $moduleActivitiesListString . '<hr class=\"divider\">' . $moduleHomeworksListString . '
                                         </div>
                                     </div>
                                 </div>
                             </div>';
-                        $card = '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
-                        echo $card;
+                        echo '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
+                        echo 'moduleId='.$module['moduleId'];
                     }
                 } else {
                     echo '<h2>No hay información para mostrar</h2>';
@@ -252,12 +328,12 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
 
                 ?>
             </div>
-            <div class="tab-pane fade" id="pills-examenes" role="tabpanel" aria-labelledby="pills-examenes-tab">
+            <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel" aria-labelledby="pills-examenes-tab">
                 <div>
                     <h2>No hay información para mostrar</h2>
                 </div>
             </div>
-            <div class="tab-pane fade" id="pills-pagos" role="tabpanel" aria-labelledby="pills-pagos-tab">
+            <div class="tab-pane fade" style="width: inherit;" id="pills-pagos" role="tabpanel" aria-labelledby="pills-pagos-tab">
                 <?php
 
                 $payments = (new Users($_SESSION['userId']))->preparePagosArray($currentUser->getUserId());
@@ -290,7 +366,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
 
                 ?>
             </div>
-            <div class="tab-pane fade" id="pills-modulo-personal" role="tabpanel"
+            <div class="tab-pane fade" style="width: inherit;" id="pills-modulo-personal" role="tabpanel"
                 aria-labelledby="pills-modulo-personal-tab">
                 <div>
                     <div class="card mt-2">
@@ -398,7 +474,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="pills-presentaciones" role="tabpanel"
+            <div class="tab-pane fade" style="width: inherit;" id="pills-presentaciones" role="tabpanel"
                 aria-labelledby="pills-presentaciones-tab">
                 <div>
                     <h2>No hay información para mostrar</h2>
@@ -407,7 +483,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
         </div>
     </div>
 
-    <?php include_once('footer.html') ?>
+    <?php include_once ('footer.html') ?>
 </body>
 
 </html>

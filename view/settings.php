@@ -103,7 +103,7 @@ if ($row == 406)
                 <div class="input-group">
                     <span class="input-group-text bg-primary text-white">Foto de perfil</span>
                     <input type="text" id="profilePic" class="form-control text-truncate"
-                        value="<?php echo $_SESSION['foto_perfil'] !== 'none' ? explode('/', $_SESSION['foto_perfil'])[3] : 'Ninguna imagen seleccionada'; ?>"
+                        value="<?php echo $_SESSION['foto_perfil'] !== 'img/user_pic.png' ? explode('/', $_SESSION['foto_perfil'])[3] : 'Ninguna imagen seleccionada'; ?>"
                         disabled>
                     <button class="btn btn-outline-primary" type="button" id="changeProfilePic" data-bs-toggle="modal"
                         data-bs-target="#profilePicModal">Cambiar foto</button>
