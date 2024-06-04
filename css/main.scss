@@ -310,6 +310,24 @@ div input::placeholder {
   background: #28a745;
 }
 
+.dropdown-item.item-pass:hover {
+  color: #FFFFFF;
+  background-color: #28a745; /* color verde de Bootstrap */
+}
+
+.dropdown-item.item-fail:hover {
+  color: #FFFFFF;
+  background-color: #ff4343; /* color rojo de Bootstrap */
+}
+
+.dropdown-item .bi {
+  visibility: hidden;
+}
+
+.dropdown-item:hover .bi {
+  visibility: visible;
+}
+
 .options {
   list-style-type: none;
   position: absolute;

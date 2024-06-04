@@ -18,15 +18,17 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     $currentUserModules = new Module($currentUser->getUserId());
 }
 ?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../img/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
     <link rel="stylesheet" href="../css/main.scss">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="utf-8">
     <style>
@@ -199,7 +201,8 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" style="width: inherit;" id="pills-modulos" role="tabpanel" aria-labelledby="pills-modulos-tab">
+            <div class="tab-pane fade" style="width: inherit;" id="pills-modulos" role="tabpanel"
+                aria-labelledby="pills-modulos-tab">
                 <?php
 
                 $modules = $currentUserModules->retrieveModules();
@@ -238,35 +241,42 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                 /** @var ModuleActivity $moduleActivity */
                                 $userModuleActivityDetails = $moduleActivity->getUserActivityDetails($currentUser->getUserId());
                                 $statusElement = '';
-                                switch ($userModuleActivityDetails['actStatus']) {
-                                    case 0:
-                                        $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
-                                        break;
-                                    case 1:
-                                        $statusElement = "<div class=\"dropdown\">
-                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
-                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\">
-                                                    <li><a class=\"dropdown-item\" href=\"#\">Acreditar</a></li>
-                                                    <li><a class=\"dropdown-item\" href=\"#\">Rechazar</a></li>
+                                if (!empty($userModuleActivityDetails)) {
+                                    switch ($userModuleActivityDetails['actStatus']) {
+                                        case 0:
+                                            $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
+                                            break;
+                                        case 1:
+                                            $statusElement =
+                                                "<div class=\"dropdown\">
+                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\">
+                                                    <li><a class=\"dropdown-item item-pass\" href=\"#\">Acreditar<i class=\"bi bi-check\"></i></a></li>
+                                                    <li><a class=\"dropdown-item item-fail\" href=\"#\">Rechazar<i class=\"bi bi-x\"></i></a></li>
                                                 </ul>
                                             </div>";
-                                        break;
-                                    case 2:
-                                        $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
-                                        break;
-                                    case 3:
-                                        $statusElement = "<button class=\"btn btn-primary disabled\"><strong>Revisado</strong></button>";
-                                        break;
+                                            break;
+                                        case 2:
+                                            $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
+                                            break;
+                                        case 3:
+                                            $statusElement = "<button class=\"btn btn-primary disabled\"><strong>Revisado</strong></button>";
+                                            break;
+                                    }
+                                    $moduleActivitiesListString .=
+                                        "<div class=\"d-flex mt-1\">
+                                            <a class=\"list-group-item list-group-item-action\">
+                                                <div id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}\" class=\"d-flex w-100 justify-content-start\">
+                                                    <h5 class=\"mb-1\">{$moduleActivity->activityName}</h5>
+                                                </div>
+                                            </a>
+                                            <div class=\"d-flex justify-content-end\">{$statusElement}
+                                                <a href=\"../{$currentUserWeb->getUserPath()}{$moduleActivity->type}s/{$userModuleActivityDetails['attachment']}\" download=\"{$userModuleActivityDetails['attachment']}\">
+                                                    <img class=\"dashboard_icon m-2\" title=\"Descargar {$moduleActivity->activityName}\" src=\"../img/download.png\">
+                                                </a>
+                                            </div>
+                                        </div>";
                                 }
-                                $moduleActivitiesListString .= "<div class=\"d-flex\"><a class=\"list-group-item list-group-item-action mt-1\">
-                                    <div id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}\" class=\"d-flex w-100 justify-content-start\">
-                                        <h5 class=\"mb-1\">{$moduleActivity->activityName}</h5>
-                                    </div>
-                                    <div class=\"d-flex justify-content-end\">
-                                        $statusElement
-                                        <a href=\"../{$currentUserWeb->getUserPath()}{$moduleActivity->type}s/{$userModuleActivityDetails['attachment']}\" download=\"{$userModuleActivityDetails['attachment']}\"><img class=\"dashboard_icon m-2\" title=\"Descargar {$moduleActivity->type}\" src=\"../img/download.png\"></a>
-                                    </div>
-                                </a></div>";
                             }
                         }
                         $currentHomeworks = $currentUserModuleActivities->getHomeworks();
@@ -275,35 +285,42 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                 /** @var ModuleActivity $moduleActivity */
                                 $userModuleActivityDetails = $moduleActivity->getUserActivityDetails($currentUser->getUserId());
                                 $statusElement = '';
-                                switch ($userModuleActivityDetails['actStatus']) {
-                                    case 0:
-                                        $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
-                                        break;
-                                    case 1:
-                                        $statusElement = "<div class=\"dropdown\">
-                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
-                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\">
-                                                    <li><a class=\"dropdown-item\" href=\"#\">Acreditar</a></li>
-                                                    <li><a class=\"dropdown-item\" href=\"#\">Rechazar</a></li>
+                                if (!empty($userModuleActivityDetails)) {
+                                    switch ($userModuleActivityDetails['actStatus']) {
+                                        case 0:
+                                            $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
+                                            break;
+                                        case 1:
+                                            $statusElement =
+                                                "<div class=\"dropdown\">
+                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod{$module['moduleId']}_hw{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod{$module['moduleId']}_hw{$moduleActivity->getActivityId()}_review\">
+                                                    <li><a class=\"dropdown-item item-pass\" href=\"#\">Acreditar<i class=\"bi bi-check\"></i></a></li>
+                                                    <li><a class=\"dropdown-item item-fail\" href=\"#\">Rechazar<i class=\"bi bi-x\"></i></a></li>
                                                 </ul>
                                             </div>";
-                                        break;
-                                    case 2:
-                                        $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
-                                        break;
-                                    case 3:
-                                        $statusElement = "<button class=\"btn btn-primary disabled\"><strong>Revisado</strong></button>";
-                                        break;
+                                            break;
+                                        case 2:
+                                            $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
+                                            break;
+                                        case 3:
+                                            $statusElement = "<button class=\"btn btn-primary disabled\"><strong>Revisado</strong></button>";
+                                            break;
+                                    }
+                                    $moduleHomeworksListString .=
+                                        "<div class=\"d-flex mt-1\">
+                                            <a class=\"list-group-item list-group-item-action\">
+                                                <div id=\"mod{$module['moduleId']}_hw{$moduleActivity->getActivityId()}\" class=\"flex-grow-1 mb-1\">
+                                                    <h5>{$moduleActivity->activityName}</h5>
+                                                </div>
+                                            </a>
+                                            <div class=\"d-flex justify-content-end\">{$statusElement}
+                                                <a href=\"../{$currentUserWeb->getUserPath()}{$moduleActivity->type}s/{$userModuleActivityDetails['attachment']}\" download=\"{$userModuleActivityDetails['attachment']}\">
+                                                    <img class=\"dashboard_icon m-2\" title=\"Descargar {$moduleActivity->activityName}\" src=\"../img/download.png\">
+                                                </a>
+                                            </div>
+                                        </div>";
                                 }
-                                $moduleHomeworksListString .= "<div class=\"d-flex\"><a class=\"list-group-item list-group-item-action mt-1\">
-                                    <div id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}\" class=\"flex-grow-1 mb-1\">
-                                        <h5>{$moduleActivity->activityName}</h5>
-                                    </div>
-                                    <div class=\"d-flex justify-content-end\">
-                                        $statusElement
-                                        <a href=\"../{$currentUserWeb->getUserPath()}{$moduleActivity->type}s/{$userModuleActivityDetails['attachment']}\" download=\"{$userModuleActivityDetails['attachment']}\"><img class=\"dashboard_icon m-2\" title=\"Descargar {$moduleActivity->type}\" src=\"../img/download.png\"></a>
-                                    </div>
-                                </a></div>";
                             }
                         }
                         $cardBody =
@@ -320,7 +337,6 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                 </div>
                             </div>';
                         echo '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
-                        echo 'moduleId='.$module['moduleId'];
                     }
                 } else {
                     echo '<h2>No hay información para mostrar</h2>';
@@ -328,12 +344,14 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
 
                 ?>
             </div>
-            <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel" aria-labelledby="pills-examenes-tab">
+            <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel"
+                aria-labelledby="pills-examenes-tab">
                 <div>
                     <h2>No hay información para mostrar</h2>
                 </div>
             </div>
-            <div class="tab-pane fade" style="width: inherit;" id="pills-pagos" role="tabpanel" aria-labelledby="pills-pagos-tab">
+            <div class="tab-pane fade" style="width: inherit;" id="pills-pagos" role="tabpanel"
+                aria-labelledby="pills-pagos-tab">
                 <?php
 
                 $payments = (new Users($_SESSION['userId']))->preparePagosArray($currentUser->getUserId());

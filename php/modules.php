@@ -553,23 +553,25 @@ class ModuleActivity
 
     public function getUserActivityDetails($userId)
     {
+        $activityDetails = 0;
         $query = $this->conn->query("SELECT * FROM {$this->type}s_usuarios 
                 WHERE id_{$this->type}={$this->activityId} 
-                AND id_usuario = {$userId}")->fetch_array(MYSQLI_ASSOC) or die($this->conn->error);
+                AND id_usuario = {$userId}") or die($this->conn->error);
+        $result = $query->fetch_array(MYSQLI_ASSOC);
+        $this->conn->close();
         $dateString = $this->type == 'tarea' ? 'fecha_subida' : 'fecha_subido';
-        if ($query) {
-            return [
+        if (!empty($result)) {
+            $activityDetails = [
                 'activityName' => $this->activityName,
                 'activityComments' => $this->activityComments,
                 'templateName' => $this->templateName,
-                'actStatus' => $query['revisado'],
-                'attachment' => $query['adjunto'],
-                'uploadDate' => $query[$dateString],
+                'actStatus' => $result['revisado'],
+                'attachment' => $result['adjunto'],
+                'uploadDate' => $result[$dateString],
                 'moduleId' => $this->moduleId
             ];
         }
-        $this->conn->close();
-        return 0;
+        return $activityDetails;
     }
 
     function getActDetailsFromDB()
