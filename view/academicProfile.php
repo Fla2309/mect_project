@@ -236,6 +236,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                 </div>
                             </div>';
                         $currentActivities = $currentUserModuleActivities->getActivities();
+                        $count = 0;
                         if ($currentActivities) {
                             foreach ($currentActivities as $moduleActivity) {
                                 /** @var ModuleActivity $moduleActivity */
@@ -249,12 +250,12 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                         case 1:
                                             $statusElement =
                                                 "<div class=\"dropdown\">
-                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
-                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\">
-                                                    <li><a class=\"dropdown-item item-pass\" href=\"#\">Acreditar<i class=\"bi bi-check\"></i></a></li>
-                                                    <li><a class=\"dropdown-item item-fail\" href=\"#\">Rechazar<i class=\"bi bi-x\"></i></a></li>
-                                                </ul>
-                                            </div>";
+                                                    <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                    <ul class=\"dropdown-menu\" aria-labelledby=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\">
+                                                        <li><a class=\"dropdown-item item-pass\" href=\"#\">Acreditar<i class=\"bi bi-check\"></i></a></li>
+                                                        <li><a class=\"dropdown-item item-fail\" href=\"#\">Rechazar<i class=\"bi bi-x\"></i></a></li>
+                                                    </ul>
+                                                </div>";
                                             break;
                                         case 2:
                                             $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
@@ -278,6 +279,9 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                         </div>";
                                 }
                             }
+                        }
+                        else {
+                            $moduleActivitiesListString .= "<h5>No hay trabajos para mostrar</h5>";
                         }
                         $currentHomeworks = $currentUserModuleActivities->getHomeworks();
                         if ($currentHomeworks) {
@@ -322,6 +326,9 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                         </div>";
                                 }
                             }
+                        }
+                        else {
+                            $moduleHomeworksListString .= "<h5>No hay tareas para mostrar</h5>";
                         }
                         $cardBody =
                             '<div class="card-body row accordion g-0" id="accModule' . $module['moduleId'] . '">
