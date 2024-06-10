@@ -68,11 +68,23 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
+    <?php if ($_SESSION['nivel_usuario'] > 1)
+        echo '<script src="../js/admin.js"></script>'; ?>
     <title>Perfil Académico</title>
 </head>
 
 <body>
     <?php include_once ('navbar.php') ?>
+    <table hidden>
+        <tr>
+            <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>"
+                    value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userName" placeholder="<?php echo $_SESSION['fullname'] ?>"
+                    value="<?php echo $_SESSION['fullname'] ?>" class="user_properties"></td>
+            <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
+                    value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
+        </tr>
+    </table>
     <div class="text-center mt-5 mb-3">
         <img id="profilePic" class="img-fluid profile_pic mb-3" src="../<?php echo $currentUserWeb->getProfilePic() ?>"
             alt="Foto de Perfil">
@@ -123,6 +135,10 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                         <h3 class="mt-2">Información Personal</h3 class="mt-2">
                     </div>
                     <div class="card-body row">
+                        <div class="col-3 mt-3" hidden>
+                            <h5 class="card-title">ID</h5>
+                            <span class="card-text mt-2 m-b3" id="currentUserId"><?php echo $currentUser->getUserId() ?></span>
+                        </div>
                         <div class="col-3 mt-3">
                             <h5 class="card-title">Nombre</h5>
                             <p class="card-text mt-2 m-b3" id="userName">
@@ -248,14 +264,15 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                             $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
                                             break;
                                         case 1:
-                                            $statusElement =
+                                            $statusElement = $_SESSION['nivel_usuario'] > 1 ?
                                                 "<div class=\"dropdown\">
-                                                    <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
-                                                    <ul class=\"dropdown-menu\" aria-labelledby=\"mod{$module['moduleId']}_act{$moduleActivity->getActivityId()}_review\">
-                                                        <li><a class=\"dropdown-item item-pass\" href=\"#\">Acreditar<i class=\"bi bi-check\"></i></a></li>
-                                                        <li><a class=\"dropdown-item item-fail\" href=\"#\">Rechazar<i class=\"bi bi-x\"></i></a></li>
+                                                    <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                    <ul class=\"dropdown-menu\" aria-labelledby=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}_review\" id=\"mod-{$module['moduleId']}_act-{$moduleActivity->getActivityId()}_options\">
+                                                        <li><a class=\"dropdown-item item-pass\" href=\"#\" data-value=\"pass\">Acreditar<i class=\"bi bi-check\"></i></a></li>
+                                                        <li><a class=\"dropdown-item item-fail\" href=\"#\" data-value=\"fail\">Rechazar<i class=\"bi bi-x\"></i></a></li>
                                                     </ul>
-                                                </div>";
+                                                </div>" :
+                                                "<button class=\"btn btn-warning disabled\"><strong>En revisión</strong></button>";
                                             break;
                                         case 2:
                                             $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
@@ -279,8 +296,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                         </div>";
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             $moduleActivitiesListString .= "<h5>No hay trabajos para mostrar</h5>";
                         }
                         $currentHomeworks = $currentUserModuleActivities->getHomeworks();
@@ -295,14 +311,15 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                             $statusElement = "<button class=\"btn btn-light disabled\"><strong>Pendiente</strong></button>";
                                             break;
                                         case 1:
-                                            $statusElement =
+                                            $statusElement = $_SESSION['nivel_usuario'] > 1 ?
                                                 "<div class=\"dropdown\">
-                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod{$module['moduleId']}_hw{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
-                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod{$module['moduleId']}_hw{$moduleActivity->getActivityId()}_review\">
-                                                    <li><a class=\"dropdown-item item-pass\" href=\"#\">Acreditar<i class=\"bi bi-check\"></i></a></li>
-                                                    <li><a class=\"dropdown-item item-fail\" href=\"#\">Rechazar<i class=\"bi bi-x\"></i></a></li>
+                                                <button class=\"btn btn-warning dropdown-toggle\" type=\"button\" id=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Revisar</button>
+                                                <ul class=\"dropdown-menu\" aria-labelledby=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_review\" id=\"mod-{$module['moduleId']}_hw-{$moduleActivity->getActivityId()}_options\">
+                                                    <li><a class=\"dropdown-item item-pass\" href=\"#\" data-value=\"pass\">Acreditar<i class=\"bi bi-check\"></i></a></li>
+                                                    <li><a class=\"dropdown-item item-fail\" href=\"#\" data-value=\"fail\">Rechazar<i class=\"bi bi-x\"></i></a></li>
                                                 </ul>
-                                            </div>";
+                                            </div>" :
+                                                "<button class=\"btn btn-warning disabled\"><strong>En revisión</strong></button>";
                                             break;
                                         case 2:
                                             $statusElement = "<button class=\"btn btn-danger disabled\"><strong>Rechazado</strong></button>";
@@ -326,8 +343,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                                         </div>";
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             $moduleHomeworksListString .= "<h5>No hay tareas para mostrar</h5>";
                         }
                         $cardBody =
@@ -350,6 +366,18 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                 }
 
                 ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', (event) => {
+                        document.querySelectorAll('.dropdown-item').forEach(item => {
+                            item.addEventListener('click', (event) => {
+                                event.preventDefault();
+                                const value = event.target.getAttribute('data-value');
+                                const ulElement = event.target.closest('ul.dropdown-menu');
+                                reviewActivity(value, ulElement.id);
+                            });
+                        });
+                    });
+                </script>
             </div>
             <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel"
                 aria-labelledby="pills-examenes-tab">

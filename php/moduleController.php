@@ -21,6 +21,9 @@ if ($module->userLevel > 1) {
                     ];
                     echo json_encode($module);
                     break;
+                case 'activityReview':
+                    echo json_encode($userModule->reviewUserActivity());
+                    break;
             }
         } else if (isset($_GET['actId'])) {
             header('Content-Type: application/json; charset=utf-8');

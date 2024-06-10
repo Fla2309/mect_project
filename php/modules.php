@@ -469,6 +469,36 @@ class UserModule
         }
         return $html;
     }
+
+    public function reviewUserActivity()
+    {
+        if ($this->userLevel < 2) {
+            http_response_code(403);
+            return ['error' => 'User not allowed to perform review'];
+        } else {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $actType = $data['activityType'] == 0 ? 'trabajo' : 'tarea';
+            $actStatus = $data['review'] == 'pass' ? 3 : 2;
+            try {
+                $query = $this->conn->query("UPDATE {$actType}s_usuarios SET revisado='{$actStatus}' 
+                WHERE id_{$actType}={$data['activityId']} AND id_usuario={$data['targetUserId']}") or die($this->conn->error);
+                if ($query) {
+                    $module = $this->conn->query("SELECT id_modulo, nombre_modulo FROM modulos WHERE id_modulo={$_GET['module']}")->fetch_assoc();
+                    http_response_code(201);
+                    return [
+                        'moduleName' => $module['nombre_modulo'],
+                        'activityReview' => $actStatus,
+                    ];
+                } else {
+                    http_response_code(400);
+                    return ['error' => 'Error while updating the activity'];
+                }
+            } catch (Exception $e) {
+                http_response_code(500);
+                return ['error' => $e];
+            }
+        }
+    }
 }
 
 class ModuleDetails
@@ -580,7 +610,8 @@ class ModuleActivity
         return $query;
     }
 
-    public function getActivityId(){
+    public function getActivityId()
+    {
         return $this->activityId;
     }
 }

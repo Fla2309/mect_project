@@ -789,3 +789,26 @@ function setUsersHtml(json) {
         console.log(json);
     }
 }
+
+function reviewActivity(value, ulId) {
+    ulIdParts = ulId.split('_');
+    moduleId = ulIdParts[0].replace('mod-', '');
+    activityId = ulIdParts[1].replace('act-', '').replace('hw-', '');
+    activityType = ulIdParts[1].includes('act') ? '0' : '1';
+    var params = {
+        activityType: activityType,
+        activityId: activityId,
+        review: value,
+        targetUserId: document.getElementById("currentUserId").textContent
+    };
+    console.log(params);
+    $.ajax({
+        method: "PUT",
+        url: "../php/moduleController.php?dataType=activityReview&module=" + moduleId + "&userId=" + document.getElementById("userId").value,
+        data: JSON.stringify(params),
+    }).done(function (data) {
+        alert('Actividad actualizada con éxito. Recarga la página para ver todos los cambios');
+    }).fail(function (result) {
+        console.log(result);
+    });
+}
