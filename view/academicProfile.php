@@ -362,7 +362,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                         echo '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
                     }
                 } else {
-                    echo '<h2>No hay información para mostrar</h2>';
+                    echo '<h2 class="text-center">No hay información para mostrar</h2>';
                 }
 
                 ?>
@@ -382,7 +382,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel"
                 aria-labelledby="pills-examenes-tab">
                 <div>
-                    <h2>No hay información para mostrar</h2>
+                    <h2 class="text-center">No hay información para mostrar</h2>
                 </div>
             </div>
             <div class="tab-pane fade" style="width: inherit;" id="pills-pagos" role="tabpanel"
@@ -414,7 +414,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     $card = '<div class="card mt-2">' . $cardHeader . $cardBody . '</div>';
                     echo $card;
                 } else {
-                    echo '<h2>No hay información para mostrar</h2>';
+                    echo '<h2 class="text-center">No hay información para mostrar</h2>';
                 }
 
                 ?>
@@ -530,7 +530,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             <div class="tab-pane fade" style="width: inherit;" id="pills-presentaciones" role="tabpanel"
                 aria-labelledby="pills-presentaciones-tab">
                 <div>
-                    <h2>No hay información para mostrar</h2>
+                    <h2 class="text-center">No hay información para mostrar</h2>
                 </div>
             </div>
         </div>

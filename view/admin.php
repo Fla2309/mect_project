@@ -168,7 +168,7 @@ include_once('./php/groups.php');
                 <div class="row g-0">
                     <div class="px-2 py-2 mx-2 my-2 col">
                         <div class="px-3 py-3" style="background-color: white;">
-                            <h1 class="mb-3">Búsqueda de exámenes</h1>
+                            <h1 class="mb-3">Listado de Exámenes</h1>
                             <hr class="divider">
                             <!-- <div class="col-4 mb-3 d-flex">
                                 <div class="col-10" id="testsControlPanel">
@@ -189,12 +189,9 @@ include_once('./php/groups.php');
                     </div>
                     <div class="px-2 py-2 mx-2 my-2 col">
                         <div class="px-3 py-3" style="background-color: white;">
-                            <h1 class="mb-3">Exámenes</h1>
+                            <h1 class="mb-3">Abrir Examen</h1>
                             <hr class="divider">
-                            <div class="col-4 mb-3 d-flex">
-                                <button type="button" class="btn btn-primary">Crear Examen</button>
-                            </div>
-                            <div class="accordion" id="testsAccordion">
+                            <div class="dropdown" id="createTest">
 
                             </div>
                         </div>
@@ -371,11 +368,29 @@ include_once('./php/groups.php');
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="changesMadeModalLabel">Atención</h5>
+                    <h5 class="modal-title" id="changesMadeModalTitle">Atención</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="changesMadeModalBody">
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="activateExamModal" tabindex="-1" aria-labelledby="activateExamModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambio de estado de examen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmExam">Guardar
+                        cambios</button>
                 </div>
             </div>
         </div>

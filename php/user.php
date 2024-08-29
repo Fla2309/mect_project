@@ -87,12 +87,12 @@ class User extends DB
 
     public function getUserPhone()
     {
-        return $this->mail;
+        return $this->phone;
     }
 
     public function getUserRegistrationDate()
     {
-        return $this->phone;
+        return $this->regDate;
     }
 
     public function getUserStatus()

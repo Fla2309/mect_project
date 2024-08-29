@@ -812,3 +812,24 @@ function reviewActivity(value, ulId) {
         console.log(result);
     });
 }
+
+function showMessageModal(title, message, callback = null, autodismiss = false) {
+    $('#changesMadeModalTitle').text(title);
+    $('#changesMadeModalBody').text(message);
+    $('#changesMadeModal').modal('show');
+    $('#changesMadeModal').on('shown.bs.modal', function () {
+        if (autodismiss) {
+            var seconds = 3;
+            function redirect() {
+                if (seconds <= 0) {
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
+                }
+            } setInterval(redirect, 1000);
+        }
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            callback();
+        })
+    })
+}

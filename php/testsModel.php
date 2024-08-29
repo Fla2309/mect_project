@@ -12,7 +12,7 @@ class Tests
     {
         $this->userId = $userId;
         $this->conn = (new DB)->connect();
-        $this->setAdminPermissions($_GET['userId']);
+        $this->setAdminPermissions($userId);
     }
 
     function setAdminPermissions($userId)
@@ -87,25 +87,138 @@ class Tests
         }
     }
 
-    public function retrieveFinishedExamsAdmin()
+    public function retrieveExamsAdmin()
     {
         if ($this->admin) {
-            $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre AS examen_nombre, usuarios.nombre AS usuario_nombre, usuarios.apellidos, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
+            http_response_code(200);
+            return [
+                'open' => $this->retrieveExamsByStatus(0),
+                'active' => $this->retrieveExamsByStatus(1),
+                'finished' => $this->retrieveFinishedExamsAdmin()
+            ];
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
+    }
+    public function retrieveExamsByStatus($status)
+    {
+        $rows = $this->conn->query("SELECT eg.id AS exam_grupo_id, e.nombre AS examen_nombre, e.comentarios, e.liga, g.id_grupo AS id_grupo, g.sede, g.nombre_grupo, eg.fecha_aplicacion 
+                FROM examenes_grupos eg, examenes e, grupos g
+                WHERE eg.id_examen = e.id_examen
+                AND eg.id_grupo=g.id
+                AND eg.activo = {$status}");
+        $data = [];
+        foreach ($rows as $row) {
+            array_push($data, [
+                'egId' => $row['exam_grupo_id'],
+                'testName' => $row['examen_nombre'],
+                'groupNumber' => $row['id_grupo'],
+                'groupLocation' => $row['sede'],
+                'groupName' => $row['nombre_grupo'],
+                'comments' => $row['comentarios'],
+                'link' => $row['liga'],
+                'dateApplied' => $row['fecha_aplicacion']
+            ]);
+        }
+        return $data;
+    }
+
+    public function retrieveFinishedExamsAdmin()
+    {
+        $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre AS examen_nombre, usuarios.nombre AS usuario_nombre, usuarios.apellidos, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
                 FROM examenes_usuarios, examenes, usuarios 
                 WHERE examenes_usuarios.id_usuario = usuarios.id
                 AND examenes.id_examen=examenes_usuarios.id_examen");
+        $data = [];
+        foreach ($rows as $row) {
+            array_push($data, [
+                'id' => $row['id'],
+                'testName' => $row['examen_nombre'],
+                'userName' => $row['usuario_nombre'] . ' ' . $row['apellidos'],
+                'result' => $row['resultado'],
+                'dateApplied' => $row['fecha_aplicacion']
+            ]);
+        }
+        return $data;
+    }
+
+    public function retrieveAvailableGroups()
+    {
+        if ($this->admin) {
+            $rows = $this->conn->query("SELECT * FROM grupos ORDER BY id_grupo DESC") or die($this->conn->error);
             $data = [];
             foreach ($rows as $row) {
                 array_push($data, [
-                    'id' => $row['id'],
-                    'testName' => $row['examen_nombre'],
-                    'userName' => $row['usuario_nombre'] . ' ' . $row['apellidos'],
-                    'result' => $row['resultado'],
-                    'dateApplied' => $row['fecha_aplicacion']
+                    'groupId' => $row['id'],
+                    'groupNumber' => $row['id_grupo'],
+                    'groupName' => $row['nombre_grupo'],
+                    'groupLocation' => $row['sede'],
                 ]);
             }
             http_response_code(200);
             return $data;
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
+    }
+
+    public function getAvailableTestsByGroup()
+    {
+        if ($this->admin) {
+            $rows = $this->conn->query("SELECT * FROM examenes WHERE id_examen NOT IN 
+                    (SELECT id_examen FROM examenes_grupos WHERE id_grupo = {$_POST['groupId']})") or die($this->conn->error);
+            $data = [];
+            foreach ($rows as $row) {
+                array_push($data, [
+                    'testId' => $row['id_examen'],
+                    'testName' => $row['nombre'],
+                    'comments' => $row['comentarios'],
+                    'link' => $row['liga'],
+                ]);
+            }
+            return $data;
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
+    }
+
+    public function setExamByGroup()
+    {
+        if ($this->admin) {
+            $query = $this->conn->query("INSERT INTO examenes_grupos (id_examen, id_grupo) VALUES ({$_POST['testId']}, {$_POST['groupId']})") or die($this->conn->error);
+            if ($query) {
+                http_response_code(201);
+                return [
+                    'testId' => $_POST['testId'],
+                    'groupId' => $_POST['groupId'],
+                    'status' => 0
+                ];
+            } else {
+                http_response_code(400);
+                return [
+                    'error' => $this->conn->error
+                ];
+            }
+        } else {
+            http_response_code(403);
+            return "Usuario no autorizado";
+        }
+    }
+
+    public function setExamStatus($status){
+        if ($this->admin) {
+            $query = $this->conn->query("UPDATE examenes_grupos SET activo={$status} WHERE id={$_POST['examId']}") or die($this->conn->error);
+            if ($query) {
+                http_response_code(200);
+            } else {
+                http_response_code(400);
+                return [
+                    'error' => $this->conn->error
+                ];
+            }
         } else {
             http_response_code(403);
             return "Usuario no autorizado";
