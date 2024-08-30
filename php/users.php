@@ -52,7 +52,7 @@ class Users
     {
         $query = $this->conn->query('SELECT usuarios.id, usuarios.nombre, usuarios.apellidos, 
             usuarios.id_grupo, grupos.nombre_grupo, usuarios.correo, usuarios.telefono 
-            FROM usuarios, grupos WHERE usuarios.status=0 AND usuarios.id_grupo = grupos.id_grupo') or die($this->conn->error);
+            FROM usuarios, grupos WHERE usuarios.status=0 AND usuarios.id_grupo = grupos.id') or die($this->conn->error);
         return $query->num_rows > 0 ? $query : 0;
     }
 

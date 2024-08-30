@@ -31,14 +31,14 @@ function generatePresentationsPage() {
 }
 
 function generateTestsPage() {
-    getFinishedTests(document.getElementById("userId").value);
-    getActiveTests(document.getElementById("userId").value);
+    getFinishedTests();
+    getActiveTests();
 }
 
-function getFinishedTests(userId) {
+function getFinishedTests() {
     $.ajax({
         method: "GET",
-        url: "../php/testsController.php?type=0&userId=" + userId,
+        url: "../php/testsController.php?type=0&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
         if (data.length == 0) {
             $('#finishedTests').html('<h4 class="ms-3">No hay exámenes para mostrar</h4>');
@@ -51,10 +51,10 @@ function getFinishedTests(userId) {
     });
 }
 
-function getActiveTests(userId) {
+function getActiveTests() {
     $.ajax({
         method: "GET",
-        url: "../php/testsController.php?type=1&userId=" + userId,
+        url: "../php/testsController.php?type=1&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
         if (data.length == 0) {
             $('#activeTests').html('<h4 class="ms-3">No hay exámenes activos</h4>');

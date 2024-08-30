@@ -19,7 +19,7 @@ class UserGroup
     }
 
     public function setGroup(){
-        $query = $this->conn->query("SELECT * FROM grupos WHERE id_grupo = '{$this->groupId}'");
+        $query = $this->conn->query("SELECT * FROM grupos WHERE id = '{$this->groupId}'");
         foreach ($query as $currentUser) {
             $this->groupId = $currentUser['id_grupo'];
             $this->groupName = $currentUser['nombre_grupo'];
