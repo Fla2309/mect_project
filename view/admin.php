@@ -188,11 +188,20 @@ include_once('./php/groups.php');
                         </div>
                     </div>
                     <div class="px-2 py-2 mx-2 my-2 col">
-                        <div class="px-3 py-3" style="background-color: white;">
-                            <h1 class="mb-3">Abrir Examen</h1>
-                            <hr class="divider">
-                            <div class="dropdown" id="createTest">
-
+                        <div class="row">
+                            <div class="px-3 py-3" style="background-color: white;">
+                                <h1 class="mb-3">Abrir Examen</h1>
+                                <hr class="divider">
+                                <div class="dropdown" id="createTest">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2 pt-2">
+                            <div class="px-3 py-3" style="background-color: white;">
+                                <h1 class="mb-3">Pendientes de Revisión</h1>
+                                <hr class="divider">
+                                <div class="list-group" id="pendingRevisionList" role="tablist">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -377,7 +386,8 @@ include_once('./php/groups.php');
             </div>
         </div>
     </div>
-    <div class="modal fade" id="activateExamModal" tabindex="-1" aria-labelledby="activateExamModalLabel" aria-hidden="true">
+    <div class="modal fade" id="activateExamModal" tabindex="-1" aria-labelledby="activateExamModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -385,7 +395,7 @@ include_once('./php/groups.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

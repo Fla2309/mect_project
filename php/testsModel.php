@@ -25,25 +25,37 @@ class Tests
     {
         $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre, examenes.comentarios, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
                 FROM examenes, examenes_usuarios WHERE examenes_usuarios.id_examen = examenes.id_examen AND examenes_usuarios.id_usuario=" . $this->userId);
-        // $data = [];
-        // foreach ($rows as $row) {
-        //     array_push($data, [
-        //         'testName' => $row[0],
-        //         'comments' => $row[1],
-        //         'result' => $row[2],
-        //         'dateApplied' => $row[3],
-        //     ]);
-        // }
-        return $rows;
+        $data = [];
+        foreach ($rows as $row) {
+            array_push($data, [
+                'id' => $row['id'],
+                'testName' => $row['nombre'],
+                'comments' => $row['comentarios'],
+                'result' => $row['resultado'],
+                'dateApplied' => $row['fecha_aplicacion'],
+            ]);
+        }
+        return $data;
     }
 
     public function retrieveActiveTestPerGroup()
     {
-        return $this->conn->query("SELECT examenes.id_examen, examenes.nombre, examenes.comentarios, examenes.liga FROM examenes, examenes_grupos, usuarios 
+        $data = [];
+        $rows = $this->conn->query("SELECT examenes.id_examen, examenes.nombre, examenes.comentarios, examenes.liga FROM examenes, examenes_grupos, usuarios 
         WHERE examenes_grupos.activo = 1 
         AND examenes_grupos.id_examen = examenes.id_examen 
         AND examenes_grupos.id_grupo=usuarios.id_grupo 
-        AND usuarios.id=" . $this->userId);
+        AND usuarios.id={$this->userId}
+        AND examenes.id_examen NOT IN (SELECT id_examen FROM examenes_usuarios WHERE id_usuario={$this->userId})");
+        foreach ($rows as $row) {
+            array_push($data, [
+                'examId' => $row['id_examen'],
+                'examName' => $row['nombre'],
+                'comments' => $row['comentarios'],
+                'link' => $row['liga'],
+            ]);
+        }
+        return $data;
     }
 
     public function retrieveTestsAdmin()
@@ -208,7 +220,8 @@ class Tests
         }
     }
 
-    public function setExamStatus($status){
+    public function setExamStatus($status)
+    {
         if ($this->admin) {
             $query = $this->conn->query("UPDATE examenes_grupos SET activo={$status} WHERE id={$_POST['examId']}") or die($this->conn->error);
             if ($query) {
@@ -222,6 +235,57 @@ class Tests
         } else {
             http_response_code(403);
             return "Usuario no autorizado";
+        }
+    }
+
+    public function startExamStudent()
+    {
+        $response = [];
+        if ($_SESSION['userId'] == $_GET['userId']) {
+            $response['redirect'] = "../view/exam.php?examId={$_GET['examId']}&userId={$_GET['userId']}";
+        } else {
+            $response['redirect'] = '../view/unavailable.php';
+        }
+        return $response;
+    }
+
+    public function getExamQuestions()
+    {
+        $rows = $this->conn->query("SELECT e.id_examen, e.nombre, e.comentarios, e.liga, er.id_reactivo, er.reactivo 
+                FROM examenes e, examenes_reactivos er
+                WHERE e.id_examen = er.id_examen AND e.id_examen = {$_GET['examId']}") or die($this->conn->error);
+        $questions = [];
+        $data = [];
+        foreach ($rows as $row) {
+            if (empty($data)) {
+                $data['examId'] = $row['id_examen'];
+                $data['name'] = $row['nombre'];
+                $data['comments'] = $row['comentarios'];
+                $data['link'] = $row['liga'];
+            }
+            array_push($questions, [
+                'id' => $row['id_reactivo'],
+                'question' => $row['reactivo']
+            ]);
+        }
+        $data['questions'] = $questions;
+        return $data;
+    }
+
+    public function finishExam()
+    {
+        try {
+            $this->conn->begin_transaction();
+            foreach ($_POST['answers'] as $answer) {
+                $query = $this->conn->query("INSERT INTO examenes_reactivos_usuarios (`id_usuario`, `id_reactivo`, `respuesta`, `correcto`) VALUES ({$_GET['userId']}, {$answer['id']}, '{$answer['answer']}', '0')") or die($this->conn->error);
+            }
+            $query = $this->conn->query("INSERT INTO examenes_usuarios (`id_examen`, `id_usuario`, `terminado`) VALUES ({$_GET['examId']}, {$_GET['userId']}, 1)") or die($this->conn->error);
+            $this->conn->commit();
+            http_response_code(201);
+            return ['message' => 'Examen registrado exitosamente'];
+        } catch (Exception $exception) {
+            http_response_code(400);
+            return ['errorMessage' => $exception];
         }
     }
 }

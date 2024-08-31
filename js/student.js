@@ -44,7 +44,7 @@ function getFinishedTests() {
             $('#finishedTests').html('<h4 class="ms-3">No hay exámenes para mostrar</h4>');
         }
         else {
-            $('#finishedTests').html(data);
+            populateFinishedTests(data);
         }
     }).fail(function (result) {
         console.log(result);
@@ -60,10 +60,99 @@ function getActiveTests() {
             $('#activeTests').html('<h4 class="ms-3">No hay exámenes activos</h4>');
         }
         else {
-            $('#activeTests').html(data);
+            populateActiveTests(data);
         }
     }).fail(function (result) {
         console.log(result);
+    });
+}
+
+function populateFinishedTests(tests) {
+    const finishedTests = document.getElementById('finishedTests');
+    finishedTests.innerHTML = '';
+
+    tests.forEach(function (test) {
+        const testItem = document.createElement('a');
+        testItem.classList.add('list-group-item', 'list-group-item-action', 'align-items-center');
+        testItem.id = 'test_' + test.id;
+        testItem.setAttribute('data-toggle', 'list');
+        testItem.setAttribute('role', 'tab');
+        testItem.setAttribute('aria-controls', 'home');
+        const testName = document.createElement('p');
+        testName.classList.add('fw-bold');
+        testName.textContent = test.testName;
+        testItem.appendChild(testName);
+        const testDetails = document.createElement('div');
+        testDetails.classList.add('d-flex', 'justify-content-between');
+        const resultContainer = document.createElement('div');
+        resultContainer.classList.add('pr-2', 'd-flex');
+        resultContainer.textContent = 'Calificación: ';
+
+        const result = document.createElement('p');
+        result.classList.add('fw-bold');
+        result.classList.add(test.result >= 70 ? 'text-success' : 'text-danger');
+        result.textContent = test.result;
+        if (test.result == 0) {
+            resultContainer.textContent = 'Calificación pendiente';
+        } else {
+            resultContainer.appendChild(result);
+        }
+
+        testDetails.appendChild(resultContainer);
+        const dateContainer = document.createElement('div');
+        dateContainer.classList.add('pr-2');
+
+        const dateText = document.createElement('small');
+        dateText.classList.add('text-muted');
+        dateText.style.fontSize = '10px';
+        dateText.textContent = 'Terminado: ' + test.dateApplied;
+
+        dateContainer.appendChild(dateText);
+        testDetails.appendChild(dateContainer);
+        testItem.appendChild(testDetails);
+        finishedTests.appendChild(testItem);
+    });
+}
+
+function populateActiveTests(jsonData) {
+    const activeTestsContainer = document.getElementById('activeTests');
+    activeTestsContainer.innerHTML = '';
+
+    jsonData.forEach(test => {
+        const testDiv = document.createElement('div');
+        testDiv.id = `active_test_${test.examId}`;
+        testDiv.className = 'col-sm px-1 py-1';
+        testDiv.style.backgroundColor = 'white';
+        const innerDiv = document.createElement('div');
+        innerDiv.className = 'p-1';
+        const testName = document.createElement('h2');
+        testName.textContent = test.examName;
+        innerDiv.appendChild(testName);
+        const testComments = document.createElement('h4');
+        testComments.textContent = test.comments;
+        innerDiv.appendChild(testComments);
+        const button = document.createElement('button');
+        button.id = `but_active_test_${test.examId}`;
+        button.type = 'button';
+        button.className = 'btn btn-primary';
+        button.style.width = 'auto';
+        button.style.textAlign = 'left';
+        button.innerHTML = `Ir al examen<img src="../img/right-arrow.png" style="float: right;" width="20">`;
+        button.addEventListener('click', () => goToExam(test.examId))
+
+        innerDiv.appendChild(button);
+        testDiv.appendChild(innerDiv);
+        activeTestsContainer.appendChild(testDiv);
+    });
+}
+
+function goToExam(examId) {
+    $.ajax({
+        method: "GET",
+        url: "../php/testsController.php?data=startExamStudent&examId=" + examId + "&userId=" + $('#userId').val(),
+        success: function (response) {
+            window.location.href = response.redirect;
+        }
     });
 }
 
@@ -332,7 +421,7 @@ function deleteCoaching(button) {
 function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
-    
+
     var divRow = document.createElement('div');
     divRow.className = 'row g-0 m-3 justify-content-center';
     divRow.style.alignContent = 'center';
@@ -363,4 +452,22 @@ function setModulesHtml(json) {
         divRow.appendChild(divCol);
     }
     document.getElementById('modulos').appendChild(divRow);
+}
+
+function showFinishedExamModal() {
+    window.location.href = '../index.php';
+    window.onload = function () {
+        document.getElementById('changesMadeModalTitle').textContent = 'Examen Registrado Exitosamente';
+        document.getElementById('changesMadeModalBody').textContent =
+            'Tu examen ha sido terminado exitosamente. Este será revisado por tu máster coach y te hará saber cuando esté disponible la calificación';
+        $('#changesMadeModal').modal('show');
+        var seconds = 5;
+        function redirect() {
+            if (seconds <= 0) {
+                $('#changesMadeModal').modal('hide');
+            } else {
+                seconds--;
+            }
+        } setInterval(redirect, 1000);
+    }
 }

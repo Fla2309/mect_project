@@ -25,7 +25,7 @@
                     value="<?php echo $_SESSION['user'] ?>" class="user_properties"></td>
             <td><input type="text" id="userId" placeholder="<?php echo $_SESSION['userId'] ?>"
                     value="<?php echo $_SESSION['userId'] ?>" class="user_properties"></td>
-            <td><input type="text" id="userFullName" placeholder="<?php echo $_SESSION['userId'] ?>"
+            <td><input type="text" id="userFullName" placeholder="<?php echo $_SESSION['fullname'] ?>"
                     value="<?php echo $_SESSION['fullname'] ?>" class="user_properties"></td>
         </tr>
     </table>

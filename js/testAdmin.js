@@ -151,6 +151,10 @@ function setActiveExamsHtml(json) {
 
 function setFinishedExamsHtml(json) {
     const jsonData = json;
+    const testsList = document.getElementById('testsList')
+    testsList.innerHTML = '';
+    const pendingRevisionList = document.getElementById('pendingRevisionList');
+    pendingRevisionList.innerHTML = '';
     const h4 = document.createElement('h4');
     h4.classList.add('mt-3');
     h4.textContent = 'Exámenes Terminados';
@@ -202,7 +206,20 @@ function setFinishedExamsHtml(json) {
         div.appendChild(div2);
 
         listGroupItem.appendChild(div);
-        document.getElementById('testsList').append(listGroupItem);
+
+        if (item.result == 0) {
+            const buttonDiv = document.createElement('div');
+            buttonDiv.className = 'd-flex justify-content-end p-3';
+            const reviewButton = document.createElement('button');
+            reviewButton.className = 'btn btn-primary';
+            reviewButton.textContent = 'Revisar';
+            reviewButton.addEventListener('click', () => finishExam());
+            buttonDiv.appendChild(reviewButton);
+            listGroupItem.appendChild(buttonDiv);
+            pendingRevisionList.appendChild(listGroupItem);
+        } else {
+            document.getElementById('testsList').appendChild(listGroupItem);
+        }
     });
 }
 
