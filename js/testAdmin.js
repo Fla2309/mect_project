@@ -45,7 +45,7 @@ function setOpenExamsHtml(json) {
         listGroupItem.classList.add('list-group-item');
         listGroupItem.classList.add('list-group-item-action');
         listGroupItem.classList.add('align-items-center');
-        listGroupItem.id = item.id;
+        listGroupItem.id = item.egId;
 
         const p = document.createElement('p');
         p.classList.add('fw-bold');
@@ -151,8 +151,7 @@ function setActiveExamsHtml(json) {
 
 function setFinishedExamsHtml(json) {
     const jsonData = json;
-    const testsList = document.getElementById('testsList')
-    testsList.innerHTML = '';
+    const testsList = document.getElementById('testsList');
     const pendingRevisionList = document.getElementById('pendingRevisionList');
     pendingRevisionList.innerHTML = '';
     const h4 = document.createElement('h4');

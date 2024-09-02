@@ -4,7 +4,7 @@ include_once('../php/connection.php');
 session_start();
 
 $conn = (new DB)->connect();
-$query = $conn->query("SELECT * FROM examenes_usuarios WHERE id_usuario={$_GET['userId']} AND id_examen={$_GET['examId']}") or die(conn->error);
+$query = $conn->query("SELECT * FROM examenes_usuarios WHERE id_usuario={$_GET['userId']} AND id_examen={$_GET['examId']}") or die($conn->error);
 if ($query->num_rows > 0) {
     header("Location: unavailable.php");
 }
