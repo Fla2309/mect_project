@@ -349,4 +349,8 @@ class Tests
             return 'Hubo un problema al revisar examen. Intente de nuevo';
         }
     }
+
+    public function getExamAnswersStudent(){
+        return '';
+    }
 }

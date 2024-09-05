@@ -70,6 +70,10 @@ if (isset($_GET['data'])) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($tests->getExamAnswersById());
             break;
+            case 'getExamAnswersStudent':
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($tests->getExamAnswersStudent());
+                break;
         case 'reviewStudentExam':
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($tests->reviewStudentExam());

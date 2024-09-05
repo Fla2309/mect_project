@@ -82,8 +82,9 @@ function populateFinishedTests(tests) {
         testName.classList.add('fw-bold');
         testName.textContent = test.testName;
         testItem.appendChild(testName);
+        const testContent = document.createElement('div');
+        testContent.classList = 'd-flex justify-content-between'
         const testDetails = document.createElement('div');
-        testDetails.classList.add('d-flex', 'justify-content-between');
         const resultContainer = document.createElement('div');
         resultContainer.classList.add('pr-2', 'd-flex');
         resultContainer.textContent = 'Calificación: ';
@@ -109,7 +110,17 @@ function populateFinishedTests(tests) {
 
         dateContainer.appendChild(dateText);
         testDetails.appendChild(dateContainer);
-        testItem.appendChild(testDetails);
+        const buttonDiv = document.createElement('div');
+        const viewButton = document.createElement('button');
+        viewButton.className = 'btn btn-primary';
+        viewButton.innerHTML = '<i class="fa fa-regular fa-eye"></i>&nbspVer Examen';
+        viewButton.onclick = () => {
+            populateExam(test);
+        };
+        buttonDiv.appendChild(viewButton);
+        testContent.appendChild(testDetails);
+        testContent.appendChild(buttonDiv);
+        testItem.appendChild(testContent);
         finishedTests.appendChild(testItem);
     });
 }
@@ -470,4 +481,12 @@ function showFinishedExamModal() {
             }
         } setInterval(redirect, 1000);
     }
+}
+
+function populateExam(test) {
+    var userId = document.getElementById('userId').getAttribute('value');
+    $.ajax({
+        method: 'GET',
+        url: "../php/testsController.php?data=getExamAnswersStudent&examId=" + test.id + "&userId=" + userId,
+    });
 }
