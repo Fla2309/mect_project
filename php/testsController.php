@@ -12,16 +12,6 @@ if (isset($_POST['userId'])) {
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case 0:
-            // $rows = $tests->retrieveTestsPerUser();
-            // $html = "";
-            // foreach ($rows as $row) {
-            //     $resultColor = $row['resultado'] >= 70 ? "text-success" : "text-danger";
-            //     $html = $html . '<a class="list-group-item list-group-item-action align-items-center" id="test_' . $row['id'] . '" data-toggle="list" role="tab" aria-controls="home"><p class="fw-bold">' . $row['nombre'] . '</p>';
-            //     $html = $html . '<div class="d-flex justify-content-between">';
-            //     $html = $html . '<div class="pr-2 d-flex"> Calificación: <p class="fw-bold ' . $resultColor . '">' . $row['resultado'] . '</p></div>';
-            //     $html = $html . '<div class="pr-2"><small class="text-muted" style="font-size: 10px">Terminado: ' . $row['fecha_aplicacion'] . '</small></div></div></a>';
-            // }
-            // echo $html;
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($tests->retrieveTestsPerUser());
             break;
@@ -75,6 +65,14 @@ if (isset($_GET['data'])) {
         case 'finishExam':
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($tests->finishExam());
+            break;
+        case 'getExamAnswersById':
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($tests->getExamAnswersById());
+            break;
+        case 'reviewStudentExam':
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($tests->reviewStudentExam());
             break;
         default:
             break;

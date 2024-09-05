@@ -14,7 +14,7 @@ include_once('./php/groups.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
     <link rel="stylesheet" href="../css/main.scss">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <meta charset="utf-8">
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -372,6 +372,15 @@ include_once('./php/groups.php');
             </div>
         </div>
     </div>
+    <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="reviewExamOffcanvas"
+        aria-labelledby="reviewExamOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h3 id="reviewExamOffcanvasLabel">Revisar Examen</h3>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+        </div>
+    </div>
     <div class="modal fade" id="changesMadeModal" tabindex="-1" aria-labelledby="changesMadeModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -381,7 +390,6 @@ include_once('./php/groups.php');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="changesMadeModalBody">
-
                 </div>
             </div>
         </div>
@@ -399,8 +407,7 @@ include_once('./php/groups.php');
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmExam">Guardar
-                        cambios</button>
+                    <button type="button" class="btn btn-primary" id="confirmExam">Aceptar</button>
                 </div>
             </div>
         </div>

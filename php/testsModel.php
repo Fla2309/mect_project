@@ -8,6 +8,7 @@ class Tests
     private $userId;
     private $conn;
     private $admin;
+    private $adminLevel;
     public function __construct($userId)
     {
         $this->userId = $userId;
@@ -19,6 +20,7 @@ class Tests
     {
         $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);
         $this->admin = $query[0] > 1 ? true : false;
+        $this->adminLevel = $query[0];
     }
 
     public function retrieveTestsPerUser()
@@ -138,7 +140,7 @@ class Tests
 
     public function retrieveFinishedExamsAdmin()
     {
-        $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.nombre AS examen_nombre, usuarios.nombre AS usuario_nombre, usuarios.apellidos, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
+        $rows = $this->conn->query("SELECT examenes_usuarios.id, examenes.id_examen AS id_examen, examenes.nombre AS examen_nombre, usuarios.nombre AS usuario_nombre, usuarios.id AS id_usuario, usuarios.apellidos, examenes_usuarios.resultado, examenes_usuarios.fecha_aplicacion 
                 FROM examenes_usuarios, examenes, usuarios 
                 WHERE examenes_usuarios.id_usuario = usuarios.id
                 AND examenes.id_examen=examenes_usuarios.id_examen");
@@ -146,7 +148,9 @@ class Tests
         foreach ($rows as $row) {
             array_push($data, [
                 'id' => $row['id'],
+                'testId' => $row['id_examen'],
                 'testName' => $row['examen_nombre'],
+                'userId' => $row['id_usuario'],
                 'userName' => $row['usuario_nombre'] . ' ' . $row['apellidos'],
                 'result' => $row['resultado'],
                 'dateApplied' => $row['fecha_aplicacion']
@@ -222,7 +226,7 @@ class Tests
 
     public function setExamStatus($status)
     {
-        if ($this->admin) {
+        if ($this->adminLevel > 2) {
             $query = $this->conn->query("UPDATE examenes_grupos SET activo={$status} WHERE id={$_POST['examId']}") or die($this->conn->error);
             if ($query) {
                 http_response_code(200);
@@ -234,7 +238,7 @@ class Tests
             }
         } else {
             http_response_code(403);
-            return "Usuario no autorizado";
+            return ['error' => "Usuario no autorizado. Nivel actual: " . $this->adminLevel];
         }
     }
 
@@ -286,6 +290,63 @@ class Tests
         } catch (Exception $exception) {
             http_response_code(400);
             return ['errorMessage' => $exception];
+        }
+    }
+
+    public function getExamAnswersById()
+    {
+        try {
+            if ($this->adminLevel <= 2) {
+                http_response_code(403);
+                return 'Usuario no autorizado';
+            }
+            $data = [];
+            $examContents = [];
+            $rows = $this->conn->query("SELECT e.id_examen, e.nombre, u.id as id_usuario, concat(u.nombre, ' ', u.apellidos) as nombre_usuario, er.id_reactivo, er.reactivo, eru.respuesta 
+                    FROM examenes_reactivos_usuarios eru
+                    INNER JOIN examenes_reactivos er ON eru.id_reactivo = er.id_reactivo
+                    INNER JOIN examenes e ON er.id_examen = e.id_examen
+                    INNER JOIN usuarios u ON u.id = eru.id_usuario
+                    WHERE u.id = {$_GET['targetUserId']} AND e.id_examen={$_GET['examId']}") or die($this->conn->error);
+
+            foreach ($rows as $row) {
+                if (empty($data)) {
+                    $data['examId'] = $row['id_examen'];
+                    $data['name'] = $row['nombre'];
+                    $data['userId'] = $row['id_usuario'];
+                    $data['userName'] = $row['nombre_usuario'];
+                }
+                array_push($examContents, [
+                    'questionId' => $row['id_reactivo'],
+                    'question' => $row['reactivo'],
+                    'answer' => $row['respuesta']
+                ]);
+            }
+
+            $data['examContents'] = $examContents;
+            return $data;
+        } catch (Exception $exception) {
+            http_response_code(400);
+            return 'Hubo un error al procesar el examen';
+        }
+    }
+
+    public function reviewStudentExam()
+    {
+        try {
+            $this->conn->begin_transaction();
+            foreach ($_POST['review'] as $questionReview) {
+                if ($questionReview['answerStatus'] == 1) {
+                    $this->conn->query("UPDATE examenes_reactivos_usuarios SET correcto = 1 WHERE id_usuario = {$_POST['targetUserId']} AND id_reactivo = {$questionReview['questionId']}") or die($this->conn->error);
+                }
+            }
+            $this->conn->query("UPDATE examenes_usuarios SET resultado = {$_POST['grade']} WHERE id_usuario = {$_POST['targetUserId']} AND id_examen = {$_POST['examId']}") or die($this->conn->error);
+            $this->conn->commit();
+            http_response_code(201);
+            return 'Examen revisado exitosamente';
+        } catch (Exception $exception) {
+            http_response_code(400);
+            return 'Hubo un problema al revisar examen. Intente de nuevo';
         }
     }
 }

@@ -820,16 +820,18 @@ function showMessageModal(title, message, callback = null, autodismiss = false) 
     $('#changesMadeModal').on('shown.bs.modal', function () {
         if (autodismiss) {
             var seconds = 3;
-            function redirect() {
+            var interval = setInterval(function() {
                 if (seconds <= 0) {
-                    $('#changesMadeModal').modal('hide');
+                    clearInterval(interval);  // Limpiar el intervalo cuando se alcance 0
+                    $('#changesMadeModal').modal('hide');  // Esconder el modal
                 } else {
                     seconds--;
                 }
-            } setInterval(redirect, 1000);
+            }, 1000);
         }
-        $('#changesMadeModal').on('shown.bs.modal', function () {
+
+        if (callback) {
             callback();
-        })
-    })
+        }
+    });
 }

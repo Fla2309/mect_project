@@ -151,7 +151,6 @@ function setActiveExamsHtml(json) {
 
 function setFinishedExamsHtml(json) {
     const jsonData = json;
-    const testsList = document.getElementById('testsList');
     const pendingRevisionList = document.getElementById('pendingRevisionList');
     pendingRevisionList.innerHTML = '';
     const h4 = document.createElement('h4');
@@ -184,12 +183,7 @@ function setFinishedExamsHtml(json) {
 
         const result = document.createElement('div');
         result.classList.add('d-flex', 'pr-2');
-        result.textContent = 'Calificación: ';
-
-        const p2 = document.createElement('p');
-        p2.classList.add('fw-bold');
-        p2.textContent = item.result;
-        result.appendChild(p2);
+        result.innerHTML = item.result != 0 ? `Calificación: <strong>${item.result}</strong>` : 'Calificación Pendiente';
 
         const div2 = document.createElement('div');
         div2.classList.add('pr-2');
@@ -212,7 +206,7 @@ function setFinishedExamsHtml(json) {
             const reviewButton = document.createElement('button');
             reviewButton.className = 'btn btn-primary';
             reviewButton.textContent = 'Revisar';
-            reviewButton.addEventListener('click', () => finishExam());
+            reviewButton.addEventListener('click', () => populateExamForReview(item.testId, item.userId));
             buttonDiv.appendChild(reviewButton);
             listGroupItem.appendChild(buttonDiv);
             pendingRevisionList.appendChild(listGroupItem);
@@ -361,6 +355,144 @@ function activateExam(examId, setClose = false) {
         },
         error: function (error) {
             showMessageModal('Error al activar examen', error.error);
+        }
+    });
+}
+
+function populateExamForReview(examId, targetUserId) {
+    $.ajax({
+        method: "GET",
+        url: "../php/testsController.php?data=getExamAnswersById&examId=" + examId + "&targetUserId=" + targetUserId + "&userId=" + $('#userId').val(),
+        success: function (json) {
+            const examContentDiv = document.querySelector('#reviewExamOffcanvas .offcanvas-body');
+            examContentDiv.innerHTML = '';
+            const title = document.createElement('h5');
+            title.textContent = json.name;
+            examContentDiv.appendChild(title);
+            const userName = document.createElement('p');
+            userName.innerHTML = `<strong>Alumno: </strong>${json.userName}`;
+            examContentDiv.appendChild(userName);
+            json.examContents.forEach((item, index) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('card', 'mb-3');
+                const cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header', 'd-flex', 'justify-content-between', 'align-items-center');
+                const questionTitle = document.createElement('span');
+                questionTitle.innerHTML = `<strong>Pregunta ${index + 1}: ${item.question}</strong>`;
+                const checkboxesDiv = document.createElement('div');
+                checkboxesDiv.classList.add('d-flex', 'align-items-center');
+                checkboxesDiv.innerHTML = `
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="question${item.questionId}" value="1">
+                        <label class="form-check-label"><i class="fa fa-solid fa-check"></i></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="question${item.questionId}" value="0">
+                        <label class="form-check-label"><i class="fa fa-solid fa-xmark"></i></label>
+                    </div>
+                `;
+                cardHeader.appendChild(questionTitle);
+                cardHeader.appendChild(checkboxesDiv);
+                cardDiv.appendChild(cardHeader);
+                const cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                const answerText = document.createElement('p');
+                answerText.innerHTML = `${item.answer}`;
+                cardBody.appendChild(answerText);
+                cardDiv.appendChild(cardBody);
+                examContentDiv.appendChild(cardDiv);
+            });
+            const gradeDiv = document.createElement('div');
+            gradeDiv.className = 'mt-4 d-flex justify-content-end align-items-center';
+            gradeDiv.innerHTML = `
+                <label for="finalGrade"><strong>Calificación Final:</strong></label>
+                <input type="text" id="finalGrade" class="form-control ms-1 w-50" placeholder="Ingresa una calificación">
+            `;
+
+            const buttonDiv = document.createElement('div');
+            buttonDiv.className = 'text-end my-3';
+
+            const reviewButton = document.createElement('button');
+            reviewButton.className = 'btn btn-primary';
+            reviewButton.textContent = 'Finalizar Revisión';
+            reviewButton.id = 'validateExamButton';
+            reviewButton.onclick = () => {
+                validateExam(json);
+            };
+            const pError = document.createElement('p');
+            pError.className = 'text-danger';
+            pError.id = 'examReviewError';
+            pError.setAttribute('hidden', true);
+            buttonDiv.appendChild(pError);
+            buttonDiv.appendChild(reviewButton);
+            examContentDiv.appendChild(gradeDiv);
+            examContentDiv.appendChild(buttonDiv);
+            new bootstrap.Offcanvas(document.getElementById('reviewExamOffcanvas')).show();
+        }
+    });
+}
+
+function validateExam(json) {
+    let isValid = true;
+    const errorMessage = document.getElementById('examReviewError');
+    const examContents = json.examContents;
+    errorMessage.innerHTML = '';
+    examContents.forEach(item => {
+        const correctChecked = document.querySelector(`input[name="question${item.questionId}"][value="1"]`).checked;
+        const incorrectChecked = document.querySelector(`input[name="question${item.questionId}"][value="0"]`).checked;
+
+        if (!correctChecked && !incorrectChecked) {
+            isValid = false;
+            errorMessage.innerHTML = '<strong>* Todas las preguntas deben estar revisadas</strong>\n';
+        }
+    });
+    const finalGrade = document.getElementById('finalGrade').value.trim();
+    if (finalGrade === '') {
+        isValid = false;
+        errorMessage.innerHTML += errorMessage.innerHTML != '' ? '<br><strong>* Debe ingresar una calificación final</strong>' : '<strong>* Debe ingresar una calificación final<strong>';
+    }
+    if (!isValid) {
+        errorMessage.removeAttribute('hidden');
+    } else {
+        errorMessage.setAttribute('hidden', true);
+        sendExamReview(json);
+    }
+}
+
+function sendExamReview(examData) {
+    const offcanvas = $('.offcanvas#reviewExamOffcanvas');
+    const examId = examData.examId;
+    const examReview = [];
+    examData.examContents.forEach((question) => {
+        const selectedAnswer = document.querySelector(`input[name="question${question.questionId}"]:checked`);
+
+        if (selectedAnswer) {
+            examReview.push({
+                questionId: question.questionId,
+                answerStatus: selectedAnswer.value
+            });
+        }
+    });
+    if (examReview.length === 0) {
+        alert("Debes seleccionar al menos una respuesta para continuar.");
+        return;
+    }
+    $.ajax({
+        method: 'POST',
+        url: '../php/testsController.php?data=reviewStudentExam&userId=' + $('#userId').val(),
+        data: {
+            targetUserId: examData.userId,
+            examId: examId,
+            review: examReview,
+            grade: $('#finalGrade').val()
+        },
+        success: function () {
+            offcanvas.offcanvas('hide');
+            showMessageModal('Examen Revisado', 'El examen ha sido revisado y registrado exitosamente', retrieveExams(setExamsHtml), true);
+            retrieveGroups(setGroupSelects);
+        },
+        error: function (error) {
+            showMessageModal('Error al Revisar Examen', 'Hubo un problema al revisar examen. Intente de nuevo', error.error);
         }
     });
 }
