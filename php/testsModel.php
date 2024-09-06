@@ -350,7 +350,32 @@ class Tests
         }
     }
 
-    public function getExamAnswersStudent(){
-        return '';
+    public function getExamAnswersStudent()
+    {
+        $data = [];
+        $examContents = [];
+        $rows = $this->conn->query("SELECT e.id_examen, e.nombre, u.id AS id_usuario, eu.resultado AS calificacion, er.reactivo, eru.respuesta, eru.correcto 
+                    FROM examenes_reactivos_usuarios eru 
+                    INNER JOIN examenes_reactivos er ON eru.id_reactivo = er.id_reactivo 
+                    INNER JOIN examenes e ON er.id_examen = e.id_examen 
+                    INNER JOIN examenes_usuarios eu ON eu.id_examen = e.id_examen 
+                    INNER JOIN usuarios u ON u.id = eru.id_usuario 
+                    WHERE u.id = {$_GET['userId']} AND eu.id={$_GET['userExamId']}") or die($this->conn->error);
+
+        foreach ($rows as $row) {
+            if (empty($data)) {
+                $data['examId'] = $row['id_examen'];
+                $data['name'] = $row['nombre'];
+                $data['userId'] = $row['id_usuario'];
+                $data['grade'] = $row['calificacion'];
+            }
+            array_push($examContents, [
+                'correct' => $row['correcto'],
+                'question' => $row['reactivo'],
+                'answer' => $row['respuesta']
+            ]);
+        }
+        $data['examContents'] = $examContents;
+        return $data;
     }
 }

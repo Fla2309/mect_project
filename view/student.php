@@ -4,7 +4,7 @@
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../bootstrap-5.2.1-dist/css/bootstrap.css">
     <link rel="stylesheet" href="../css/main.scss">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <meta charset="utf-8">
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -299,7 +299,7 @@
     <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="viewExamOffcanvas"
         aria-labelledby="viewExamOffcanvasLabel">
         <div class="offcanvas-header">
-            <h3 id="viewExamOffcanvasLabel">Revisar Examen</h3>
+            <h3 id="viewExamOffcanvasLabel"></h3>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">

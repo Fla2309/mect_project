@@ -93,10 +93,18 @@ function populateFinishedTests(tests) {
         result.classList.add('fw-bold');
         result.classList.add(test.result >= 70 ? 'text-success' : 'text-danger');
         result.textContent = test.result;
+        const buttonDiv = document.createElement('div');
+        const viewButton = document.createElement('button');
         if (test.result == 0) {
             resultContainer.textContent = 'Calificación pendiente';
         } else {
             resultContainer.appendChild(result);
+            viewButton.className = 'btn btn-primary';
+            viewButton.innerHTML = '<i class="fa fa-regular fa-eye"></i>&nbspVer Examen';
+            viewButton.onclick = () => {
+                populateExam(test);
+            };
+            buttonDiv.appendChild(viewButton);
         }
 
         testDetails.appendChild(resultContainer);
@@ -110,16 +118,9 @@ function populateFinishedTests(tests) {
 
         dateContainer.appendChild(dateText);
         testDetails.appendChild(dateContainer);
-        const buttonDiv = document.createElement('div');
-        const viewButton = document.createElement('button');
-        viewButton.className = 'btn btn-primary';
-        viewButton.innerHTML = '<i class="fa fa-regular fa-eye"></i>&nbspVer Examen';
-        viewButton.onclick = () => {
-            populateExam(test);
-        };
-        buttonDiv.appendChild(viewButton);
         testContent.appendChild(testDetails);
-        testContent.appendChild(buttonDiv);
+        if (test.result != 0)
+            testContent.appendChild(buttonDiv);
         testItem.appendChild(testContent);
         finishedTests.appendChild(testItem);
     });
@@ -487,6 +488,45 @@ function populateExam(test) {
     var userId = document.getElementById('userId').getAttribute('value');
     $.ajax({
         method: 'GET',
-        url: "../php/testsController.php?data=getExamAnswersStudent&examId=" + test.id + "&userId=" + userId,
+        url: "../php/testsController.php?data=getExamAnswersStudent&userExamId=" + test.id + "&userId=" + userId,
+        success: function (json) {
+            const examContentDiv = document.querySelector('#viewExamOffcanvas .offcanvas-body');
+            examContentDiv.innerHTML = '';
+            const gradeDiv = document.createElement('div');
+            gradeDiv.className = 'mb-3 d-flex align-items-center';
+            gradeDiv.innerHTML = `
+                <label for="finalGrade"><strong>Calificación Final:</strong> ${json.grade}</label>
+            `;
+            examContentDiv.appendChild(gradeDiv);
+            document.getElementById('viewExamOffcanvasLabel').textContent = json.name;
+            json.examContents.forEach((item, index) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('card', 'mb-3');
+                const cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header', 'd-flex', 'justify-content-between', 'align-items-center');
+                const questionTitle = document.createElement('span');
+                questionTitle.innerHTML = `<strong>Pregunta ${index + 1}: ${item.question}</strong>`;
+                const checkboxesDiv = document.createElement('div');
+                checkboxesDiv.classList.add('d-flex', 'align-items-center');
+                checkboxesDiv.innerHTML = item.correct == 1 ?
+                    '<label class="form-check-label"><i class="text-success fa fa-solid fa-check"></i></label>' :
+                    '<label class="form-check-label"><i class="text-danger fa fa-solid fa-xmark"></i></label>';
+                cardHeader.appendChild(questionTitle);
+                cardHeader.appendChild(checkboxesDiv);
+                cardDiv.appendChild(cardHeader);
+                const cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                const answerText = document.createElement('p');
+                answerText.innerHTML = `${item.answer}`;
+                cardBody.appendChild(answerText);
+                cardDiv.appendChild(cardBody);
+                examContentDiv.appendChild(cardDiv);
+            });
+            const pError = document.createElement('p');
+            pError.className = 'text-danger';
+            pError.id = 'examReviewError';
+            pError.setAttribute('hidden', true);
+            new bootstrap.Offcanvas(document.getElementById('viewExamOffcanvas')).show();
+        }
     });
 }
