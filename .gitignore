@@ -7,3 +7,4 @@ resources/users/Flavio Ariel Almanza Fierro/*.jpg
 *.zip
 connection*.php
 resources/information/*
+*/connection.php
