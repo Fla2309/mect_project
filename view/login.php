@@ -15,6 +15,7 @@
         crossorigin="anonymous"></script>
     <script src="http://www.myersdaily.org/joseph/javascript/md5.js"></script>
     <script src="../bootstrap-5.2.1-dist/js/bootstrap.min.js"></script>
+    <title>Portal MECT</title>
 </head>
 
 <body id="background">

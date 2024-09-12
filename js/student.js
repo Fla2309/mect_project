@@ -495,7 +495,7 @@ function populateExam(test) {
             const gradeDiv = document.createElement('div');
             gradeDiv.className = 'mb-3 d-flex align-items-center';
             gradeDiv.innerHTML = `
-                <label for="finalGrade"><strong>Calificación Final:</strong> ${json.grade}</label>
+                <label for="finalGrade"><strong>Calificación:</strong> ${json.grade}</label>
             `;
             examContentDiv.appendChild(gradeDiv);
             document.getElementById('viewExamOffcanvasLabel').textContent = json.name;
