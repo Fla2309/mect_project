@@ -503,14 +503,16 @@ function populateExam(test) {
                 const cardDiv = document.createElement('div');
                 cardDiv.classList.add('card', 'mb-3');
                 const cardHeader = document.createElement('div');
-                cardHeader.classList.add('card-header', 'd-flex', 'justify-content-between', 'align-items-center');
+                cardHeader.className = item.correct == 1 ?
+                    'card-header d-flex justify-content-between align-items-center bg-primary text-white' :
+                    'card-header d-flex justify-content-between align-items-center bg-danger text-white';
                 const questionTitle = document.createElement('span');
                 questionTitle.innerHTML = `<strong>Pregunta ${index + 1}: ${item.question}</strong>`;
                 const checkboxesDiv = document.createElement('div');
                 checkboxesDiv.classList.add('d-flex', 'align-items-center');
                 checkboxesDiv.innerHTML = item.correct == 1 ?
-                    '<label class="form-check-label"><i class="text-success fa fa-solid fa-check"></i></label>' :
-                    '<label class="form-check-label"><i class="text-danger fa fa-solid fa-xmark"></i></label>';
+                    '<label class="form-check-label"><i class="text-white fa fa-solid fa-check"></i></label>' :
+                    '<label class="form-check-label"><i class="text-white fa fa-solid fa-xmark"></i></label>';
                 cardHeader.appendChild(questionTitle);
                 cardHeader.appendChild(checkboxesDiv);
                 cardDiv.appendChild(cardHeader);
