@@ -41,7 +41,7 @@ class Settings
             return 406;
         if ($targetUser != null) {
             $data = [];
-            $query = mysqli_fetch_assoc($this->conn->query("SELECT usuarios.id, nombre, apellidos, id_pl, usuarios.id_grupo, nombre_grupo, fecha_ingreso, nombre_preferido, nivel_usuario ,login_user ,login_pass ,correo ,telefono 
+            $query = mysqli_fetch_assoc($this->conn->query("SELECT usuarios.id, nombre, apellidos, id_pl, grupos.id_grupo, nombre_grupo, fecha_ingreso, nombre_preferido, nivel_usuario ,login_user ,login_pass ,correo ,telefono 
                 FROM usuarios, grupos 
                 WHERE usuarios.id={$targetUser} AND usuarios.id_grupo = grupos.id"));
             $data = [
@@ -60,7 +60,7 @@ class Settings
             ];
             return $data;
         } else {
-            $query = $this->conn->query("SELECT usuarios.id,nombre,apellidos,id_pl,usuarios.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
+            $query = $this->conn->query("SELECT usuarios.id,nombre,apellidos,id_pl,grupos.id_grupo,nombre_grupo,fecha_ingreso,nombre_preferido,nivel_usuario,login_user,login_pass,correo,telefono 
                 FROM usuarios, grupos 
                 WHERE usuarios.id={$this->userId} AND usuarios.id_grupo = grupos.id;");
             return mysqli_fetch_assoc($query);
