@@ -494,11 +494,11 @@ function setGroupsHtml(json) {
 }
 
 function showEditGroupModal(button) {
-    let groupNumber = button.id.replace('but-edit-', '')
+    let groupId = button.id.replace('but-edit-', '');
     let location = button.previousElementSibling.textContent;
     $.ajax({
         method: "GET",
-        url: "../php/groupController.php?data=get&dataType=group&groupNumber=" + groupNumber + "&location=" + location + "&userId=" + $("#userId").val(),
+        url: "../php/groupController.php?data=get&dataType=group&groupId=" + groupId + "&location=" + location + "&userId=" + $("#userId").val(),
     }).done(function (data) {
         $('#groupIdModal').val(data.groupId);
         $('#groupNumberModal').val(data.groupNumber);

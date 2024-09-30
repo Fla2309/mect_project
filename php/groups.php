@@ -34,7 +34,7 @@ class Groups extends DB
 
     public function prepareSingleGroupJson()
     {
-        $group = mysqli_fetch_assoc($this->conn->query("SELECT * FROM grupos WHERE id_grupo = {$_GET['groupNumber']} AND sede = '{$_GET['location']}'")) or die($this->conn->error);
+        $group = mysqli_fetch_assoc($this->conn->query("SELECT * FROM grupos WHERE id = {$_GET['groupId']} AND sede = '{$_GET['location']}'")) or die($this->conn->error);
         return [
             'groupId' => $group['id'],
             'groupNumber' => $group['id_grupo'],
