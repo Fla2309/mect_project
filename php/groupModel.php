@@ -154,7 +154,7 @@ class UserGroup
 
     public function getGroupIdAndNameString()
     {
-        $row = mysqli_fetch_assoc($this->conn->query('SELECT * FROM grupos WHERE id_grupo = ' . $this->groupId));
+        $row = mysqli_fetch_assoc($this->conn->query('SELECT * FROM grupos WHERE id = ' . $this->groupId));
         return 'MECT ' . $row['id_grupo'] . ' ' . $row['nombre_grupo'];
     }
 }

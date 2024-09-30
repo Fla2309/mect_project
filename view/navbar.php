@@ -4,6 +4,16 @@
 </head>
 
 <body>
+    <?php
+    if ($_SESSION['notifications'] != []) {
+        foreach ($_SESSION['notifications'] as $notification) {
+            echo "<div class=\"alert alert-warning alert-dismissible my-0 fade show\" role=\"alert\">
+                <strong>{$notification['titulo']}:</strong> {$notification['texto']}
+                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
+                </div>";
+        }
+    }
+    ?>
     <nav class="navbar navbar-expand-md" id="nav_bar">
         <div class="container-fluid">
             <a href="/index.php" class="navbar-brand"><img src="../img/mect_logo.png" id="nav_logo"></a>

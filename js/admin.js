@@ -130,6 +130,7 @@ function clearAndShowSettingsModal() {
     $('#targetUserPhone').val('');
     $('#targetUserLogin').val('');
     $('#userLevel').val('');
+    document.querySelector('#settingsModal #errorSettings').hidden = true;
     const levelSelectElement = document.getElementById('levelsDropdown');
     // levelSelectElement.options[0].selected = true;
     $('#settingsModal .btn-primary').attr('onclick', 'saveNewUser()');
@@ -360,8 +361,16 @@ function saveNewUser() {
                     seconds--;
                 }
             } setInterval(redirect, 1000);
-            generateUsersPage();
+            $('#changesMadeModal').on('hide.bs.modal', function () { generateUsersPage() });
         })
+    }).fail(function (json) {
+        if (json.responseJSON.errorMessage) {
+            errorMessage = document.querySelector('#settingsModal #errorSettings');
+            errorMessage.textContent = json.responseJSON.errorMessage;
+            errorMessage.hidden = false;
+        } else {
+            window.alert("Ha ocurrido un error en el servidor al intentar crear el usuario. Por favor, contacte al administrador del sitio");
+        }
     });
 }
 
@@ -457,7 +466,7 @@ function setGroupsHtml(json) {
         divCol.style.backgroundColor = 'white';
         divCol.id = 'idGroup-' + group.groupId;
         divP1.className = 'p-1';
-        h2.textContent = 'MECT ' + group.groupId + ' ' + group.groupName;
+        h2.textContent = 'MECT ' + group.groupNumber + ' ' + group.groupName;
         h2.className = 'group-header';
         h4.textContent = group.location;
         h4.className = 'group-location';
@@ -722,12 +731,12 @@ function setUsersHtml(json) {
             li.id = "user_" + user.userId;
 
             let a1 = document.createElement('a');
-            a1.textContent = user.userName + ' ' + user.userLastName + '\u00A0\u00A0';
+            a1.innerHTML = '<strong>' + user.userName + ' ' + user.userLastName + '<strong>\u00A0';
             li.appendChild(a1);
 
             let em = document.createElement('em');
             em.className = "text-muted";
-            em.textContent = 'MECT ' + user.groupId + ' ' + user.groupName;
+            em.textContent = 'MECT ' + user.groupId + ' ' + user.groupName + ' - ' + user.groupLocation;
             a1.appendChild(em);
 
             user.options.forEach(option => {
@@ -820,7 +829,7 @@ function showMessageModal(title, message, callback = null, autodismiss = false) 
     $('#changesMadeModal').on('shown.bs.modal', function () {
         if (autodismiss) {
             var seconds = 3;
-            var interval = setInterval(function() {
+            var interval = setInterval(function () {
                 if (seconds <= 0) {
                     clearInterval(interval);  // Limpiar el intervalo cuando se alcance 0
                     $('#changesMadeModal').modal('hide');  // Esconder el modal

@@ -18,7 +18,8 @@ class Groups extends DB
 
         while ($row = mysqli_fetch_array($query)) {
             $group = array(
-                'groupId' => $row['id_grupo'],
+                'groupId' => $row['id'],
+                'groupNumber' => $row['id_grupo'],
                 'groupName' => $row['nombre_grupo'],
                 'location' => $row['sede']
             );
@@ -46,10 +47,10 @@ class Groups extends DB
 
     public function getGroupHtmlDropdownTags()
     {
-        $modules = $this->conn->query("SELECT id_grupo, nombre_grupo FROM grupos") or die($this->conn->error);
+        $modules = $this->conn->query("SELECT id, id_grupo, nombre_grupo, sede FROM grupos ORDER BY id DESC") or die($this->conn->error);
         $html = '<option href=\"#\">Elige un grupo...</option>';
         foreach ($modules as $module) {
-            $html = $html . "<option id=\"group_{$module['id_grupo']}\" href=\"#\">{$module['nombre_grupo']}</option>";
+            $html = $html . "<option id=\"group_{$module['id']}\" href=\"#\">MECT {$module['id_grupo']} {$module['nombre_grupo']} - {$module['sede']}</option>";
         }
         return $html;
     }
@@ -66,7 +67,7 @@ class Groups extends DB
 
     public function getGroupsFromDatabase()
     {
-        $query = $this->conn->query('SELECT * FROM grupos WHERE id_grupo <> 0') or die($this->conn->error);
+        $query = $this->conn->query('SELECT * FROM grupos WHERE id_grupo <> 0 ORDER BY id DESC') or die($this->conn->error);
         return $query;
     }
 

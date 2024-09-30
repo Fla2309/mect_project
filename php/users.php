@@ -39,6 +39,7 @@ class Users
                     'userLastName' => $user['apellidos'],
                     'groupId' => $user['id_grupo'],
                     'groupName' => $user['nombre_grupo'],
+                    'groupLocation' => $user['sede'],
                     'options' => $options
                 ];
                 array_push($usersList, $user);
@@ -51,7 +52,7 @@ class Users
     public function getUsuarios()
     {
         $query = $this->conn->query('SELECT usuarios.id, usuarios.nombre, usuarios.apellidos, 
-            grupos.id_grupo, grupos.nombre_grupo, usuarios.correo, usuarios.telefono 
+            grupos.id_grupo, grupos.nombre_grupo, grupos.sede, usuarios.correo, usuarios.telefono 
             FROM usuarios, grupos WHERE usuarios.status=0 AND usuarios.id_grupo = grupos.id') or die($this->conn->error);
         return $query->num_rows > 0 ? $query : 0;
     }

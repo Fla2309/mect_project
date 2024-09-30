@@ -148,7 +148,7 @@ include_once('./php/groups.php');
                         <div class="col-4 mb-3 d-flex">
                             <div class="col-7" id="usersControlPanel">
                                 <input class="form-control" type="text" id="txtUser"
-                                    onkeyup="searchInList('txtUser','usersList')" placeholder="Buscar por nombre..."
+                                    onkeyup="searchInList('txtUser','usersList')" placeholder="Buscar..."
                                     title="Escribe el nombre">
                             </div>
                             <div class="col-5 ms-4">
@@ -272,7 +272,7 @@ include_once('./php/groups.php');
                         </div>
                     </form>
 
-                    <p id="errorAct" class="text-danger" hidden></p>
+                    <p id="errorSettings" class="text-danger" hidden></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

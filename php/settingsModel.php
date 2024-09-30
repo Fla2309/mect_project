@@ -190,6 +190,26 @@ class Settings
 
     public function createNewUser()
     {
+        if ($this->validateLoginExists()) {
+            $results = [
+                'userCreation' => false,
+                'webUserCreation' => false,
+                'directoryCreation' => false,
+                'errorMessage' => "El nombre de usuario {$_POST['targetUserLogin']} ya existe en el sitio"
+            ];
+            http_response_code(406);
+            return $results;
+        }
+        if ($this->validateStudentExists()) {
+            $results = [
+                'userCreation' => false,
+                'webUserCreation' => false,
+                'directoryCreation' => false,
+                'errorMessage' => "{$_POST['targetUserName']} {$_POST['targetUserLastname']} ya existe en el grupo."
+            ];
+            http_response_code(406);
+            return $results;
+        }
         $userCreation = $this->insertIntoUsuarios();
         $webUserCreation = $this->insertIntoUsuarioWeb();
         $directoryCreation = $this->createUserDirectory();
@@ -204,36 +224,61 @@ class Settings
         else
             http_response_code(400);
 
-        header('Content-Type: application/json; charset=utf-8');
-        return json_encode($results);
+        return $results;
+    }
+
+    function validateLoginExists()
+    {
+        $query = $this->conn->query("SELECT * FROM usuarios WHERE login_user='{$_POST['targetUserLogin']}'");
+        return $query && $query->num_rows > 0;
+    }
+
+    function validateStudentExists()
+    {
+        $query = $this->conn->query("SELECT * FROM usuarios 
+            WHERE nombre='{$_POST['targetUserName']}' 
+            AND apellidos='{$_POST['targetUserLastname']}' 
+            AND id_pl='{$_POST['targetUserPL']}' 
+            AND id_grupo={$_POST['targetUserGroup']} 
+            AND nivel_usuario={$_POST['targetUserLevel']}");
+        return $query && $query->num_rows > 0;
     }
 
     function insertIntoUsuarios()
     {
         try {
-        $newPass = md5('contraseña');
+            $newPass = md5('password');
             return $this->conn->query("INSERT INTO usuarios (nombre, apellidos, id_pl, id_grupo, fecha_ingreso, nombre_preferido, nivel_usuario, login_user, login_pass, correo, telefono, status) 
             VALUES ('{$_POST['targetUserName']}','{$_POST['targetUserLastname']}','{$_POST['targetUserPL']}',
             '{$_POST['targetUserGroup']}','{$_POST['targetUserDate']}','{$_POST['targetUserAlias']}',
             '{$_POST['targetUserLevel']}','{$_POST['targetUserLogin']}','$newPass','{$_POST['targetUserMail']}',
             '{$_POST['targetUserPhone']}','0')") or die($this->conn->error);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
 
     function insertIntoUsuarioWeb()
     {
+        $userNameFixed = $_POST['targetUserName'] . ' ' . $_POST['targetUserLastname'];
+        $search = ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ'];
+        $replace = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U', 'n', 'N'];
+        $userNameFixed = str_replace($search, $replace, $userNameFixed);
+
         $userId = $this->conn->query('SELECT id FROM usuarios WHERE login_user = \'' . $_POST['targetUserLogin'] . '\'')->fetch_row()[0];
         return $this->conn->query("INSERT INTO usuario_web (id_usuario, usuario, pass, foto_perfil, directorio_local) 
         VALUES ('{$userId}','{$_POST['targetUserLogin']}','',
-        'img/user_pic.png','resources/users/{$_POST['targetUserName']} {$_POST['targetUserLastname']}/')") or die($this->conn->error);
+        'img/user_pic.png','resources/users/{$userNameFixed}/')") or die($this->conn->error);
     }
 
     function createUserDirectory()
     {
-        $dirName = "../resources/users/{$_POST['targetUserName']} {$_POST['targetUserLastname']}";
+        $userNameFixed = $_POST['targetUserName'] . ' ' . $_POST['targetUserLastname'];
+        $search = ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ'];
+        $replace = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U', 'n', 'N'];
+        $userNameFixed = str_replace($search, $replace, $userNameFixed);
+
+        $dirName = "../resources/users/{$userNameFixed}";
         if (!file_exists($dirName)) {
             mkdir($dirName, 0777, true);
             return true;
