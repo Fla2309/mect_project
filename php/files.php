@@ -44,7 +44,9 @@ class Files extends DB
         try {
             $previousFile = '';
             $this->user = mysqli_fetch_row($this->conn->query('SELECT * FROM usuarios WHERE id=' . $this->userId)) or die($this->conn->error);
+            $userWeb = mysqli_fetch_row($this->conn->query('SELECT * FROM usuario_web WHERE id_usuario=' . $this->userId)) or die($this->conn->error);
             $username = $this->user[1] . ' ' . $this->user[2];
+            $userWebFolder = $userWeb[5];
             $results = [];
             switch ($this->type) {
                 case 'work':
@@ -56,8 +58,8 @@ class Files extends DB
                 default:
                     break;
             }
-            $deletedPreviousFile = $this->deletePreviousFile($username, $previousFile);
-            $savedFile = $this->saveFile($username);
+            $deletedPreviousFile = $this->deletePreviousFile($userWebFolder, $previousFile);
+            $savedFile = $this->saveFile($userWebFolder);
             $results = [
                 'deletedPreviousFile' => $deletedPreviousFile == 0 ? 'success' : 'error #' . $deletedPreviousFile,
                 'savedFile' => $savedFile == 0 ? 'success' : 'error #' . $savedFile
@@ -101,10 +103,10 @@ class Files extends DB
         }
     }
 
-    function saveFile($username)
+    function saveFile($userWebFolder)
     {
         $folder = $this->type == 'work' ? 'trabajos' : 'tareas';
-        $destPath = "../resources/users/{$username}/{$folder}/{$this->file['name']}";
+        $destPath = "../{$userWebFolder}/{$folder}/{$this->file['name']}";
         if (move_uploaded_file($this->file['tmp_name'], $destPath)) {
             // echo 'Archivo creado exitosamente.';
             return 0;
@@ -114,10 +116,10 @@ class Files extends DB
         }
     }
 
-    function deletePreviousFile($username, $previousFile)
+    function deletePreviousFile($userWebFolder, $previousFile)
     {
         $folder = $this->type == 'work' ? 'trabajos' : 'tareas';
-        $srcPath = "../resources/users/{$username}/{$folder}/{$previousFile}";
+        $srcPath = "../{$userWebFolder}/{$folder}/{$previousFile}";
         if (file_exists($srcPath)) {
             if (unlink($srcPath)) {
                 // echo 'Archivo borrado exitosamente.';

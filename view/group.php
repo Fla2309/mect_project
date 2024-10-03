@@ -103,7 +103,7 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
         </div>
     </div>
     <script>
-        const moduleCheckboxes = document.querySelectorAll('.module-checkbox');
+        moduleCheckboxes = document.querySelectorAll('.module-checkbox');
         moduleCheckboxes.forEach((checkbox) => {
             checkbox.addEventListener('change', function () {
                 var moduleId = this.id.replace('_enabled', '');

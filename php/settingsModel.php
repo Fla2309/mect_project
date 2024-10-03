@@ -195,6 +195,9 @@ class Settings
                 'userCreation' => false,
                 'webUserCreation' => false,
                 'directoryCreation' => false,
+                'modulesCreation' => false,
+                'worksCreation' => false,
+                'homeworksCreation' => false,
                 'errorMessage' => "El nombre de usuario {$_POST['targetUserLogin']} ya existe en el sitio"
             ];
             http_response_code(406);
@@ -205,6 +208,9 @@ class Settings
                 'userCreation' => false,
                 'webUserCreation' => false,
                 'directoryCreation' => false,
+                'modulesCreation' => false,
+                'worksCreation' => false,
+                'homeworksCreation' => false,
                 'errorMessage' => "{$_POST['targetUserName']} {$_POST['targetUserLastname']} ya existe en el grupo."
             ];
             http_response_code(406);
@@ -213,10 +219,16 @@ class Settings
         $userCreation = $this->insertIntoUsuarios();
         $webUserCreation = $this->insertIntoUsuarioWeb();
         $directoryCreation = $this->createUserDirectory();
+        $modulesCreation = $this->insertIntoModulosUsuarios();
+        $worksCreation = $this->insertIntoTrabajosUsuarios();
+        $homeworksCreation = $this->insertIntoTareasUsuarios();
         $results = [
             'userCreation' => $userCreation,
             'webUserCreation' => $webUserCreation,
-            'directoryCreation' => $directoryCreation
+            'directoryCreation' => $directoryCreation,
+            'modulesCreation' => $modulesCreation,
+            'worksCreation' => $worksCreation,
+            'homeworksCreation' => $homeworksCreation
         ];
 
         if ($userCreation && $webUserCreation && $directoryCreation)
@@ -285,5 +297,35 @@ class Settings
         } else {
             return false;
         }
+    }
+
+    function insertIntoModulosUsuarios()
+    {
+        return $this->conn->query("INSERT INTO modulos_usuarios (id_modulo, id_usuario, status) 
+            SELECT m.id_modulo, u.id, 1 FROM modulos m, usuarios u WHERE u.login_user = '{$_POST['targetUserLogin']}'");
+    }
+
+    function insertIntoTrabajosUsuarios()
+    {
+        return $this->conn->query("INSERT INTO trabajos_usuarios (id_trabajo, id_usuario) 
+            SELECT tm.id_trabajo, u.id FROM trabajos_modulos tm, usuarios u 
+            WHERE login_user ='{$_POST['targetUserLogin']}' 
+            AND id_trabajo NOT IN 
+                (SELECT id_trabajo FROM trabajos_usuarios 
+                WHERE id_usuario IN 
+                    (SELECT id FROM usuarios 
+                    WHERE login_user ='{$_POST['targetUserLogin']}'))") or die($this->conn->error);
+    }
+
+    function insertIntoTareasUsuarios()
+    {
+        return $this->conn->query("INSERT INTO tareas_usuarios (id_tarea, id_usuario) 
+            SELECT tm.id_tarea, u.id FROM tareas_modulos tm, usuarios u 
+            WHERE login_user ='{$_POST['targetUserLogin']}' 
+            AND id_tarea NOT IN 
+                (SELECT id_tarea FROM tareas_usuarios 
+                WHERE id_usuario IN 
+                    (SELECT id FROM usuarios 
+                    WHERE login_user ='{$_POST['targetUserLogin']}'))") or die($this->conn->error);
     }
 }
