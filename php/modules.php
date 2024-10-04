@@ -135,7 +135,7 @@ class Module extends DB
     {
         $table = $type == 1 ? 'tareas_modulos' : 'trabajos_modulos';
         $nameCol = $type == 1 ? 'nombre_tarea' : 'nombre_trabajo';
-        $query = $this->conn->query("INSERT INTO {$table} (`nombre_tarea`, `id_modulo`, `comentarios`, `plantilla`, `status`) 
+        $query = $this->conn->query("INSERT INTO {$table} (`{$nameCol}`, `id_modulo`, `comentarios`, `plantilla`, `status`) 
             VALUES ('{$values['actName']}', {$values['moduleId']}, '{$values['comments']}', '{$values['templateName']}', 0)");
         if ($query)
             http_response_code(201);
