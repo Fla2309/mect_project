@@ -5,6 +5,7 @@ include_once('../php/users.php');
 include_once('../php/groupModel.php');
 include_once('../php/modules.php');
 include_once('../php/coaching.php');
+include_once('../php/testsModel.php');
 if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     include('unavailable.php');
 } else {
@@ -18,6 +19,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     $currentUserWeb->setUserWeb();
     $currentUserModules = new Module($currentUser->getUserId());
     $currentUserCoaching = new Coaching();
+    $currentUserTests = new Tests($currentUser->getUserId());
 }
 ?>
 <!DOCTYPE html>
@@ -68,16 +70,16 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
         .rounded-table {
             border-collapse: separate;
             border-spacing: 0;
-            border-radius: 10px;
+            border-radius: calc(0.375rem - 1px);
             overflow: hidden;
         }
 
-        .rounded-table thead{
-            background-color: #01176f; 
+        .rounded-table thead {
+            background-color: #01176f;
             color: #ffffff;
         }
 
-        .rounded-table tbody{
+        .rounded-table tbody {
             background-color: white;
         }
     </style>
@@ -434,13 +436,13 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                         $tbody .= "<p class=\"text-break ps-5\"><strong>¿Qué nuevas preguntas surgen a partir de esta experiencia?:</strong><br>{$coaching['newQuestions']}</p>";
                         $tbody .= "</div></div></td></tr>";
                     }
-                    $count = count($coachings);
-                    $html = "<table class=\"table table-hover rounded-table\"><thead><th scope=\"col\" class=\"align-middle\">Nombre de la sesión</th>
-                        <th scope=\"col\" class=\"align-middle\">Coachee</th>
-                        <th scope=\"col\" class=\"align-middle\">Fecha de subida</th>
-                        <th scope=\"col\" class=\"align-middle\">Opciones</th></thead>
-                        <tbody><tr><td></td><td></td><td></td><td><strong><i>Sesiones totales: {$count}</i></strong></td></tr>{$tbody}</tbody></table>";
-                    echo $html;
+                    $coachingsCount = count($coachings);
+                    $coachingsHtml = "<table class=\"table table-hover rounded-table mt-2\"><thead><th scope=\"col\" class=\"align-middle\"><h3>Nombre de la sesión</h3></th>
+                        <th scope=\"col\" class=\"align-middle\"><h3>Coachee</h3></th>
+                        <th scope=\"col\" class=\"align-middle\"><h3>Fecha de subida</h3></th>
+                        <th scope=\"col\" class=\"align-middle\"><h3>Opciones</h3></th></thead>
+                        <tbody><tr><td></td><td></td><td></td><td><strong><i>Sesiones totales: {$coachingsCount}</i></strong></td></tr>{$tbody}</tbody></table>";
+                    echo $coachingsHtml;
                 } else {
                     echo '<h2 class="text-center">No hay información para mostrar</h2>';
                 }
@@ -448,9 +450,49 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             </div>
             <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel"
                 aria-labelledby="pills-examenes-tab">
-                <div>
-                    <h2 class="text-center">No hay información para mostrar</h2>
-                </div>
+                <?php
+                $userExams = $currentUserTests->retrieveTestsPerUser();
+                if ($userExams != []) {
+                    $examsHtml = '';
+                    foreach ($userExams as $exam) {
+                        $resultString = $exam['result'] >= 70 ? "<p class=\"fw-bold text-success\">{$exam['result']}</p>" : "<p class=\"fw-bold text-danger\">{$exam['result']}</p>";
+                        $examAnswers = $currentUserTests->getExamAnswersStudent($currentUser->getUserId(),$exam['id']);
+                        $examAnswersHtml = '';
+                        $examDetailsHtml = '';
+                        foreach ($examAnswers['examContents'] as $answer) {
+                            $examAnswersHtml = $answer['correct'] > 0 ? 
+                                $examAnswersHtml . "<div class=\"card mb-3\"><div class=\"card-header d-flex justify-content-between align-items-center bg-primary text-white\">":
+                                $examAnswersHtml . "<div class=\"card mb-3\"><div class=\"card-header d-flex justify-content-between align-items-center bg-danger text-white\">";
+                            $examAnswersHtml .= "<span><strong>{$answer['question']}</strong></span><div class=\"d-flex align-items-center\"><label class=\"form-check-label\">";
+                            $examAnswersHtml = $answer['correct'] > 0 ? 
+                                $examAnswersHtml . "<i class=\"text-white fa fa-solid fa-check\"></i></label></div></div>":
+                                $examAnswersHtml . "<i class=\"text-white fa fa-solid fa-xmark\"></i></label></div></div>";
+                            $examAnswersHtml .= "<div class=\"card-body\"><p>{$answer['answer']}</p></div></div>";
+                        }
+                        $examDetailsHtml .= "<div class=\"offcanvas-body\"><div class=\"mb-3 d-flex align-items-center\">
+                                <label for=\"finalGrade\"><strong>Calificación: </strong>{$exam['result']}</label></div>{$examAnswersHtml}</div>";
+                        $examsHtml .= "<div class=\"card mt-2\"><div class=\"card-header d-flex justify-content-between\">
+                                <h3 class=\"mt-2 vh-50 col-auto\">{$exam['testName']}</h3>
+                            </div>
+                            <div class=\"card-body row accordion g-0\" id=\"accExam{$exam['id']}\">
+                                <div class=\"accordion-item\">
+                                    <h2 class=\"accordion-header\" id=\"accExamHeading{$exam['id']}\">
+                                        <button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#accExamCollapse{$exam['id']}\" aria-expanded=\"true\" aria-controls=\"collapseOne\">Ver detalles del examen</button>
+                                    </h2>
+                                    <div id=\"accExamCollapse{$exam['id']}\" class=\"accordion-collapse collapsed collapse\" aria-labelledby=\"accHeading4\" data-bs-parent=\"#accExam{$exam['id']}\" style=\"\">
+                                        <div class=\"accordion-body\" id=\"accExamBody{$exam['id']}=\"\">
+                                            {$examDetailsHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div></div>";
+                    }
+                    echo $examsHtml;
+                } else {
+                    echo '<h2 class="text-center">No hay información para mostrar</h2>';
+                }
+
+                ?>
             </div>
             <div class="tab-pane fade" style="width: inherit;" id="pills-pagos" role="tabpanel"
                 aria-labelledby="pills-pagos-tab">
