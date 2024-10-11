@@ -1,11 +1,12 @@
 <?php
 session_start();
-include_once ('../php/user.php');
-include_once ('../php/users.php');
-include_once ('../php/groupModel.php');
-include_once ('../php/modules.php');
+include_once('../php/user.php');
+include_once('../php/users.php');
+include_once('../php/groupModel.php');
+include_once('../php/modules.php');
+include_once('../php/coaching.php');
 if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
-    include ('unavailable.php');
+    include('unavailable.php');
 } else {
     $currentUser = new User();
     $currentUser->setUser($_GET['user']);
@@ -16,6 +17,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     $currentUserWeb = new UserWeb($currentUser->getUserId());
     $currentUserWeb->setUserWeb();
     $currentUserModules = new Module($currentUser->getUserId());
+    $currentUserCoaching = new Coaching();
 }
 ?>
 <!DOCTYPE html>
@@ -62,6 +64,22 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
         .list-group-item img {
             height: 2.5rem;
         }
+
+        .rounded-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .rounded-table thead{
+            background-color: #01176f; 
+            color: #ffffff;
+        }
+
+        .rounded-table tbody{
+            background-color: white;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
@@ -74,7 +92,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
 </head>
 
 <body>
-    <?php include_once ('navbar.php') ?>
+    <?php include_once('navbar.php') ?>
     <table hidden>
         <tr>
             <td><input type="text" id="user" placeholder="<?php echo $_SESSION['user'] ?>"
@@ -104,6 +122,11 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     <button class="nav-link" id="pills-modulos-tab" data-bs-toggle="pill"
                         data-bs-target="#pills-modulos" type="button" role="tab" aria-controls="pills-modulos"
                         aria-selected="false">Módulos</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-coaching-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-coaching" type="button" role="tab" aria-controls="pills-coaching"
+                        aria-selected="false">Coaching</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-examenes-tab" data-bs-toggle="pill"
@@ -137,7 +160,8 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     <div class="card-body row">
                         <div class="col-3 mt-3" hidden>
                             <h5 class="card-title">ID</h5>
-                            <span class="card-text mt-2 m-b3" id="currentUserId"><?php echo $currentUser->getUserId() ?></span>
+                            <span class="card-text mt-2 m-b3"
+                                id="currentUserId"><?php echo $currentUser->getUserId() ?></span>
                         </div>
                         <div class="col-3 mt-3">
                             <h5 class="card-title">Nombre</h5>
@@ -379,6 +403,49 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     });
                 </script>
             </div>
+            <div class="tab-pane fade" style="width: inherit;" id="pills-coaching" role="tabpanel"
+                aria-labelledby="pills-coaching-tab">
+                <?php
+                $coachings = $currentUserCoaching->getCoachings($_GET['user']);
+                $tbody = '';
+                if ($coachings != []) {
+                    foreach ($coachings as $coaching) {
+                        $tbody .= "<tr id=\"idCoaching-{$coaching['idCoaching']}\">";
+                        $tbody .= "<th>{$coaching['nameCoaching']}</th>";
+                        $tbody .= "<td>{$coaching['coacheeName']}</td>";
+                        $tbody .= "<td>{$coaching['date']}</td>";
+                        $tbody .= "<td><button class=\"btn btn-outline-secondary collapsed\" type=\"button\" data-bs-toggle=\"collapse\" aria-expanded=\"false\" data-bs-target=\"#collapse-{$coaching['idCoaching']}\" aria-expanded=\"false\" aria-controls=\"collapse-{$coaching['idCoaching']}\">Ver Contenido</button></td></tr>";
+                        $tbody .= "<tr><td colspan=\"4\" class=\"p-0\" style=\"width: auto;\">";
+                        $tbody .= "<div class=\"accordion-collapse collapse\" id=\"collapse-{$coaching['idCoaching']}\">";
+                        $tbody .= "<div class=\"accordion-body pt-2\">";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>Lugar:</strong><br>{$coaching['place']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>Descripción del lugar:</strong><br>{$coaching['placeDesc']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>Tiempo de interacción:</strong><br>{$coaching['timeOfInteraction']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Cuál fue el quiebre declarado?:</strong><br>{$coaching['topicDeclared']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Cuál fue el quiebre que se trabajó?:</strong><br>{$coaching['topicHandled']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Cómo fue el proceso de indagación? ¿Qué valor le agregó a la conversación?:</strong><br>{$coaching['process']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Cuál fue la interpretación que tuviste del quiebre?:</strong><br>{$coaching['interpretation']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Cómo fue la emoción de la interacción?:</strong><br>{$coaching['interactionEmotions']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Cómo fue la corporalidad del coachee durante la interacción?:</strong><br>{$coaching['bodyLang']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Qué nuevas acciones son posibles para el coachee después de tu intervención?:</strong><br>{$coaching['newActions']}</p>";
+                        $tbody .= "<p><h5 class=\"ms-4\">REFLEXIONES POSTERIORES AL COACHING</h5></p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Qué emociones vivencié?:</strong><br>{$coaching['myEmotions']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Qué áreas de aprendizaje puedo declarar?:</strong><br>{$coaching['areasOfOportunity']}</p>";
+                        $tbody .= "<p class=\"text-break ps-5\"><strong>¿Qué nuevas preguntas surgen a partir de esta experiencia?:</strong><br>{$coaching['newQuestions']}</p>";
+                        $tbody .= "</div></div></td></tr>";
+                    }
+                    $count = count($coachings);
+                    $html = "<table class=\"table table-hover rounded-table\"><thead><th scope=\"col\" class=\"align-middle\">Nombre de la sesión</th>
+                        <th scope=\"col\" class=\"align-middle\">Coachee</th>
+                        <th scope=\"col\" class=\"align-middle\">Fecha de subida</th>
+                        <th scope=\"col\" class=\"align-middle\">Opciones</th></thead>
+                        <tbody><tr><td></td><td></td><td></td><td><strong><i>Sesiones totales: {$count}</i></strong></td></tr>{$tbody}</tbody></table>";
+                    echo $html;
+                } else {
+                    echo '<h2 class="text-center">No hay información para mostrar</h2>';
+                }
+                ?>
+            </div>
             <div class="tab-pane fade" style="width: inherit;" id="pills-examenes" role="tabpanel"
                 aria-labelledby="pills-examenes-tab">
                 <div>
@@ -536,7 +603,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
         </div>
     </div>
 
-    <?php include_once ('footer.html') ?>
+    <?php include_once('footer.html') ?>
 </body>
 
 </html>
