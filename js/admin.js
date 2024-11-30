@@ -14,6 +14,13 @@ $(function () {
     });
 });
 
+$(document).ready(function () {
+    if (sessionStorage.getItem('activateTab')) {
+        $('#pills-presentaciones-tab').trigger('click');
+        sessionStorage.removeItem('activateTab');
+    }
+});
+
 groupHtml = "";
 
 function prepareUrl(data, module_id) {
@@ -658,7 +665,7 @@ function generateCreateGroupFrame(json) {
             Object.values(sortedGroupsByLocation)[0].filter(function (item) {
                 return item.location == select.value;
             });
-        groupIdInput.value = parseInt(filteredValues[0].groupId) + 1;
+        groupIdInput.value = parseInt(filteredValues[0].groupNumber) + 1;
         groupIdInput.parentElement.hidden = false;
         groupNameInput.parentElement.hidden = false;
         startDateInput.parentElement.hidden = false;
@@ -843,4 +850,80 @@ function showMessageModal(title, message, callback = null, autodismiss = false) 
             callback();
         }
     });
+}
+
+function savePresentationTopic() {
+    userId = $('#currentUserIdModal').val();
+    topic = $('#currentUserTopicModal').val();
+    $.ajax({
+        method: "POST",
+        url: "../php/presentationsController.php?type=setTopic",
+        data: {
+            userId: userId,
+            topic: topic
+        }
+    }).done(function () {
+        $('#presentationTopicModal').modal('hide');
+        $('#changesMadeModalBody').text('Tema guardado exitosamente');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            var interval = setInterval(function () {
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
+                }
+            }, 1000);
+        });
+        $('#changesMadeModal').on('hidden.bs.modal', function () {
+            sessionStorage.setItem('activateTab', true);
+            window.location.reload();
+        });
+    }).fail(function () {
+        $('#presentationTopicModal').modal('hide');
+        $('#changesMadeModalBody').text('Hubo un problema al guardar el tema. Inténtelo más tarde');
+        $('#changesMadeModal').modal('show');
+    })
+}
+
+function savePresentationFeedback() {
+    userId = $('#currentUserIdFeedbackModal').val();
+    author = $('#currentFeedbackAuthorModal').val();
+    title = $('#currentFeedbackTitleModal').val();
+    feedback = $('#currentFeedbackModal').val();
+    $.ajax({
+        method: "POST",
+        url: "../php/presentationsController.php?type=setFeedback",
+        data: {
+            userId: userId,
+            author: author,
+            title: title,
+            feedback: feedback,
+        }
+    }).done(function () {
+        $('#presentationFeedbackModal').modal('hide');
+        $('#changesMadeModalBody').text('Feedback guardado exitosamente');
+        $('#changesMadeModal').modal('show');
+        $('#changesMadeModal').on('shown.bs.modal', function () {
+            var seconds = 3;
+            var interval = setInterval(function () {
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    $('#changesMadeModal').modal('hide');
+                } else {
+                    seconds--;
+                }
+            }, 1000);
+        });
+        $('#changesMadeModal').on('hidden.bs.modal', function () {
+            sessionStorage.setItem('activateTab', true);
+            window.location.reload();
+        });
+    }).fail(function () {
+        $('#presentationFeedbackModal').modal('hide');
+        $('#changesMadeModalBody').text('Hubo un problema al guardar el tema. Inténtelo más tarde');
+        $('#changesMadeModal').modal('show');
+    })
 }

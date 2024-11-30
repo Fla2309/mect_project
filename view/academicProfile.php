@@ -6,6 +6,7 @@ include_once('../php/groupModel.php');
 include_once('../php/modules.php');
 include_once('../php/coaching.php');
 include_once('../php/testsModel.php');
+include_once('../php/presentationsModel.php');
 if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     include('unavailable.php');
 } else {
@@ -20,6 +21,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
     $currentUserModules = new Module($currentUser->getUserId());
     $currentUserCoaching = new Coaching();
     $currentUserTests = new Tests($currentUser->getUserId());
+    $currentUserPresentations = new Presentations($currentUser->getUserId());
 }
 ?>
 <!DOCTYPE html>
@@ -456,16 +458,16 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     $examsHtml = '';
                     foreach ($userExams as $exam) {
                         $resultString = $exam['result'] >= 70 ? "<p class=\"fw-bold text-success\">{$exam['result']}</p>" : "<p class=\"fw-bold text-danger\">{$exam['result']}</p>";
-                        $examAnswers = $currentUserTests->getExamAnswersStudent($currentUser->getUserId(),$exam['id']);
+                        $examAnswers = $currentUserTests->getExamAnswersStudent($currentUser->getUserId(), $exam['id']);
                         $examAnswersHtml = '';
                         $examDetailsHtml = '';
                         foreach ($examAnswers['examContents'] as $answer) {
-                            $examAnswersHtml = $answer['correct'] > 0 ? 
-                                $examAnswersHtml . "<div class=\"card mb-3\"><div class=\"card-header d-flex justify-content-between align-items-center bg-primary text-white\">":
+                            $examAnswersHtml = $answer['correct'] > 0 ?
+                                $examAnswersHtml . "<div class=\"card mb-3\"><div class=\"card-header d-flex justify-content-between align-items-center bg-primary text-white\">" :
                                 $examAnswersHtml . "<div class=\"card mb-3\"><div class=\"card-header d-flex justify-content-between align-items-center bg-danger text-white\">";
                             $examAnswersHtml .= "<span><strong>{$answer['question']}</strong></span><div class=\"d-flex align-items-center\"><label class=\"form-check-label\">";
-                            $examAnswersHtml = $answer['correct'] > 0 ? 
-                                $examAnswersHtml . "<i class=\"text-white fa fa-solid fa-check\"></i></label></div></div>":
+                            $examAnswersHtml = $answer['correct'] > 0 ?
+                                $examAnswersHtml . "<i class=\"text-white fa fa-solid fa-check\"></i></label></div></div>" :
                                 $examAnswersHtml . "<i class=\"text-white fa fa-solid fa-xmark\"></i></label></div></div>";
                             $examAnswersHtml .= "<div class=\"card-body\"><p>{$answer['answer']}</p></div></div>";
                         }
@@ -639,12 +641,134 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
             <div class="tab-pane fade" style="width: inherit;" id="pills-presentaciones" role="tabpanel"
                 aria-labelledby="pills-presentaciones-tab">
                 <div>
-                    <h2 class="text-center">No hay información para mostrar</h2>
+                    <?php
+                    $currentUserPresentation = $currentUserPresentations->getUserPresentation();
+                    $currentUserPresentationFeedback = $currentUserPresentations->getPresentationsFeedbackPerUser();
+                    if ($currentUserPresentation != null) {
+                        if ($currentUserPresentationFeedback->num_rows > 0) {
+                            $rowsHtml = '';
+                            foreach ($currentUserPresentationFeedback as $row) {
+                                $rowsHtml .= "<tr>
+                                            <td>{$row['autor']}</th>
+                                            <td>{$row['fecha_subido']}</td>
+                                            <td>{$row['nombre_feedback']}</td>
+                                            <td>{$row['feedback']}</td>
+                                        </tr>";
+                            }
+                            $table = "<table class=\"table\">
+                                    <thead>
+                                        <tr><th scope=\"col\">Autor</th><th scope=\"col\">Fecha</th><th scope=\"col\">Título</th><th scope=\"col\">Feedback</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        {$rowsHtml}
+                                    </tbody>
+                                </table>";
+                        } else {
+                            $table = "<p class=\"text-center\">No hay feedback aún</p>";
+                        }
+                        echo "<div class=\"d-flex justify-content-center\">
+                        <div class=\"card w-auto\">
+                            <div class=\"card-body row justify-content-center\">
+                                <h5 class=\"card-title text-center\">{$currentUserPresentation['topic']}</h5>
+                                {$table}
+                                <button class=\"btn btn-light w-auto\" data-bs-toggle=\"modal\" data-bs-target=\"#presentationFeedbackModal\">Agregar Feedback</button>
+                            </div>
+                        </div>
+                    </div>";
+                    } else {
+                        echo "<div class=\"d-flex justify-content-center\">
+                                <div class=\"card w-auto\">
+                                    <div class=\"card-body row justify-content-center\">
+                                        <h5 class=\"card-title text-center\">No hay un tema asignado para {$currentUser->getFullName()}</h5>
+                                        <button class=\"btn btn-light w-auto\" data-bs-toggle=\"modal\" data-bs-target=\"#presentationTopicModal\">Agregar Tema</button>
+                                    </div>
+                                </div>
+                            </div>";
+                    }
+                    ?>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="presentationTopicModal" tabindex="-1" aria-labelledby="presentationTopicModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="presentationTopicModalTitle">Agregar tema de presentación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="presentationTopicModalBody">
+                    <div class="input-group mb-2" hidden>
+                        <span class="input-group-text bg-primary text-white">ID</span>
+                        <input class="form-control" value="<?php echo $currentUser->getUserId() ?>"
+                            id="currentUserIdModal" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Estudiante</span>
+                        <input class="form-control" value="<?php echo $currentUser->getFullName() ?>"
+                            id="currentUserFullnameModal" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Tema</span>
+                        <input class="form-control" placeholder="Escriba el nombre del tema" id="currentUserTopicModal">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="savePresentationTopic()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="presentationFeedbackModal" tabindex="-1" aria-labelledby="presentationFeedbackModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="presentationFeedbackModalTitle">Agregar feedback de presentación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="presentationFeedbackModalBody">
+                    <div class="input-group mb-2" hidden>
+                        <span class="input-group-text bg-primary text-white">ID</span>
+                        <input class="form-control" value="<?php echo $currentUser->getUserId() ?>"
+                            id="currentUserIdFeedbackModal" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Autor</span>
+                        <input class="form-control" value="<?php echo $_SESSION['fullname']?>"
+                            id="currentFeedbackAuthorModal" disabled>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Título</span>
+                        <input class="form-control" placeholder="Escriba un título a su feedback..." id="currentFeedbackTitleModal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text bg-primary text-white">Feedback</span>
+                        <textarea class="form-control" placeholder="Escriba su feedback..." id="currentFeedbackModal"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="savePresentationFeedback()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changesMadeModal" tabindex="-1" aria-labelledby="changesMadeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changesMadeModalTitle">Atención</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="changesMadeModalBody">
+                </div>
+            </div>
+        </div>
+    </div>
     <?php include_once('footer.html') ?>
 </body>
 

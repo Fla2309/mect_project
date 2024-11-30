@@ -1,11 +1,12 @@
 <?php
 
 include_once('presentationsModel.php');
-$presentations = new Presentations($_GET['userId']);
+$userId = isset($_POST['userId']) ? $_POST['userId'] : $_GET['userId'];
+$presentations = new Presentations($userId);
 
 switch ($_GET['type']) {
-    case 0:
-        $rows = $presentations->retrievePresentationsFeedbackPerUser();
+    case 'getFeedback':
+        $rows = $presentations->getPresentationsFeedbackPerUser();
         $html = "";
         foreach ($rows as $row) {
             $html = $html . "<tr><td scope=\"row\">" . $row['nombre_feedback'] . "</td>";
@@ -15,8 +16,12 @@ switch ($_GET['type']) {
         }
         echo $html;
         break;
+    case 'setTopic':
+        $presentations->savePresentationTopicByUserId();
+        break;
+    case 'setFeedback':
+        $presentations->savePresentationFeedbackByUserId();
+        break;
     default:
         break;
 }
-
-?>
