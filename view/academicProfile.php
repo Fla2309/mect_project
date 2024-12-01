@@ -667,7 +667,7 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                             $table = "<p class=\"text-center\">No hay feedback aún</p>";
                         }
                         $addFeedbackButton = "";
-                        if($_SESSION['nivel_usuario']>3){
+                        if($_SESSION['nivel_usuario']>=3){
                             $addFeedbackButton = "<button class=\"btn btn-light w-auto\" data-bs-toggle=\"modal\" data-bs-target=\"#presentationFeedbackModal\">Agregar Feedback</button>";
                         }
                         echo "<div class=\"d-flex justify-content-center\">
