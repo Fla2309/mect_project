@@ -17,17 +17,51 @@ function generateModulesPage() {
 function generatePresentationsPage() {
     $.ajax({
         method: "GET",
-        url: "../php/presentationsController.php?type=0&userId=" + document.getElementById("userId").value,
+        url: "../php/presentationsController.php?type=getFeedback&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
-        if (data.length == 0) {
+        if (data == null) {
             $('#presentationsTable').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
         }
         else {
-            $('#presentationsTableBody').html(data);
+            generatePresentationsPageHtml(data);
         }
     }).fail(function (result) {
         console.log(result);
     });
+}
+
+function generatePresentationsPageHtml(json) {
+    if (document.querySelector("#topicTitle") != null) {
+        document.querySelector("#topicTitle").remove();
+    }
+    const tableBody = document.querySelector('#presentationsTableBody');
+    const presentationsTable = document.querySelector('#presentationsTable');
+    const topicTitle = document.createElement('h3');
+    topicTitle.id = "topicTitle";
+    topicTitle.textContent = json.topic;
+    presentationsTable.parentElement.insertBefore(topicTitle, presentationsTable);
+    tableBody.innerHTML = "";
+    if (json.feedback.length == 0) {
+        presentationsTable.innerHTML = "<h5>No hay feedback para mostrar aún</h5>"
+    } else {
+        json.feedback.forEach(feedbackItem => {
+            const row = document.createElement('tr');
+            const titleCell = document.createElement('td');
+            titleCell.setAttribute('scope', 'row');
+            titleCell.textContent = feedbackItem.title;
+            row.appendChild(titleCell);
+            const authorCell = document.createElement('td');
+            authorCell.textContent = feedbackItem.author;
+            row.appendChild(authorCell);
+            const dateCell = document.createElement('td');
+            dateCell.textContent = feedbackItem.date;
+            row.appendChild(dateCell);
+            const feedbackCell = document.createElement('td');
+            feedbackCell.textContent = feedbackItem.feedback;
+            row.appendChild(feedbackCell);
+            tableBody.appendChild(row);
+        });
+    }
 }
 
 function generateTestsPage() {

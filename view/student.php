@@ -139,14 +139,14 @@
             </div>
             <div class="tab-pane fade" id="presentaciones">
                 <div class="mx-3 my-5" style="background-color: white">
-                    <h2 class="px-3 py-3">Presentaciones y Feedback</h2>
+                    <h2 class="px-3 py-3">Presentación y Feedback</h2>
                     <hr class="divider">
                     <table class="table table-hover" id="presentationsTable">
                         <thead>
                             <th scope="col">Nombre del feedback</th>
                             <th scope="col">Autor</th>
                             <th scope="col">Fecha de subida</th>
-                            <th scope="col">Archivo</th>
+                            <th scope="col">Feedback</th>
                         </thead>
                         <tbody id="presentationsTableBody">
                         </tbody>

@@ -385,7 +385,7 @@ function setInformacionFrame(json) {
         imgTemplate.src = 'img/download.png';
         imgTemplate.title = 'Descargar archivo';
         aDownload.href = jsonRow.attachment;
-        aDownload.download = jsonRow.attachment;
+        aDownload.download = jsonRow.attachment.split('\\').pop();
         aDownload.appendChild(imgTemplate);
         divTitle.appendChild(h5);
         divTitle.appendChild(aDownload);
