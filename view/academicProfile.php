@@ -645,14 +645,14 @@ if ($_SESSION['user'] != $_GET['user'] && $_SESSION['nivel_usuario'] < 2) {
                     $currentUserPresentation = $currentUserPresentations->getUserPresentation();
                     $currentUserPresentationFeedback = $currentUserPresentations->getPresentationsFeedbackPerUser();
                     if ($currentUserPresentation != null) {
-                        if ($currentUserPresentationFeedback->num_rows > 0) {
+                        if (count($currentUserPresentationFeedback['feedback']) > 0) {
                             $rowsHtml = '';
-                            foreach ($currentUserPresentationFeedback as $row) {
+                            foreach ($currentUserPresentationFeedback['feedback'] as $feedback) {
                                 $rowsHtml .= "<tr>
-                                            <td>{$row['autor']}</th>
-                                            <td>{$row['fecha_subido']}</td>
-                                            <td>{$row['nombre_feedback']}</td>
-                                            <td>{$row['feedback']}</td>
+                                            <td>{$feedback['author']}</th>
+                                            <td>{$feedback['date']}</td>
+                                            <td>{$feedback['title']}</td>
+                                            <td>{$feedback['feedback']}</td>
                                         </tr>";
                             }
                             $table = "<table class=\"table\">

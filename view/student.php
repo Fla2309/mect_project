@@ -146,7 +146,7 @@
                             <th scope="col">Nombre del feedback</th>
                             <th scope="col">Autor</th>
                             <th scope="col">Fecha de subida</th>
-                            <th scope="col">Archivo</th>
+                            <th scope="col">Feedback</th>
                         </thead>
                         <tbody id="presentationsTableBody">
                         </tbody>

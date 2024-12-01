@@ -17,8 +17,23 @@ class Presentations
 
     public function getPresentationsFeedbackPerUser()
     {
+        $presentationInfo = mysqli_fetch_assoc($this->conn->query("SELECT * FROM presentaciones WHERE id_usuario=" . $this->userId));
         $rows = $this->conn->query("SELECT * FROM presentaciones_feedback WHERE id_usuario=" . $this->userId);
-        return $rows;
+        $feedback = [];
+        foreach ($rows as $row) {
+            array_push($feedback, [
+                'author' => $row['autor'],
+                'title' => $row['nombre_feedback'],
+                'feedback' => $row['feedback'],
+                'date' => $row['fecha_subido'],
+            ]);
+        }
+        $data = [
+            'userId' => $presentationInfo['id_usuario'],
+            'topic' => $presentationInfo['tema'],
+            'feedback' => $feedback
+        ];
+        return $data;
     }
 
     public function getUserPresentation()

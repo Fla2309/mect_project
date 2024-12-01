@@ -6,15 +6,8 @@ $presentations = new Presentations($userId);
 
 switch ($_GET['type']) {
     case 'getFeedback':
-        $rows = $presentations->getPresentationsFeedbackPerUser();
-        $html = "";
-        foreach ($rows as $row) {
-            $html = $html . "<tr><td scope=\"row\">" . $row['nombre_feedback'] . "</td>";
-            $html = $html . "<td>" . $row['autor'] . "</td>";
-            $html = $html . "<td>" . $row['fecha_subido'] . "</td>";
-            $html = $html . '<td><a id="but_presentation_' . $row['id'] . '" href="resources/templates/" download="' . $row['archivo'] . '"><img src="img/download.png" class="dashboard_icon m-2" title="Descargar tarea"></a></td></tr>';
-        }
-        echo $html;
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($presentations->getPresentationsFeedbackPerUser(), JSON_UNESCAPED_UNICODE);
         break;
     case 'setTopic':
         $presentations->savePresentationTopicByUserId();

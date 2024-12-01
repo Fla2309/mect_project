@@ -23,10 +23,39 @@ function generatePresentationsPage() {
             $('#presentationsTable').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
         }
         else {
-            $('#presentationsTableBody').html(data);
+            generatePresentationsPageHtml(data);
         }
     }).fail(function (result) {
         console.log(result);
+    });
+}
+
+function generatePresentationsPageHtml(json) {
+    if (document.querySelector("#topicTitle") != null) {
+        document.querySelector("#topicTitle").remove();
+    }
+    const tableBody = document.querySelector('#presentationsTableBody');
+    const topicTitle = document.createElement('h3');
+    topicTitle.id = "topicTitle";
+    topicTitle.textContent = json.title;
+    document.querySelector('#presentationsTable').parentElement.appendChild(topicTitle);
+    tableBody.innerHTML = ""
+    json.feedback.forEach(feedbackItem => {
+        const row = document.createElement('tr');
+        const titleCell = document.createElement('td');
+        titleCell.setAttribute('scope', 'row');
+        titleCell.textContent = feedbackItem.title;
+        row.appendChild(titleCell);
+        const authorCell = document.createElement('td');
+        authorCell.textContent = feedbackItem.author;
+        row.appendChild(authorCell);
+        const dateCell = document.createElement('td');
+        dateCell.textContent = feedbackItem.date;
+        row.appendChild(dateCell);
+        const feedbackCell = document.createElement('td');
+        feedbackCell.textContent = feedbackItem.feedback;
+        row.appendChild(feedbackCell);
+        tableBody.appendChild(row);
     });
 }
 
