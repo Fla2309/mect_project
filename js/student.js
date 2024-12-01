@@ -19,7 +19,7 @@ function generatePresentationsPage() {
         method: "GET",
         url: "../php/presentationsController.php?type=getFeedback&userId=" + document.getElementById("userId").value,
     }).done(function (data) {
-        if (data.length == 0) {
+        if (data == null) {
             $('#presentationsTable').html('<h4 class="ms-3">No hay contenido para mostrar</h4>');
         }
         else {

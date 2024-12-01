@@ -17,23 +17,28 @@ class Presentations
 
     public function getPresentationsFeedbackPerUser()
     {
+
         $presentationInfo = mysqli_fetch_assoc($this->conn->query("SELECT * FROM presentaciones WHERE id_usuario=" . $this->userId));
         $rows = $this->conn->query("SELECT * FROM presentaciones_feedback WHERE id_usuario=" . $this->userId);
         $feedback = [];
-        foreach ($rows as $row) {
-            array_push($feedback, [
-                'author' => $row['autor'],
-                'title' => $row['nombre_feedback'],
-                'feedback' => $row['feedback'],
-                'date' => $row['fecha_subido'],
-            ]);
+        if ($presentationInfo) {
+            foreach ($rows as $row) {
+                array_push($feedback, [
+                    'author' => $row['autor'],
+                    'title' => $row['nombre_feedback'],
+                    'feedback' => $row['feedback'],
+                    'date' => $row['fecha_subido'],
+                ]);
+            }
+            $data = [
+                'userId' => $presentationInfo['id_usuario'],
+                'topic' => $presentationInfo['tema'],
+                'feedback' => $feedback
+            ];
+            return $data;
+        } else {
+            return null;
         }
-        $data = [
-            'userId' => $presentationInfo['id_usuario'],
-            'topic' => $presentationInfo['tema'],
-            'feedback' => $feedback
-        ];
-        return $data;
     }
 
     public function getUserPresentation()
@@ -64,7 +69,8 @@ class Presentations
         }
     }
 
-    public function savePresentationFeedbackByUserId(){
+    public function savePresentationFeedbackByUserId()
+    {
         $query = $this->conn->query("INSERT INTO presentaciones_feedback (id_usuario, nombre_feedback, feedback, autor) 
                     VALUES ('{$_POST['userId']}', '{$_POST['title']}', '{$_POST['feedback']}', '{$_POST['author']}')");
         if ($query) {
