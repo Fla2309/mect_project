@@ -139,7 +139,7 @@
             </div>
             <div class="tab-pane fade" id="presentaciones">
                 <div class="mx-3 my-5" style="background-color: white">
-                    <h2 class="px-3 py-3">Presentaciones y Feedback</h2>
+                    <h2 class="px-3 py-3">Presentación y Feedback</h2>
                     <hr class="divider">
                     <table class="table table-hover" id="presentationsTable">
                         <thead>
