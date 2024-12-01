@@ -149,6 +149,42 @@ class Coaching extends DB
         return $stringData;
     }
 
+    public function getCoachings($user){
+        
+        $queryString = 'SELECT * FROM coaching_usuarios WHERE id_usuario IN (SELECT id FROM usuarios WHERE login_user = \'' . $user . '\') ORDER BY id DESC';
+        $query = $this->conn->query($queryString) or die($this->conn->error);
+        if ($query) {
+            $result = [];
+            while ($row = $query->fetch_assoc()) {
+                $modifiedRow = [
+                    'idCoaching' => $row['id'],
+                    'nameCoaching' => $row['nombre_coaching'],
+                    'userId' => $row['id_usuario'],
+                    'coacheeName' => $row['nombre_coachee'],
+                    'place' => $row['lugar'],
+                    'date' => $row['fecha'],
+                    'timeOfInteraction' => $row['tiempo_interaccion'],
+                    'placeDesc' => $row['descripcion_lugar'],
+                    'topicDeclared' => $row['quiebre_declarado'],
+                    'topicHandled' => $row['quiebre_trabajado'],
+                    'process' => $row['proceso_indagacion'],
+                    'interpretation' => $row['interpretacion_quiebre'],
+                    'interactionEmotions' => $row['emocion_interaccion'],
+                    'bodyLang' => $row['corporalidad'],
+                    'newActions' => $row['nuevas_acciones'],
+                    'myEmotions' => $row['emociones_vividas'],
+                    'areasOfOportunity' => $row['areas_aprendizaje'],
+                    'newQuestions' => $row['nuevas_preguntas']
+                ];
+                $result[] = $modifiedRow;
+            }
+            $query->free();
+            return $result;
+        } else {
+            return [];
+        }
+    }
+
     function isAdmin($userId)
     {
         $query = mysqli_fetch_row($this->conn->query("SELECT nivel_usuario FROM usuarios WHERE id = {$userId}")) or die($this->conn->error);

@@ -1,7 +1,9 @@
 <?php
 
 include_once('connection.php');
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 class Tests
 {
@@ -350,8 +352,12 @@ class Tests
         }
     }
 
-    public function getExamAnswersStudent()
+    public function getExamAnswersStudent($userId = 0, $examId = 0)
     {
+        if(isset($_GET['userId']) && isset($_GET['userExamId'])){
+            $userId = $_GET['userId']; 
+            $examId = $_GET['userExamId'];
+        }
         $data = [];
         $examContents = [];
         $rows = $this->conn->query("SELECT e.id_examen, e.nombre, u.id AS id_usuario, eu.resultado AS calificacion, er.reactivo, eru.respuesta, eru.correcto 
@@ -360,7 +366,7 @@ class Tests
                     INNER JOIN examenes e ON er.id_examen = e.id_examen 
                     INNER JOIN examenes_usuarios eu ON eu.id_examen = e.id_examen 
                     INNER JOIN usuarios u ON u.id = eru.id_usuario 
-                    WHERE u.id = {$_GET['userId']} AND eu.id={$_GET['userExamId']}") or die($this->conn->error);
+                    WHERE u.id = {$userId} AND eu.id={$examId}") or die($this->conn->error);
 
         foreach ($rows as $row) {
             if (empty($data)) {
