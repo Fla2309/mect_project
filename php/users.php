@@ -137,4 +137,11 @@ class Users
         header('Content-Type: application/json; charset=utf-8');
         return json_encode($userPaymentInfo);
     }
+
+    public function readNotifications()
+    {
+        $query = $this->conn->query("UPDATE notificaciones SET leido = 1 WHERE id_usuario = {$_GET['userId']}") or die($this->conn->error);
+        http_response_code(200);
+        return;
+    }
 }
