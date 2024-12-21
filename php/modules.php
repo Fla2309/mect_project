@@ -483,10 +483,19 @@ class UserModule
                 $query = $this->conn->query("UPDATE {$actType}s_usuarios SET revisado='{$actStatus}' 
                 WHERE id_{$actType}={$data['activityId']} AND id_usuario={$data['targetUserId']}") or die($this->conn->error);
                 if ($query) {
-                    $module = $this->conn->query("SELECT id_modulo, nombre_modulo FROM modulos WHERE id_modulo={$_GET['module']}")->fetch_assoc();
+                    $module = $this->conn->query("SELECT m.id_modulo, m.nombre_modulo, tm.nombre_{$actType}, tu.id_usuario FROM modulos m  
+                            INNER JOIN {$actType}s_modulos tm ON tm.id_modulo=m.id_modulo
+                            INNER JOIN {$actType}s_usuarios tu ON tm.id_{$actType}=tu.id_{$actType}
+                            WHERE m.id_modulo={$_GET['module']} AND tu.id_{$actType}={$data['activityId']} AND tu.id_usuario=1")->fetch_assoc();
+                    $idActName="nombre_{$actType}";
+                    $statusName = $actStatus == 3 ? 'ACREDITADA': 'RECHAZADA';
+                    $notification = $this->conn->query("INSERT INTO notificaciones(id_usuario, titulo, texto) 
+                            VALUES ({$data['targetUserId']},'Revisión de {$actType}','Tu actividad \"{$module[$idActName]}\" del módulo \"{$module['nombre_modulo']}\" ha sido {$statusName}');
+                            ") or die($this->conn->error);
                     http_response_code(201);
                     return [
                         'moduleName' => $module['nombre_modulo'],
+                        'actName' => $module[$idActName],
                         'activityReview' => $actStatus,
                     ];
                 } else {
