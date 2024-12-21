@@ -490,7 +490,7 @@ class UserModule
                     $idActName="nombre_{$actType}";
                     $statusName = $actStatus == 3 ? 'ACREDITADA': 'RECHAZADA';
                     $notification = $this->conn->query("INSERT INTO notificaciones(id_usuario, titulo, texto) 
-                            VALUES ({$data['targetUserId']},'Revisión de {$actType}','Tu actividad \"{$module[$idActName]}\" del módulo \"{$module['nombre_modulo']}\" ha sido {$statusName}');
+                            VALUES ({$data['targetUserId']},'Revisión de {$actType}','Tu actividad \'{$module[$idActName]}\' del módulo \'{$module['nombre_modulo']}\' ha sido {$statusName}');
                             ") or die($this->conn->error);
                     http_response_code(201);
                     return [
