@@ -26,7 +26,7 @@ class Notifications
 
     public function getUserNotifications(){
         $data = [];
-        $query = $this->conn->query("SELECT * FROM notificaciones WHERE id_usuario = {$this->userId} ORDER BY id DESC");
+        $query = $this->conn->query("SELECT * FROM notificaciones WHERE id_usuario = {$this->userId} ORDER BY id DESC LIMIT 15");
         if ($query->num_rows > 0) {
             while ($row = $query->fetch_assoc()) {
                 $data[] = $row;
