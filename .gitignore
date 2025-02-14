@@ -8,3 +8,5 @@ resources/users/Flavio Ariel Almanza Fierro/*.jpg
 connection*.php
 resources/information/*
 */connection.php
+production_queries.sql
+beta_queries.sql
