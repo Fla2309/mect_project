@@ -5,6 +5,7 @@
 
 <body>
     <?php
+    $notificationsDetails = "";
     if ($_SESSION['global_notifications'] != []) {
         foreach ($_SESSION['global_notifications'] as $notification) {
             echo "<div class=\"alert alert-warning alert-dismissible my-0 fade show\" role=\"alert\">
@@ -19,7 +20,6 @@
         $notificationsBadge = $newNotifications > 0 ?
             "<span id=\"numberNotifications\" class=\"position-absolute top-30 start-70 translate-middle badge rounded-pill bg-danger\">" . $newNotifications . "<span class=\"visually-hidden\">unread messages</span></span>" :
             "";
-        $notificationsDetails = "";
         $notificationImage = "";
         $count = 0;
         foreach ($_SESSION['notifications'] as $notification) {
