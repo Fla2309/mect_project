@@ -1,11 +1,11 @@
 # Usa una imagen oficial de PHP
 FROM php:8.2-cli
 
-# Copia el contenido del proyecto al contenedor
-COPY . .
-
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
+
+# Copia el contenido del proyecto al contenedor
+COPY . .
 
 # Expone el puerto que Render espera
 EXPOSE 10000
