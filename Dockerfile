@@ -2,7 +2,7 @@
 FROM php:8.2-cli
 
 # Copia el contenido del proyecto al contenedor
-COPY . /var/www/html
+COPY . .
 
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
