@@ -565,3 +565,11 @@ function populateExam(test) {
         }
     });
 }
+
+function readNotifications() {
+    var userId = document.getElementById('userId').getAttribute('value');
+    $.ajax({
+        method: 'POST',
+        url: "../php/usersController.php?data=readNotifications&userId=" + userId
+    })
+}

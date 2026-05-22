@@ -6,6 +6,8 @@ SELECT * FROM ptylcudo_mect_beta.modulo_personal;
 SELECT * FROM ptylcudo_mect_beta.modulos_grupos;
 SELECT * FROM ptylcudo_mect_beta.modulos_usuarios;
 SELECT * FROM ptylcudo_mect_beta.notificaciones;
+SELECT * FROM ptylcudo_mect_beta.presentaciones;
+SELECT * FROM ptylcudo_mect_beta.presentaciones_feedback;
 SELECT * FROM ptylcudo_mect_beta.trabajos_usuarios;
 SELECT * FROM ptylcudo_mect_beta.usuarios;
 SELECT * FROM ptylcudo_mect_beta.usuario_web;

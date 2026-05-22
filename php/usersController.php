@@ -55,6 +55,9 @@ switch ($_GET['data']) {
             $module->createActivityFromModule($_GET['type'], $values);
         }
         break;
+    case 'readNotifications':
+        $users->readNotifications();
+        break;
     default:
         break;
 }

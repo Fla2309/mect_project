@@ -344,6 +344,11 @@ class Tests
             }
             $this->conn->query("UPDATE examenes_usuarios SET resultado = {$_POST['grade']} WHERE id_usuario = {$_POST['targetUserId']} AND id_examen = {$_POST['examId']}") or die($this->conn->error);
             $this->conn->commit();
+            $examResult = $this->conn->query("SELECT e.id_examen, e.nombre, resultado FROM examenes e 
+                    INNER JOIN examenes_usuarios eu ON e.id_examen=eu.id_examen
+                    WHERE eu.id_examen={$_POST['examId']} AND eu.id_usuario={$_POST['targetUserId']}")->fetch_assoc() or die($this->conn->error);
+            $notificationsExamReview = $this->conn->query("INSERT INTO notificaciones(id_usuario, titulo, texto) 
+                    VALUES ({$_POST['targetUserId']},'Un examen revisado','Tu examen \'{$examResult['nombre']}\' ha sido revisado y calificado con {$examResult['resultado']}')") or die($this->conn->error);
             http_response_code(201);
             return 'Examen revisado exitosamente';
         } catch (Exception $exception) {
