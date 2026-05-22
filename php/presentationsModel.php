@@ -62,6 +62,7 @@ class Presentations
     public function savePresentationTopicByUserId()
     {
         $query = $this->conn->query("INSERT INTO presentaciones (id_usuario, tema) VALUES ('{$_POST['userId']}', '{$_POST['topic']}')");
+        $notificationPresentationTopic = $this->conn->query("INSERT INTO notificaciones(id_usuario, titulo, texto) VALUES ({$_POST['userId']}, 'Tema de presentación asignado','Se te ha asignado el siguiente tema: \'{$_POST['topic']}\'')");
         if ($query) {
             http_response_code(201);
         } else {
@@ -73,6 +74,7 @@ class Presentations
     {
         $query = $this->conn->query("INSERT INTO presentaciones_feedback (id_usuario, nombre_feedback, feedback, autor) 
                     VALUES ('{$_POST['userId']}', '{$_POST['title']}', '{$_POST['feedback']}', '{$_POST['author']}')");
+        $notificationPresentationTopic = $this->conn->query("INSERT INTO notificaciones(id_usuario, titulo, texto) VALUES ({$_POST['userId']}, 'Nuevo feedback en presentación','{$_POST['author']} te ha dado feedback sobre tu presentación: \'{$_POST['title']}\'')");
         if ($query) {
             http_response_code(201);
         } else {

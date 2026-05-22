@@ -6,7 +6,9 @@ if (!isset($_SESSION['nivel_usuario']))
     $_SESSION['nivel_usuario'] = $user->getUserLevel();
 if (!isset($_SESSION['foto_perfil']))
     $_SESSION['foto_perfil'] = $user->getUserProfilePic();
-$_SESSION['notifications'] = (new Notifications())->getGlobalNotifications();
+$notifications = isset($_SESSION['userId']) ? new Notifications($_SESSION['userId']) : new Notifications($user->getUserId());
+$_SESSION['global_notifications'] = $notifications->getGlobalNotifications();
+$_SESSION['notifications'] = $notifications->getUserNotifications();
 switch ($_SESSION['nivel_usuario']) {
     case 1:
         include_once "view/student.php";
