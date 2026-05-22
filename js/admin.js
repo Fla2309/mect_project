@@ -417,7 +417,7 @@ function setModulesHtml(json) {
     count = 1;
     $('#modulos').html('');
     var divRow = document.createElement('div');
-    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.className = 'row g-3 mx-3 mb-3 mt-1 justify-content-center';
     divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
         let module = json[i];
@@ -426,10 +426,10 @@ function setModulesHtml(json) {
         let h2 = document.createElement('h2');
         let h4 = document.createElement('h4');
         let button = document.createElement('button');
-        divCol.className = 'col p-5 mb-3 me-3';
-        divCol.style.backgroundColor = 'white';
+        divCol.className = 'col-xl-3 col-lg-3 col-md-6';
         divCol.id = 'idModule-' + module.moduleId;
-        divP1.className = 'p-1';
+        divP1.className = 'p-5 h-100';
+        divP1.style.backgroundColor = 'white';
         button.className = 'btn btn-primary';
         button.type = 'button';
         button.style.width = '120px';
@@ -451,9 +451,9 @@ function setGroupsHtml(json) {
     groupsTab.innerHTML = '';
     var divRow = document.createElement('div');
     var butCreate = document.createElement('button');
-    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.className = 'row g-3 mx-3 mb-3 mt-1 justify-content-center';
     divRow.style.alignContent = 'center';
-    butCreate.className = 'btn btn-primary ms-3 mt-3 p-2';
+    butCreate.className = 'btn btn-primary ms-4 mt-4 p-2';
     butCreate.type = 'button';
     butCreate.id = 'butCreateGroup';
     butCreate.setAttribute('data-bs-toggle', 'collapse');
@@ -469,22 +469,22 @@ function setGroupsHtml(json) {
         let h4 = document.createElement('h4');
         let buttonView = document.createElement('button');
         let buttonEdit = document.createElement('button');
-        divCol.className = 'col p-5 mb-3 me-3';
-        divCol.style.backgroundColor = 'white';
+        divCol.className = 'col-xl-3 col-lg-3 col-md-6';
         divCol.id = 'idGroup-' + group.groupId;
-        divP1.className = 'p-1';
+        divP1.className = 'p-5 h-100';
+        divP1.style.backgroundColor = 'white';
         h2.textContent = 'MECT ' + group.groupNumber + ' ' + group.groupName;
         h2.className = 'group-header';
         h4.textContent = group.location;
         h4.className = 'group-location';
-        buttonView.className = 'btn btn-primary module-button';
+        buttonView.className = 'btn btn-primary module-button my-1';
         buttonView.type = 'button';
         buttonView.id = 'but-gr-' + group.groupId;
         buttonView.style.textAlign = 'left';
         buttonView.setAttribute('onclick', 'showGroupHtml(this)');
-        buttonView.innerHTML = '<img src="../img/eye.png" style="filter: invert(100%);" width="15"> Ver Grupo';
+        buttonView.innerHTML = '<img src="../img/eye.png" style="filter: invert(100%);" width="15">';
         buttonView.title = 'Ver Grupo';
-        buttonEdit.className = 'btn btn-secondary module-button me-2';
+        buttonEdit.className = 'btn btn-secondary module-button my-1 me-2';
         buttonEdit.type = 'button';
         buttonEdit.id = 'but-edit-' + group.groupId;
         buttonEdit.setAttribute('onclick', 'showEditGroupModal(this)');
@@ -558,8 +558,12 @@ function updateGroup() {
 }
 
 function sortGroupsByLocation(json) {
-    json.groups.sort((a, b) => a.location.localeCompare(b.location));
-    json.groups.sort((a, b) => b.groupId.localeCompare(a.groupId));
+    json.groups.sort((a, b) => {
+        const byLocation = a.location.localeCompare(b.location, 'es');
+        if (byLocation !== 0) return byLocation;
+        return Number(b.groupNumber) - Number(a.groupNumber);
+    });
+
     if (json.hasOwnProperty('options')) {
         delete json['options'];
     }

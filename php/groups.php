@@ -99,6 +99,9 @@ class Groups extends DB
             $queryInsert = $this->conn->query("INSERT INTO grupos (id_grupo, nombre_grupo, fecha_inicio, fecha_terminacion, sede)
                     VALUES ('{$_POST['groupId']}','{$_POST['groupName']}','{$_POST['startDate']}',
                     '{$_POST['endDate']}','{$_POST['location']}')") or die($this->conn->error);
+            $lastInsertedId = $this->conn->insert_id;
+            $queryInsertModulosGrupos = $this->conn->query("INSERT INTO modulos_grupos (id_modulo, id_grupo, disponible)
+                    SELECT id_modulo, '{$lastInsertedId}', '0' FROM modulos") or die($this->conn->error);
             http_response_code(201);
             return $_POST;
         } catch (Exception $e) {

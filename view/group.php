@@ -41,7 +41,7 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
                                 title="Escribe el nombre">
                         </div>
                         <div class="col ms-4">
-                            <button type="button" title="Por Implementar" class="btn btn-primary"
+                            <button hidden type="button" title="Por Implementar" class="btn btn-primary"
                                 data-bs-toggle="offcanvas" data-bs-target="#addUsersOffcanvas"
                                 aria-controls="addUsersOffcanvas"><img src="../img/plus.png"
                                     width="20">&nbsp;Añadir</button>
@@ -66,14 +66,11 @@ $userGroup = new UserGroup($_GET['user'], $_GET['group']);
                     ?>
                 </div>
                 <div class="tab-pane card-body" id="pagos">
-                    <div class="col-4 mb-3 d-flex">
-                        <div class="col-7" id="controlPanel">
+                    <div class="col-6 mb-3 d-flex">
+                        <div class="col" id="controlPanel">
                             <input class="form-control" type="text" id="txtGroupPayment"
                                 onkeyup="searchInList('txtGroupPayment','groupPaymentsList')" placeholder="Buscar..."
                                 title="Escribe el nombre">
-                        </div>
-                        <div class="col-5 ms-4">
-                            <button type="button" class="btn btn-primary">Registrar Pago</button>
                         </div>
                     </div>
                     <?php

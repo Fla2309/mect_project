@@ -469,7 +469,7 @@ function setModulesHtml(json) {
     $('#modulos').html('');
 
     var divRow = document.createElement('div');
-    divRow.className = 'row g-0 m-3 justify-content-center';
+    divRow.className = 'row g-3 mx-3 mb-3 mt-1 justify-content-center';
     divRow.style.alignContent = 'center';
     for (let i = 0; i < json.length; i++) {
         let module = json[i];
@@ -479,13 +479,12 @@ function setModulesHtml(json) {
         let h4 = document.createElement('h4');
         let p = document.createElement('p');
         let button = document.createElement('button');
-        divCol.className = 'col p-5 mb-3 me-3';
-        divCol.style.backgroundColor = 'white';
+        divCol.className = 'col-xl-3 col-lg-3 col-md-6';
         divCol.id = 'idModule-' + module.moduleId;
-        divP1.className = 'p-1';
+        divP1.className = 'p-5 h-100';
+        divP1.style.backgroundColor = 'white';
         button.className = 'btn btn-primary';
         button.type = 'button';
-        button.onclick = "showModuleHtml(this)";
         button.style.width = '120px';
         button.style.textAlign = 'left';
         h2.textContent = module.moduleName;

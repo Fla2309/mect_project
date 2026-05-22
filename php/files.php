@@ -19,6 +19,28 @@ class Files extends DB
         $this->userId = $_POST['userId'];
         $this->activityId = $_POST['activityId'];
         $this->conn = (new DB())->connect();
+
+        // Sanitizar el nombre del archivo para mantener consistencia
+        if (isset($this->file['name'])) {
+            $this->file['name'] = $this->sanitizeFileName($this->file['name']);
+        }
+    }
+
+    /**
+     * Sanitiza el nombre del archivo eliminando solo caracteres problemáticos
+     * Preserva caracteres españoles (ñ, á, é, í, ó, ú) y caracteres comunes
+     */
+    private function sanitizeFileName($fileName)
+    {
+        // Obtener solo el nombre base para evitar path traversal
+        $fileName = basename($fileName);
+
+        // Eliminar solo caracteres verdaderamente problemáticos para el sistema de archivos
+        // Mantiene: letras (incluyendo ñ, á, é, etc.), números, espacios, puntos, guiones, paréntesis
+        // Elimina: / \ : * ? " < > |
+        $fileName = preg_replace('/[\/\\\:*?"<>|]/', '_', $fileName);
+
+        return $fileName;
     }
 
     public function uploadAndRegisterFile()
@@ -105,16 +127,51 @@ class Files extends DB
 
     function saveFile($userWebFolder)
     {
-        $folder = $this->type == 'work' ? 'trabajos' : 'tareas';
-        $destPath = "../{$userWebFolder}/{$folder}/{$this->file['name']}";
-        if (move_uploaded_file($this->file['tmp_name'], $destPath)) {
-            // echo 'Archivo creado exitosamente.';
+        // 1) Determinar subcarpeta por tipo
+        $folder = ($this->type === 'work') ? 'trabajos' : 'tareas';
+
+        // 2) Sanitizar carpeta de usuario (evitar slashes duplicados y path traversal)
+        $userWebFolder = trim($userWebFolder, "/\\");
+
+        // 3) Usar el nombre de archivo ya sanitizado en el constructor
+        $fileName = $this->file['name'];
+
+        // 4) Construir ruta destino consistente
+        $basePath = realpath(__DIR__ . '/..'); // directorio raíz del proyecto
+        if ($basePath === false) {
+            error_log('No se pudo resolver basePath con realpath.');
+            return 1;
+        }
+
+        $targetDir = $basePath . DIRECTORY_SEPARATOR . $userWebFolder . DIRECTORY_SEPARATOR . $folder;
+        $destPath  = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+
+        // 5) Crear directorios si no existen
+        if (!is_dir($targetDir)) {
+            if (!mkdir($targetDir, 0755, true)) {
+                error_log("No se pudo crear el directorio: $targetDir");
+                return 1;
+            }
+        }
+
+        // 6) Validar que el tmp es un upload válido
+        $tmp = isset($this->file['tmp_name']) ? $this->file['tmp_name'] : '';
+        if (!is_uploaded_file($tmp)) {
+            error_log("El archivo temporal no es un upload válido: $tmp; error=" . (isset($this->file['error']) ? $this->file['error'] : 'desconocido'));
+            return 1;
+        }
+
+        // 7) Mover archivo
+        if (move_uploaded_file($tmp, $destPath)) {
+            @chmod($destPath, 0644);
             return 0;
         } else {
-            // echo 'Error al mover el archivo.';
+            $last = error_get_last();
+            error_log("move_uploaded_file falló. tmp=$tmp dest=$destPath err=" . print_r($last, true));
             return 1;
         }
     }
+
 
     function deletePreviousFile($userWebFolder, $previousFile)
     {
@@ -150,6 +207,28 @@ class Documents extends DB
         $this->conn = (new DB())->connect();
         $this->userWeb = new UserWeb($this->userId);
         $this->userWeb->setUserWeb();
+
+        // Sanitizar el nombre del archivo para mantener consistencia
+        if (isset($this->file['name'])) {
+            $this->file['name'] = $this->sanitizeFileName($this->file['name']);
+        }
+    }
+
+    /**
+     * Sanitiza el nombre del archivo eliminando solo caracteres problemáticos
+     * Preserva caracteres españoles (ñ, á, é, í, ó, ú) y caracteres comunes
+     */
+    private function sanitizeFileName($fileName)
+    {
+        // Obtener solo el nombre base para evitar path traversal
+        $fileName = basename($fileName);
+
+        // Eliminar solo caracteres verdaderamente problemáticos para el sistema de archivos
+        // Mantiene: letras (incluyendo ñ, á, é, etc.), números, espacios, puntos, guiones, paréntesis
+        // Elimina: / \ : * ? " < > |
+        $fileName = preg_replace('/[\/\\\:*?"<>|]/', '_', $fileName);
+
+        return $fileName;
     }
 
     public function uploadAndRegisterDocument()

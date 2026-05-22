@@ -46,7 +46,7 @@ function showEditPanel(data) {
     }
     $.ajax({
         method: "GET",
-        url: "../php/moduleController.php?type=" + type + "&" + idString
+        url: "../php/moduleController.php?type=" + type + "&" + idString + "&userId=" + $('#userId').val()
     }).done(function (data) {
         $('#actId').attr('value', data['actId']);
         $('#actType').attr('value', data['actType']);
