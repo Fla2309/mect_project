@@ -6,7 +6,8 @@ class Groups extends DB
 {
     private $conn;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->conn = (new DB)->connect();
     }
 
@@ -90,27 +91,32 @@ class Groups extends DB
 
     public function createGroup()
     {
+        $code = 400;
         try {
             $querySelect = $this->conn->query("SELECT * FROM grupos WHERE nombre_grupo = 
                     '{$_POST['groupName']}' AND sede = '{$_POST['location']}'")
                 or die($this->conn->error);
-            if ($querySelect->num_rows > 0)
+            if ($querySelect->num_rows > 0) {
+                $code = 406;
                 throw new Exception('Nombre de grupo ya existe');
+            }
             $queryInsert = $this->conn->query("INSERT INTO grupos (id_grupo, nombre_grupo, fecha_inicio, fecha_terminacion, sede)
                     VALUES ('{$_POST['groupId']}','{$_POST['groupName']}','{$_POST['startDate']}',
                     '{$_POST['endDate']}','{$_POST['location']}')") or die($this->conn->error);
             $lastInsertedId = $this->conn->insert_id;
             $queryInsertModulosGrupos = $this->conn->query("INSERT INTO modulos_grupos (id_modulo, id_grupo, disponible)
                     SELECT id_modulo, '{$lastInsertedId}', '0' FROM modulos") or die($this->conn->error);
-            http_response_code(201);
+            $code = 201;
+            http_response_code($code);
             return $_POST;
         } catch (Exception $e) {
-            http_response_code(400);
+            http_response_code($code);
             return $e->getMessage();
         }
     }
 
-    public function updateGroup(){
+    public function updateGroup()
+    {
         $groupId = $_GET['groupId'];
         $groupNumber = $_POST['groupNumber'];
         $groupName = $_POST['groupName'];
@@ -124,12 +130,12 @@ class Groups extends DB
         if ($query) {
             http_response_code(201);
             return [
-                'groupId'=> $groupId,
-                'groupNumber'=> $groupNumber,
-                'groupName'=> $groupName,
-                'startDate'=> $startDate,
-                'endDate'=> $endDate,
-                'location'=> $location
+                'groupId' => $groupId,
+                'groupNumber' => $groupNumber,
+                'groupName' => $groupName,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'location' => $location
             ];
         } else {
             http_response_code(400);

@@ -648,6 +648,14 @@ function generateCreateGroupFrame(json) {
         div.appendChild(form);
     }
 
+    // Error message element
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'errorCreateGroup';
+    errorDiv.className = 'alert alert-danger mt-2';
+    errorDiv.setAttribute('role', 'alert');
+    errorDiv.hidden = true;
+    form.appendChild(errorDiv);
+
     let butSaveChanges = document.createElement('button');
     butSaveChanges.className = 'btn btn-secondary mt-2 mb-2';
     butSaveChanges.textContent = 'Guardar Grupo';
@@ -675,13 +683,13 @@ function generateCreateGroupFrame(json) {
         startDateInput.parentElement.hidden = false;
         endDateInput.parentElement.hidden = false;
         butSaveChanges.hidden = false;
-        console.log('se removió hidden');
     });
 
     return createGroup;
 }
 
 function saveNewGroup() {
+    const errorElement = document.getElementById('errorCreateGroup');
     var params = {
         groupId: document.getElementById('groupId').value,
         groupName: document.getElementById('groupName').value,
@@ -692,21 +700,37 @@ function saveNewGroup() {
     if (params.groupId == '' || params.groupName == ''
         || params.startDate == '' || params.endDate == ''
         || params.location == '') {
-        alert('favor de llenar todos los campos')
+        errorElement.textContent = 'Favor de llenar todos los campos';
+        errorElement.hidden = false;
     } else {
+        errorElement.hidden = true;
         $.ajax({
             method: "POST",
             url: "../php/groupController.php?data=insert&userId=" + document.getElementById("userId").value,
             data: params
         }).done(function (data) {
             if (data == 1) {
-                alert('El grupo ya existe');
+                errorElement.textContent = 'El grupo ya existe';
+                errorElement.hidden = false;
             } else {
+                errorElement.hidden = true;
                 generateGroupsPage();
                 alert('Grupo creado exitosamente');
             }
         }).fail(function (result) {
-            console.log(result);
+            console.log('Error:', result);
+            let errorMessage = '';
+            if (result.status === 400) {
+                errorMessage = 'Ocurrió un error al intentar registrar el grupo';
+            } else if (result.status === 406) {
+                errorMessage = 'El nombre del grupo ya está siendo usado en la sede';
+            } else if (result.status === 500) {
+                errorMessage = 'Error del servidor. Por favor intente más tarde';
+            } else {
+                errorMessage = 'Error al crear el grupo. Por favor intente nuevamente.';
+            }
+            errorElement.textContent = errorMessage;
+            errorElement.hidden = false;
         });
     }
 }
